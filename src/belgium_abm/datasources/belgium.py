@@ -162,7 +162,7 @@ def build_households(b: Build, pop: pd.DataFrame) -> pd.DataFrame:
         x = np.stack([a, c], axis=1)
         target = np.array([adults, children]) / adults  # in units of the adult total
 
-        def dual(lam: np.ndarray, w0=w0, x=x, target=target) -> tuple[float, np.ndarray]:
+        def dual(lam: np.ndarray, w0=w0, x=x, target=target, adults=adults) -> tuple[float, np.ndarray]:
             w = w0 / adults * np.exp(x @ lam)
             return float(w.sum() - lam @ target), x.T @ w - target
 
@@ -333,7 +333,7 @@ def build_demography(b: Build, rate_year: int) -> pd.DataFrame:
     rows = []
     mort = b.es("demo_mlifetable", geo="BE", sex=["M", "F"], indic_de="PROBDEATH", time=str(rate_year))
     for sex, age, v in mort[["sex", "age", "value"]].itertuples(index=False):
-        if age.startswith("Y") and age[1:].isdigit() or age == "Y_LT1":
+        if (age.startswith("Y") and age[1:].isdigit()) or age == "Y_LT1":
             rows.append(("mortality_qx", sex, _age_num(age), float(v)))
     fert = b.es("demo_frate", geo="BE", unit="NR", agedef="COMPLET", time=str(rate_year))
     for age, v in fert[["age", "value"]].itertuples(index=False):

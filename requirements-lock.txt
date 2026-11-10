@@ -1,16 +1,13 @@
-# Pinned snapshot of the environment the test-suite was actually run against.
+# Pinned snapshot of the environment the test-suite was run against (CPython 3.13.18, Linux x86_64).
 #
-# This is NOT a resolver-generated lockfile (no hashes, no transitive closure): the build
-# sandbox had no access to PyPI, so `uv lock` / `pip-compile` could not run. It records the
-# exact direct-dependency versions verified here (CPython 3.13.16, Linux x86_64).
-# On a machine with network access, run `uv lock` (or `uv pip compile pyproject.toml`) and
-# commit the resulting hash-pinned lockfile in place of this file.
-#
-# Not verified in the build sandbox (not installed there): pyarrow (optional Parquet output),
-# pytest (tests are plain unittest and also run under pytest), ruff, mypy.
+# NOT a resolver-generated lockfile (no hashes, no transitive closure). For a hash-pinned lock run
+# `uv lock` (or `uv pip compile pyproject.toml`) and commit it in place of this file.
+# pyarrow (optional Parquet output) and pytest were exercised in this environment.
 numpy==2.5.3
 pandas==3.0.5
 scipy==1.18.1
 pydantic==2.13.5
 PyYAML==6.0.3
 matplotlib==3.11.2
+pyarrow==26.0.1
+pytest==9.2.0

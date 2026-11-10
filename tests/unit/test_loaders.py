@@ -3,7 +3,12 @@ import unittest
 from pathlib import Path
 
 from belgium_abm.demo_data import DEMO_FILES, write_demo_data
-from belgium_abm.io.loaders import InputDataError, MissingInputsError, load_targets, parse_annotated_csv
+from belgium_abm.io.loaders import (
+    InputDataError,
+    MissingInputsError,
+    load_targets,
+    parse_annotated_csv,
+)
 from belgium_abm.io.templates import write_templates
 from tests.helpers import ROOT, edit_first_data_row, modified_demo_config
 

@@ -22,7 +22,13 @@ from belgium_abm.engines.dynamics import _liquidate_firm, step_finances
 from belgium_abm.engines.economy import EconomyConfig
 from belgium_abm.engines.population import generate_population
 from belgium_abm.engines.simulation import initial_state
-from belgium_abm.engines.state import SimState, assign_heads, labour_productivity, net_worth, refresh_households
+from belgium_abm.engines.state import (
+    SimState,
+    assign_heads,
+    labour_productivity,
+    net_worth,
+    refresh_households,
+)
 from belgium_abm.io.loaders import load_targets
 from belgium_abm.io.outputs import write_json
 from belgium_abm.policies.rules import PolicyRules, statutory_pension
@@ -112,7 +118,6 @@ def run_arrangement_comparison(cfg: ModelConfig, out: Path, *, seed: int, years:
     rho_b, sg_b = econ.v("business_shock_rho"), econ.v("business_shock_sigma")
     recs = []
     p0 = st.persons
-    head_ix = p0.index[p0["head_flag"]]
     rep_of = p0["rep"].to_numpy()
     for yr in range(1, years + 1):
         st.year = yr
@@ -134,7 +139,9 @@ def run_arrangement_comparison(cfg: ModelConfig, out: Path, *, seed: int, years:
         st.counters.pop("gov:liquidation_dividends_gross", None)
         fl = step_finances(st, policy)
         P, H, F = fl.p, fl.h, fl.firms
-        by_h = lambda col: P[col].groupby(st.persons["household_id"]).sum().reindex(st.households.index, fill_value=0.0)  # noqa: E731
+        def by_h(col: str, P=P) -> pd.Series:
+            return P[col].groupby(st.persons["household_id"]).sum().reindex(st.households.index, fill_value=0.0)
+
         firm_tax = pd.Series(0.0, index=st.households.index)
         if len(F):
             firm_tax = pd.Series(F["corporate_tax"].to_numpy(), index=st.persons.loc[F.index, "household_id"].to_numpy()).groupby(level=0).sum().reindex(st.households.index, fill_value=0.0)
@@ -164,7 +171,6 @@ def run_arrangement_comparison(cfg: ModelConfig, out: Path, *, seed: int, years:
 
     piv = long.pivot_table(index="replicate", columns="arrangement", values="disposable_income", aggfunc="sum")
     last = long[long.year == years].set_index(["replicate", "arrangement"])
-    ret_year = long[long.retired].groupby(["replicate", "arrangement"])["year"].min()
     rows = []
     for arr in ARRANGEMENTS:
         g = long[long.arrangement == arr]

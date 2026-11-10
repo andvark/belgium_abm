@@ -5,7 +5,13 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from belgium_abm.analysis.inequality import p90_p10, poverty_rate, top_share, weighted_gini, weighted_quantile
+from belgium_abm.analysis.inequality import (
+    p90_p10,
+    poverty_rate,
+    top_share,
+    weighted_gini,
+    weighted_quantile,
+)
 from belgium_abm.engines.flows import REVENUE, SPENDING, Flows, net_fiscal_balance
 from belgium_abm.engines.state import SimState, net_worth
 

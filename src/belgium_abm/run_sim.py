@@ -243,7 +243,8 @@ def compare(baseline_dir: Path, scenario_dir: Path, out_dir: Path | None = None)
     gcols = keys + ["n_sim_base", "small_sample_warning"] + [c for c in mg if c.startswith("diff_")] + ["mean_eq_disposable_income_base", "mean_eq_disposable_income_scen"]
     gg = mg[gcols].groupby(["year", "group_var", "group"], as_index=False).mean(numeric_only=True)
     gg.to_csv(out / "group_differences.csv", index=False, lineterminator="\n")
-    fb = pd.read_csv(baseline_dir / "fiscal_by_year.csv"); fs = pd.read_csv(scenario_dir / "fiscal_by_year.csv")
+    fb = pd.read_csv(baseline_dir / "fiscal_by_year.csv")
+    fs = pd.read_csv(scenario_dir / "fiscal_by_year.csv")
     fb, fs = fb[fb.scenario == "baseline"], fs[fs.scenario == scen_name]
     fm = fb.merge(fs, on=["replicate", "year"], suffixes=("_base", "_scen"))
     fcols = [c for c in fb.columns if c not in ("scenario", "year", "replicate")]

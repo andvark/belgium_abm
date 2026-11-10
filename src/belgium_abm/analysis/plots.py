@@ -7,13 +7,13 @@ from pathlib import Path
 import matplotlib
 
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt  # noqa: E402
-import numpy as np  # noqa: E402
-import pandas as pd  # noqa: E402
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 
-from belgium_abm.config import ModelConfig  # noqa: E402
-from belgium_abm.engines.sampling import band_index  # noqa: E402
-from belgium_abm.io.loaders import TargetBundle  # noqa: E402
+from belgium_abm.config import ModelConfig
+from belgium_abm.engines.sampling import band_index
+from belgium_abm.io.loaders import TargetBundle
 
 
 def population_pyramid(persons: pd.DataFrame, targets: TargetBundle, cfg: ModelConfig, path: Path, *, banner: str) -> None:

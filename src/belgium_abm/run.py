@@ -11,7 +11,12 @@ import numpy as np
 import pandas as pd
 
 from belgium_abm import __version__
-from belgium_abm.analysis.calibration import build_comparisons, classify, sample_size_report, verdict
+from belgium_abm.analysis.calibration import (
+    build_comparisons,
+    classify,
+    sample_size_report,
+    verdict,
+)
 from belgium_abm.analysis.plots import population_pyramid
 from belgium_abm.analysis.reporting import banner_for, build_report, render_markdown
 from belgium_abm.analysis.validation import check_population, summarize_checks

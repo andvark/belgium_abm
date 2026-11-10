@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "belgium-abm"
-version = "0.1.0"
-description = "Belgian lifecycle agent-based model of income and wealth inequality (Phase 0/1: scaffold, provenance, synthetic population)."
+version = "0.2.0"
+description = "Belgian lifecycle agent-based model of income and wealth inequality: real-data synthetic population, lifecycle dynamics, tax-benefit scenarios."
 readme = "README.md"
 requires-python = ">=3.12"
 license = { text = "UNLICENSED" }
@@ -50,7 +50,7 @@ src = ["src", "tests"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "UP", "B", "SIM", "RUF"]
-ignore = ["RUF012"]
+ignore = ["RUF012", "E501", "SIM905"]
 
 [tool.mypy]
 python_version = "3.12"

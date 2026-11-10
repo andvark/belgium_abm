@@ -11,7 +11,7 @@ import numpy as np
 import pandas as pd
 
 from belgium_abm.analysis.inequality import weighted_gini
-from belgium_abm.engines.flows import REVENUE, SPENDING, compute_flows, net_fiscal_balance
+from belgium_abm.engines.flows import REVENUE, SPENDING, compute_flows
 from belgium_abm.engines.simulation import check_state, run_simulation
 from belgium_abm.engines.state import net_worth
 from belgium_abm.scenarios import Scenario

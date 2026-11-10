@@ -18,7 +18,13 @@ import numpy as np
 import pandas as pd
 
 from belgium_abm.engines.state import SimState, equivalence_sizes, labour_productivity
-from belgium_abm.policies.rules import PolicyRules, personal_income_tax, self_employed_contribution, statutory_pension, unemployment_benefit
+from belgium_abm.policies.rules import (
+    PolicyRules,
+    personal_income_tax,
+    self_employed_contribution,
+    statutory_pension,
+    unemployment_benefit,
+)
 
 
 @dataclass

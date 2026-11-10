@@ -39,8 +39,8 @@ def edit_first_data_row(path: Path, field_index: int, new_value: str) -> None:
 @lru_cache(maxsize=4)
 def real_sim_inputs(n_persons: int = 5000, seed: int = 42):
     """Real-data population + calibrated initial dynamic state (cached; do not mutate -- copy first)."""
-    from belgium_abm.run_sim import load_inputs
     from belgium_abm.engines.simulation import initial_state
+    from belgium_abm.run_sim import load_inputs
 
     cfg = load_config(ROOT / "configs" / "belgium_baseline.yaml").with_overrides(generator={"n_persons": n_persons})
     inp = load_inputs(cfg)

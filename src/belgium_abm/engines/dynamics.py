@@ -148,7 +148,6 @@ def _normalise_roles(st: SimState) -> None:
 
 def _resolve_estates(st: SimState, affected: np.ndarray, dead_ids: np.ndarray) -> None:
     p, hh = st.persons, st.households
-    members = p.groupby("household_id").size()
     adults = (p["age"] >= st.adult_age).groupby(p["household_id"]).sum()
     for hid in affected:
         n_adult = int(adults.get(hid, 0))
@@ -213,7 +212,7 @@ def _partnering_and_separation(st: SimState) -> None:
     hh = st.households
     single_heads = p[p["head_flag"] & p["partner_id"].isna() & p["age"].between(20, 60) & (hh["n_adults"].reindex(p["household_id"]).to_numpy() == 1)]
     pick = single_heads[crn.uniform(st.seed, "partnering", yr, single_heads.index.to_numpy()) < e.v("partnering_rate")]
-    for region, g in pick.groupby("region"):
+    for _region, g in pick.groupby("region"):
         men = g[g["sex_or_demographic_stratum"] == "M"].sort_values("age")
         women = g[g["sex_or_demographic_stratum"] == "F"].sort_values("age")
         n = min(len(men), len(women))

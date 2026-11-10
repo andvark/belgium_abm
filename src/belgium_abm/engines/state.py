@@ -211,4 +211,4 @@ def net_worth(st: SimState) -> pd.Series:
     return hh["financial_assets"] + hh["housing_value"] - hh["mortgage_balance"] - hh["other_debt"] + eq
 
 
-__all__ = ["SimState", "build_state", "labour_productivity", "net_worth", "refresh_households", "assign_heads", "equivalence_sizes", "statutory_pension", "ndtri"]
+__all__ = ["SimState", "assign_heads", "build_state", "equivalence_sizes", "labour_productivity", "ndtri", "net_worth", "refresh_households", "statutory_pension"]

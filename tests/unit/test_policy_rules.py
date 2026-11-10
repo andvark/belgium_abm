@@ -144,7 +144,7 @@ class CrnTests(unittest.TestCase):
 
     def test_distribution(self) -> None:
         u = crn.uniform(1, "d", 0, np.arange(200000))
-        self.assertTrue(0 < u.min() and u.max() < 1)
+        self.assertTrue(u.min() > 0 and u.max() < 1)
         self.assertAlmostEqual(u.mean(), 0.5, delta=0.005)
         self.assertAlmostEqual(u.std(), (1 / 12) ** 0.5, delta=0.005)
         z = crn.normal(1, "d", 0, np.arange(200000))

@@ -2,7 +2,14 @@ import unittest
 
 import numpy as np
 
-from belgium_abm.analysis.inequality import equivalised_size, p90_p10, poverty_rate, top_share, weighted_gini, weighted_quantile
+from belgium_abm.analysis.inequality import (
+    equivalised_size,
+    p90_p10,
+    poverty_rate,
+    top_share,
+    weighted_gini,
+    weighted_quantile,
+)
 
 
 class InequalityTests(unittest.TestCase):

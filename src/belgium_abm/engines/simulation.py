@@ -8,11 +8,17 @@ from dataclasses import dataclass, field
 import numpy as np
 import pandas as pd
 
-from belgium_abm.analysis.inequality import weighted_gini, weighted_quantile
-from belgium_abm.analysis.measures import fiscal_row, group_metrics, mobility_matrix, quintile, yearly_metrics
+from belgium_abm.analysis.inequality import weighted_quantile
+from belgium_abm.analysis.measures import (
+    fiscal_row,
+    group_metrics,
+    mobility_matrix,
+    quintile,
+    yearly_metrics,
+)
 from belgium_abm.engines.dynamics import step_demography, step_education, step_finances, step_work
 from belgium_abm.engines.economy import EconomyConfig
-from belgium_abm.engines.flows import REVENUE, SPENDING, compute_flows
+from belgium_abm.engines.flows import compute_flows
 from belgium_abm.engines.state import SimState, build_state, net_worth
 from belgium_abm.policies.ledger import FiscalLedger
 from belgium_abm.policies.rules import PolicyRules
