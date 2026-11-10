@@ -43,11 +43,16 @@ class SchemaTests(unittest.TestCase):
             on_disk = ROOT / "data" / "templates" / f"{TABLE_SCHEMAS[table].default_dataset_id}.csv"
             self.assertEqual(on_disk.read_text(encoding="utf-8"), text)
 
-    def test_registry_lists_only_unacquired_datasets(self) -> None:
+    def test_registry_acquired_entries_point_to_existing_files(self) -> None:
         reg = load_registry(ROOT / "data" / "sources.yaml")
-        self.assertEqual(len(reg), 12)
-        self.assertTrue(all(s.status == "not_acquired" and s.file_path is None and s.reference_year is None for s in reg))
-        self.assertTrue(all(s.license_or_terms == "verify" for s in reg))
+        self.assertEqual(len(reg), 13)
+        acquired = [s for s in reg if s.status == "acquired"]
+        self.assertEqual(len(acquired), 5)
+        for s in acquired:
+            self.assertTrue((ROOT / str(s.file_path)).is_file(), s.id)
+            self.assertEqual(s.reference_year, 2025)
+        # restricted microdata must never be marked acquired
+        self.assertTrue(all(s.status == "not_acquired" for s in reg if s.restricted_microdata))
 
     def test_demo_population_and_households_are_consistent(self) -> None:
         t = demo_tables()

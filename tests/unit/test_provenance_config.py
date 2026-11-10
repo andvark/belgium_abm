@@ -55,9 +55,9 @@ class ConfigTests(unittest.TestCase):
         with self.assertRaises(FileNotFoundError):
             load_config(ROOT / "configs" / "nope.yaml")
 
-    def test_baseline_config_loads_but_is_a_placeholder(self) -> None:
+    def test_baseline_config_targets_real_2025_data(self) -> None:
         cfg = load_config(ROOT / "configs" / "belgium_baseline.yaml")
-        self.assertEqual(cfg.baseline_year, 0)
+        self.assertEqual(cfg.baseline_year, 2025)
         self.assertFalse(cfg.allow_synthetic_demo_data)
 
     def test_typed_accessors(self) -> None:

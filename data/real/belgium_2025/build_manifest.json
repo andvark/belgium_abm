@@ -1,0 +1,282 @@
+{
+  "year": 2025,
+  "built_utc": "2026-11-10T08:54:26.925168+00:00",
+  "sources": [
+    {
+      "provider": "Eurostat",
+      "dataset": "demo_r_d2jan",
+      "params": {
+        "geo": [
+          "BE10",
+          "BE21",
+          "BE22",
+          "BE23",
+          "BE24",
+          "BE25",
+          "BE31",
+          "BE32",
+          "BE33",
+          "BE34",
+          "BE35"
+        ],
+        "sex": [
+          "M",
+          "F"
+        ],
+        "unit": "NR",
+        "time": "2025"
+      },
+      "updated": "2026-08-28T23:00:00+0200",
+      "label": "Population on 1 January by age, sex and NUTS 2 region",
+      "sha256": "71139abdfa101244295386b180836e5b55470dffa63557ba72aa54f83a6fb1f9"
+    },
+    {
+      "provider": "Eurostat",
+      "dataset": "lfst_hhnhtych",
+      "params": {
+        "geo": "BE",
+        "agechild": "TOTAL",
+        "time": "2025"
+      },
+      "updated": "2026-09-10T23:00:00+0200",
+      "label": "Private households by household composition, number of children and age of youngest child",
+      "sha256": "f29b7df661309436d83dc73110da7852448a52c008ad3d36f6b9097a5388202a"
+    },
+    {
+      "provider": "Eurostat",
+      "dataset": "lfst_r_lfsd2hh",
+      "params": {
+        "geo": [
+          "BE10",
+          "BE2",
+          "BE3"
+        ],
+        "deg_urb": "TOTAL",
+        "time": "2025"
+      },
+      "updated": "2026-09-10T23:00:00+0200",
+      "label": "Private households by degree of urbanisation and NUTS 2 region",
+      "sha256": "7b959b1a16a4b1f1a89d5a2c991c4dbfa64fb9974d3fb38d1a376e22fe0fd000"
+    },
+    {
+      "provider": "Eurostat",
+      "dataset": "lfst_r_lfsd2pop",
+      "params": {
+        "geo": [
+          "BE10",
+          "BE2",
+          "BE3"
+        ],
+        "sex": "T",
+        "unit": "THS_PER",
+        "time": "2025"
+      },
+      "updated": "2026-10-30T23:00:00+0100",
+      "label": "Population in private households by educational attainment level and NUTS 2 region",
+      "sha256": "ede0366d8fad15ae977821a6e5ca21f59d313727123ad4b85de121bab6009c48"
+    },
+    {
+      "provider": "Eurostat",
+      "dataset": "lfsa_pgaed",
+      "params": {
+        "geo": "BE",
+        "sex": "T",
+        "unit": "THS_PER",
+        "time": "2025"
+      },
+      "updated": "2026-10-30T23:00:00+0100",
+      "label": "Population in private households by educational attainment level",
+      "sha256": "9f80798486facfc843b185ed80847476b3b01e1b6905cd8ea5434ce1dafec73e"
+    },
+    {
+      "provider": "Eurostat",
+      "dataset": "lfsa_egaed",
+      "params": {
+        "geo": "BE",
+        "sex": "T",
+        "unit": "THS_PER",
+        "time": "2025"
+      },
+      "updated": "2026-10-30T11:00:00+0100",
+      "label": "Employed persons by educational attainment level",
+      "sha256": "885969489470b28bcb4ff9062918efb21c58b89c52d3becd270c28e4051805af"
+    },
+    {
+      "provider": "Eurostat",
+      "dataset": "lfsa_agaed",
+      "params": {
+        "geo": "BE",
+        "sex": "T",
+        "unit": "THS_PER",
+        "time": "2025"
+      },
+      "updated": "2026-10-30T11:00:00+0100",
+      "label": "Labour force by educational attainment level",
+      "sha256": "fedcdaf55c36f7d47838fa4e9613b0975b5db9d793c81537c7ec4f95de6a049c"
+    },
+    {
+      "provider": "Eurostat",
+      "dataset": "lfst_r_lfe2emprt",
+      "params": {
+        "geo": [
+          "BE10",
+          "BE2",
+          "BE3"
+        ],
+        "sex": "T",
+        "unit": "PC",
+        "time": "2025"
+      },
+      "updated": "2026-10-30T23:00:00+0100",
+      "label": "Employment rates by NUTS 2 region",
+      "sha256": "bb65e133313240e99ef7836333f261809a5693bab3f040ff42acfcd66e253663"
+    },
+    {
+      "provider": "Eurostat",
+      "dataset": "lfst_r_lfu3rt",
+      "params": {
+        "geo": [
+          "BE10",
+          "BE2",
+          "BE3"
+        ],
+        "sex": "T",
+        "isced11": "TOTAL",
+        "unit": "PC",
+        "time": "2025"
+      },
+      "updated": "2026-10-30T23:00:00+0100",
+      "label": "Unemployment rates by educational attainment level and NUTS 2 region",
+      "sha256": "23986667518bc33d5db95d40fb26da2756d9a7b3f91f1d334e07c49800663cd2"
+    },
+    {
+      "provider": "Eurostat",
+      "dataset": "lfsa_igar",
+      "params": {
+        "geo": "BE",
+        "sex": "T",
+        "unit": "PC_POP",
+        "reason": "EDUC_TNG",
+        "time": "2025"
+      },
+      "updated": "2026-10-30T23:00:00+0100",
+      "label": "Persons outside the labour force not seeking employment by main reason",
+      "sha256": "945e046f3f34ef4b165e22bcb2ff498fe8cb4f4d90d9e98097d2661afadd8047"
+    },
+    {
+      "provider": "Eurostat",
+      "dataset": "lfsa_esgan",
+      "params": {
+        "geo": "BE",
+        "sex": "T",
+        "unit": "THS_PER",
+        "wstatus": "SELF",
+        "citizen": "TOTAL",
+        "time": "2025"
+      },
+      "updated": "2026-10-30T11:00:00+0100",
+      "label": "Self-employed persons by citizenship",
+      "sha256": "96369b12e45b83f9b9d040ff1781a137a1ef22b502f768b9f4612240963665ca"
+    },
+    {
+      "provider": "Eurostat",
+      "dataset": "lfsa_egan",
+      "params": {
+        "geo": "BE",
+        "sex": "T",
+        "unit": "THS_PER",
+        "citizen": "TOTAL",
+        "time": "2025"
+      },
+      "updated": "2026-10-30T11:00:00+0100",
+      "label": "Employed persons by citizenship",
+      "sha256": "2255643ab0a2ca48ab5ec7e58ee75bc22cf96f63ed387b74e47119abf9c1c267"
+    },
+    {
+      "provider": "Statbel BeStat",
+      "view": "efedbaa1-1478-4366-9d9a-5318af8f90ab",
+      "sha256": "0016ac32d69754b9274138294a157d9729ffc09362f1db5064f4957cdff31b8f"
+    },
+    {
+      "provider": "Eurostat",
+      "dataset": "ilc_lvho02",
+      "params": {
+        "geo": "BE",
+        "rskpovth": "TOTAL",
+        "unit": "PC",
+        "time": "2025"
+      },
+      "updated": "2026-10-20T23:00:00+0200",
+      "label": "Distribution of population by tenure status, type of household and income group",
+      "sha256": "ae91c7daa6537abe8dd2a80ae0684aa1303bb8a2e13dfdd8f705d1b463f4db8e"
+    }
+  ],
+  "assumptions": [
+    "Regional household-type mix equals the national mix (Eurostat publishes household composition for Belgium only); it is then re-fitted per region to the regional adult and child totals (maximum entropy).",
+    "Households with 3+ children are split 80/20 into 3 and 4 children, and OTHER_MULTI households 75/25 into 3 and 4 adults (seed only; the maximum-entropy fit moves these to match regional totals).",
+    "OTHER_MULTI requires >= 3 adults in this model; 2-adult non-couple households published as 'other type' cannot be represented separately.",
+    "Population in institutions (about 1-2% of residents, mostly elderly) is not covered by the private-household tables; the household table is fitted to the full resident population, so the implied household count exceeds the published private-household count (reported in the manifest).",
+    "STUDENT is the inactive population whose main reason for inactivity is education/training (national share), applied only to ages 15-34; working students are EMPLOYED. Ages 30-34 are assumed to contain no inactive students.",
+    "RETIRED is defined by convention as inactive persons aged 65+; inactive persons below 65 (including early retirees) are INACTIVE. The LFS does not publish a 'retired' status here.",
+    "At ages 65+ the unemployed share of the population equals the national 65-74 share in every region (no regional unemployment rate is published for 65+).",
+    "Education x labour-state joint distribution by region is reconstructed by IPF from national age x education x labour-state seeds and observed regional margins (education by age; employment and unemployment rates by age).",
+    "Self-employment share of employment by age is national (no regional x age breakdown); it is applied in every region.",
+    "The BV/SRL share of the self-employed is proxied by regional counts of VAT-subject enterprises: private limited liability companies / (private limited liability companies + natural persons), 2024. Enterprise counts are not persons; this is a rough proxy, not an observation.",
+    "Housing-tenure shares are national population shares by household type (EU-SILC via Eurostat) applied to households and to all regions. RENTER = tenant at market rent; OTHER = tenant at reduced or free rent.",
+    "Age 100+ residents are included in the 85-99 band; within-band ages are uniform (model convention)."
+  ],
+  "diagnostics": {
+    "households": {
+      "BE_BRUSSELS": {
+        "fitted_households": 547686.9982837157,
+        "published_private_households": 580200.0,
+        "ratio_fitted_to_published": 0.9439624237913059,
+        "adults": 1000315.0,
+        "children": 271394.0,
+        "tilt_adults": -0.019069104951920844,
+        "tilt_children": 0.07977394417065065
+      },
+      "BE_FLANDERS": {
+        "fitted_households": 3039164.393980124,
+        "published_private_households": 2992400.0,
+        "ratio_fitted_to_published": 1.0156277215546465,
+        "adults": 5564175.0,
+        "children": 1320096.0,
+        "tilt_adults": 0.0009315300635797894,
+        "tilt_children": -0.00416846884596155
+      },
+      "BE_WALLONIA": {
+        "fitted_households": 1632382.3674879628,
+        "published_private_households": 1670700.0,
+        "ratio_fitted_to_published": 0.9770649233782025,
+        "adults": 2986307.0,
+        "children": 741208.0,
+        "tilt_adults": -0.005500894824438793,
+        "tilt_children": 0.024068576168538188
+      }
+    },
+    "student_share": {
+      "15-24": 0.063,
+      "25-34": 0.009380914194065755,
+      "35-44": 0.0,
+      "45-54": 0.0,
+      "55-64": 0.0,
+      "65-99": 0.0
+    },
+    "labour_flags": [],
+    "bv_share_of_self_employed_proxy": {
+      "BE_BRUSSELS": 0.6032543366723675,
+      "BE_FLANDERS": 0.49614653010538456,
+      "BE_WALLONIA": 0.41179426397087876
+    },
+    "self_employed_share_of_employment": {
+      "15-24": 0.05016468203699012,
+      "25-34": 0.11065748064982563,
+      "35-44": 0.14935316445890465,
+      "45-54": 0.15202016096252338,
+      "55-64": 0.1743022643496577,
+      "65-99": 0.43194706994328924
+    }
+  },
+  "n_sources_before_households": 1
+}

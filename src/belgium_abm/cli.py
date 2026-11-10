@@ -109,6 +109,25 @@ def cmd_make_templates(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_fetch_data(args: argparse.Namespace) -> int:
+    from belgium_abm.datasources.belgium import build_all
+    from belgium_abm.datasources.eurostat import FetchError
+
+    root = find_project_root(Path.cwd())
+    out = Path(args.output_dir) if args.output_dir else root / "data" / "real" / f"belgium_{args.year}"
+    cache = Path(args.cache_dir) if args.cache_dir else root / "data" / "real" / "cache"
+    try:
+        m = build_all(args.year, cache, out, offline=args.offline)
+    except (FetchError, RuntimeError) as exc:
+        _err(f"[abm fetch-data] failed: {exc}")
+        return 2
+    print(f"[abm fetch-data] wrote 6 real-data tables for {args.year} to {out}")
+    print(f"[abm fetch-data] {len(m['sources'])} source responses (sha256 in build_manifest.json); {len(m['assumptions'])} documented assumptions")
+    for r, d in m["diagnostics"]["households"].items():
+        print(f"[abm fetch-data] {r}: fitted households / published private households = {d['ratio_fitted_to_published']:.3f}")
+    return 0
+
+
 def cmd_demo(args: argparse.Namespace) -> int:
     ns = argparse.Namespace(
         config=args.config, root=args.root, seed=args.seed, n_persons=10_000,
@@ -158,6 +177,13 @@ def build_parser() -> argparse.ArgumentParser:
     sp = sub.add_parser("make-templates", help="(re)write the empty real-data CSV templates")
     sp.add_argument("--output-dir", default="data/templates")
     sp.set_defaults(func=cmd_make_templates)
+
+    sp = sub.add_parser("fetch-data", help="download open Belgian data (Eurostat API, Statbel BeStat) and build the input tables")
+    sp.add_argument("--year", type=int, default=2025)
+    sp.add_argument("--output-dir", default=None)
+    sp.add_argument("--cache-dir", default=None)
+    sp.add_argument("--offline", action="store_true", help="use only cached raw responses")
+    sp.set_defaults(func=cmd_fetch_data)
 
     sp = sub.add_parser("demo", help="10,000-person demo run on the FICTIONAL inputs")
     sp.add_argument("--config", default=DEMO_CONFIG)

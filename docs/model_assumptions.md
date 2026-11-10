@@ -65,10 +65,10 @@ Status of the dataset registry (`data/sources.yaml`). Nothing listed as `not_acq
 
 | id | producer | access | status | needed for phase | model input | url |
 |---|---|---|---|---|---|---|
-| `statbel_population` | Statbel | open | **not_acquired** | 1 | population (age x sex x region) | https://statbel.fgov.be/en/open-data |
-| `statbel_households` | Statbel | open | **not_acquired** | 1 | households (region x type x adults x children) | https://statbel.fgov.be/en/themes/population/structure-population/households |
-| `statbel_lfs_labour` | Statbel | mixed | **not_acquired** | 1 | education and labour_state tables | https://statbel.fgov.be/en/themes/work-training/labour-market/employment-and-unemployment |
-| `statbel_lfs_occupations` | Statbel | open | **not_acquired** | 1 | work_arrangement table | https://statbel.fgov.be/en/themes/work-training/labour-market/occupations-belgium |
+| `statbel_population` | Statbel via Eurostat | open | **acquired** | 1 | population (age x sex x region) | https://statbel.fgov.be/en/open-data |
+| `statbel_households` | Statbel (LFS) via Eurostat | open | **acquired** | 1 | households (region x type x adults x children) | https://statbel.fgov.be/en/themes/population/structure-population/households |
+| `statbel_lfs_labour` | Statbel (LFS) via Eurostat | mixed | **acquired** | 1 | education and labour_state tables | https://statbel.fgov.be/en/themes/work-training/labour-market/employment-and-unemployment |
+| `statbel_lfs_occupations` | Statbel (LFS) via Eurostat; Statbel BeStat | open | **acquired** | 1 | work_arrangement table | https://statbel.fgov.be/en/themes/work-training/labour-market/occupations-belgium |
 | `eurostat_eu_silc_research` | Eurostat / Statbel | restricted (microdata restricted) | **not_acquired** | 2 | income seeding and tenure (Phase 2+) | https://ec.europa.eu/eurostat/web/microdata/collections-research/european-union-statistics-on-income-and-living-conditions |
 | `eurostat_eu_silc_public_use` | Eurostat | open | **not_acquired** | 2 | tooling only | https://ec.europa.eu/eurostat/en/web/microdata/public-microdata/statistics-on-income-and-living-conditions |
 | `nbb_hfcs` | National Bank of Belgium / ECB | mixed (microdata restricted) | **not_acquired** | 2 | wealth seeding (Phase 2+); tenure shares | https://www.nbb.be/en/publications-and-research/publications/other-publications/household-finance-and-consumption-survey-0 |
@@ -77,5 +77,6 @@ Status of the dataset registry (`data/sources.yaml`). Nothing listed as `not_acq
 | `fpb_input_output_2022` | Federal Planning Bureau | open | **not_acquired** | 5 | macro constraints (later) | https://www.plan.be/en/data/input-output-tables-2022 |
 | `nbb_national_accounts` | National Bank of Belgium | open | **not_acquired** | 5 | macro totals (later) | not given in the specification |
 | `statbel_vital_statistics` | Statbel / Federal Planning Bureau | open | **not_acquired** | 3 | demography module (Phase 3) | not given in the specification |
+| `eurostat_ilc_lvho02` | Eurostat (EU-SILC published aggregate) | open | **acquired** | 1 | tenure table | https://ec.europa.eu/eurostat/databrowser/view/ilc_lvho02/default/table |
 
 Restricted data (EU-SILC research microdata, HFCS microdata, BELMOD administrative data) must be requested from the data owners; this project never fabricates or infers them from aggregates.

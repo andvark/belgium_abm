@@ -1,15 +1,15 @@
 # Dataset registry / provenance manifest (spec section 8).
 #
-# EVERY entry is currently `not_acquired`: no real Belgian dataset has been loaded into this
-# project. Set `file_path`, `reference_year` and `status: acquired` only when a real file is
-# genuinely in place. URLs are the ones named in the specification; entries without a URL in
-# the specification are left null rather than guessed.
-# `license_or_terms: verify` means the terms have NOT been checked yet.
+# `status: acquired` means a real file is in place under file_path (see method_notes for whether it
+# is observed or derived). Restricted microdata (EU-SILC research files, HFCS, BELMOD) are NOT
+# acquired and are never fabricated. `license_or_terms: verify` means terms have NOT been checked.
+# Statbel's website download pages are protected by an anti-bot challenge and are not scraped;
+# Statbel figures are obtained through Eurostat's open API and Statbel's BeStat API.
 
 - id: statbel_population
-  producer: Statbel
+  producer: Statbel via Eurostat
   url: https://statbel.fgov.be/en/open-data
-  reference_year: null
+  reference_year: 2025
   geography: Belgium
   unit: persons
   dimensions:
@@ -18,18 +18,21 @@
   - municipality
   - nationality
   access: open
-  file_path: null
-  license_or_terms: verify
-  variables_used: []
-  method_notes: Public aggregate counts of population by age/sex/place. Feeds the population targets table.
+  file_path: data/real/belgium_2025/population_age_sex_region.csv
+  license_or_terms: Eurostat/Statbel open data (reuse with attribution; verify exact terms before redistribution)
+  variables_used:
+  - demo_r_d2jan
+  method_notes: OBSERVED. Resident population on 1 Jan 2025 by single year of age, sex and NUTS-2 (summed to the 3 regions)
+    from Eurostat demo_r_d2jan, which carries Statbel's population register figures. Statbel's own download page sits behind
+    an anti-bot challenge and was not scraped.
   model_input: population (age x sex x region)
   needed_for_phase: 1
   restricted_microdata: false
-  status: not_acquired
+  status: acquired
 - id: statbel_households
-  producer: Statbel
+  producer: Statbel (LFS) via Eurostat
   url: https://statbel.fgov.be/en/themes/population/structure-population/households
-  reference_year: null
+  reference_year: 2025
   geography: Belgium
   unit: households
   dimensions:
@@ -37,18 +40,22 @@
   - household size
   - children
   access: open
-  file_path: null
-  license_or_terms: verify
-  variables_used: []
-  method_notes: Public aggregate household counts. Joint person-household detail is not necessarily available.
+  file_path: data/real/belgium_2025/household_templates_region.csv
+  license_or_terms: Eurostat/Statbel open data (reuse with attribution; verify exact terms before redistribution)
+  variables_used:
+  - lfst_hhnhtych
+  - lfst_r_lfsd2hh
+  method_notes: DERIVED. National household composition x number of children (Eurostat lfst_hhnhtych) re-fitted per region
+    by maximum entropy to the regional adult/child totals; regional private-household totals (lfst_r_lfsd2hh) are used only
+    as a diagnostic. Regional composition is NOT observed.
   model_input: households (region x type x adults x children)
   needed_for_phase: 1
   restricted_microdata: false
-  status: not_acquired
+  status: acquired
 - id: statbel_lfs_labour
-  producer: Statbel
+  producer: Statbel (LFS) via Eurostat
   url: https://statbel.fgov.be/en/themes/work-training/labour-market/employment-and-unemployment
-  reference_year: null
+  reference_year: 2025
   geography: Belgium
   unit: persons
   dimensions:
@@ -57,34 +64,46 @@
   - labour status
   - region
   access: mixed
-  file_path: null
-  license_or_terms: verify
-  variables_used: []
-  method_notes: Labour Force Survey aggregates (employment, unemployment, inactivity, education). Research microdata need
-    controlled access; check ILO vs registered unemployment definitions.
+  file_path: data/real/belgium_2025/labour_state_by_age_education_region.csv
+  license_or_terms: Eurostat/Statbel open data (reuse with attribution; verify exact terms before redistribution)
+  variables_used:
+  - lfst_r_lfsd2pop
+  - lfsa_pgaed
+  - lfsa_egaed
+  - lfsa_agaed
+  - lfst_r_lfe2emprt
+  - lfst_r_lfu3rt
+  - lfsa_igar
+  method_notes: Education by region x age is OBSERVED (lfst_r_lfsd2pop). Work-state by region x age x education is DERIVED
+    by IPF from national seeds (lfsa_pgaed/egaed/agaed) and regional employment/unemployment rates (lfst_r_lfe2emprt, lfst_r_lfu3rt).
+    ILO definitions (LFS), not registered unemployment.
   model_input: education and labour_state tables
   needed_for_phase: 1
   restricted_microdata: false
-  status: not_acquired
+  status: acquired
 - id: statbel_lfs_occupations
-  producer: Statbel
+  producer: Statbel (LFS) via Eurostat; Statbel BeStat
   url: https://statbel.fgov.be/en/themes/work-training/labour-market/occupations-belgium
-  reference_year: null
+  reference_year: 2025
   geography: Belgium
   unit: persons
   dimensions:
   - occupation
   - labour status
   access: open
-  file_path: null
-  license_or_terms: verify
-  variables_used: []
-  method_notes: Published aggregates on employee vs self-employed and occupations. The BV distinction needs business/legal
-    sources.
+  file_path: data/real/belgium_2025/work_arrangement_by_age_region.csv
+  license_or_terms: Eurostat/Statbel open data (reuse with attribution; verify exact terms before redistribution)
+  variables_used:
+  - lfsa_esgan
+  - lfsa_egan
+  - bestat:efedbaa1-1478-4366-9d9a-5318af8f90ab
+  method_notes: DERIVED. National self-employed share of employment by age band (lfsa_esgan/lfsa_egan). The sole-proprietor
+    vs BV split is only a PROXY from Statbel BeStat counts of VAT-subject enterprises by legal form and region (2024); no
+    source observes BV owner-managers directly.
   model_input: work_arrangement table
   needed_for_phase: 1
   restricted_microdata: false
-  status: not_acquired
+  status: acquired
 - id: eurostat_eu_silc_research
   producer: Eurostat / Statbel
   url: https://ec.europa.eu/eurostat/web/microdata/collections-research/european-union-statistics-on-income-and-living-conditions
@@ -239,3 +258,23 @@
   needed_for_phase: 3
   restricted_microdata: false
   status: not_acquired
+- id: eurostat_ilc_lvho02
+  producer: Eurostat (EU-SILC published aggregate)
+  url: https://ec.europa.eu/eurostat/databrowser/view/ilc_lvho02/default/table
+  reference_year: 2025
+  geography: Belgium
+  unit: share of population
+  dimensions:
+  - household type
+  - tenure
+  access: open
+  file_path: data/real/belgium_2025/tenure_by_household_type_region.csv
+  license_or_terms: Eurostat open data (verify)
+  variables_used:
+  - ilc_lvho02
+  method_notes: DERIVED. Published EU-SILC tenure distribution by household type, national only; applied unchanged to every
+    region and to households (shares of persons used as shares of households). NOT microdata.
+  model_input: tenure table
+  needed_for_phase: 1
+  restricted_microdata: false
+  status: acquired

@@ -43,19 +43,32 @@ class CliTests(unittest.TestCase):
                 hashes.append(json.loads((target / "manifest.json").read_text())["outputs_sha256"]["persons.csv"])
             self.assertNotEqual(*hashes)
 
-    def test_baseline_config_exits_2_with_a_clear_message(self) -> None:
-        code, _, err = run_cli("init", "--config", str(ROOT / "configs" / "belgium_baseline.yaml"))
+    def test_missing_real_tables_exit_2_with_a_clear_message(self) -> None:
+        import yaml
+
+        cfg = yaml.safe_load((ROOT / "configs" / "belgium_baseline.yaml").read_text())
+        cfg["inputs"] = {k: f"data/raw/absent_{k}.csv" for k in cfg["inputs"]}
+        with tempfile.TemporaryDirectory() as d:
+            path = Path(d) / "c.yaml"
+            path.write_text(yaml.safe_dump(cfg))
+            code, _, err = run_cli("init", "--config", str(path), "--root", str(ROOT))
         self.assertEqual(code, 2)
         self.assertIn("no real data is ever substituted", err)
-        self.assertIn("data/raw", err)
+
+    def test_baseline_config_runs_on_real_tables(self) -> None:
+        with tempfile.TemporaryDirectory() as d:
+            code, out, _ = run_cli("init", "--config", str(ROOT / "configs" / "belgium_baseline.yaml"), "--n-persons", "3000",
+                                   "--output-dir", d, "--no-parquet", "--no-plot")
+            self.assertEqual(code, 0, out)
+            self.assertNotIn("SYNTHETIC", out)
 
     def test_bad_config_path_exits_2(self) -> None:
         self.assertEqual(run_cli("init", "--config", "does/not/exist.yaml")[0], 2)
 
-    def test_sources_lists_every_dataset_as_not_acquired(self) -> None:
+    def test_sources_reports_acquired_and_missing_datasets(self) -> None:
         code, out, _ = run_cli("sources", "--config", str(DEMO_CONFIG))
         self.assertEqual(code, 0)
-        self.assertIn("12 of 12 registered datasets are NOT acquired", out)
+        self.assertIn("8 of 13 registered datasets are NOT acquired", out)
         self.assertIn("statbel_population", out)
 
     def test_assumptions_command_matches_committed_doc(self) -> None:

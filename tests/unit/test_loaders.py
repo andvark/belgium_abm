@@ -107,8 +107,19 @@ class LoaderTests(unittest.TestCase):
     def test_baseline_config_cannot_run_without_data(self) -> None:
         from belgium_abm.config import load_config
 
+        cfg = load_config(ROOT / "configs" / "belgium_baseline.yaml")
+        cfg = cfg.model_copy(update={"inputs": cfg.inputs.model_copy(update={"population": "data/raw/absent.csv"})})
         with self.assertRaises(MissingInputsError):
-            load_targets(load_config(ROOT / "configs" / "belgium_baseline.yaml"))
+            load_targets(cfg)
+
+    def test_baseline_real_tables_load_and_are_marked_real(self) -> None:
+        from belgium_abm.config import load_config
+
+        t = load_targets(load_config(ROOT / "configs" / "belgium_baseline.yaml"))
+        self.assertFalse(t.any_synthetic)
+        self.assertEqual({m.reference_year for m in t.meta.values()}, {"2025"})
+        self.assertGreater(t.total_persons, 11_000_000)
+        self.assertLess(t.total_persons, 12_500_000)
 
 
 if __name__ == "__main__":

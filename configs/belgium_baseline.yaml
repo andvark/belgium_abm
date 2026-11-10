@@ -1,34 +1,49 @@
-# BASELINE configuration for REAL Belgian data -- intentionally NOT runnable yet.
+# BASELINE configuration on REAL Belgian aggregate data (reference year 2025).
 #
-# `abm init --config configs/belgium_baseline.yaml` exits with code 2 and lists the missing
-# files: no real data has been acquired and none is ever substituted. To make it runnable:
-#   1. acquire the datasets listed by `abm sources`, convert them to the layouts in data/templates/
-#      and save them under data/raw/ (never commit restricted microdata);
-#   2. set baseline_year to the single reference year the tables share and set every table's
-#      `# reference_year:` header to it;
-#   3. replace each `assumed` parameter below with an `observed`/`derived` value (with source and
-#      year) or keep it explicitly `assumed`, and set the region labels to match your tables.
+# Tables in data/real/belgium_2025/ are built by `abm fetch-data --year 2025` from Eurostat's
+# open API (national statistics supplied by Statbel / the Belgian LFS) and Statbel's BeStat API.
+# Each table's header states whether it is `observed` or `derived`; every assumption behind
+# the derived tables is listed in data/real/belgium_2025/build_manifest.json and docs/data_real.md.
+# The parameters below are modelling CONVENTIONS (status `assumed`), not Belgian statistics.
 name: belgium_baseline
-baseline_year: 0              # PLACEHOLDER: set to the real baseline year when data are acquired
+baseline_year: 2025
 allow_synthetic_demo_data: false
 regions: [BE_BRUSSELS, BE_FLANDERS, BE_WALLONIA]
 sources_registry: data/sources.yaml
 output_dir: outputs/belgium_baseline
 inputs:
-  population: data/raw/population_age_sex_region.csv
-  households: data/raw/household_templates_region.csv
-  education: data/raw/education_by_age_region.csv
-  labour_state: data/raw/labour_state_by_age_education_region.csv
-  work_arrangement: data/raw/work_arrangement_by_age_region.csv
-  tenure: null
+  population: data/real/belgium_2025/population_age_sex_region.csv
+  households: data/real/belgium_2025/household_templates_region.csv
+  education: data/real/belgium_2025/education_by_age_region.csv
+  labour_state: data/real/belgium_2025/labour_state_by_age_education_region.csv
+  work_arrangement: data/real/belgium_2025/work_arrangement_by_age_region.csv
+  tenure: data/real/belgium_2025/tenure_by_household_type_region.csv
 generator:
   n_persons: 100000
+  pool_multiplier: 10.0
+  min_pool_per_template: 200
+  max_candidate_attempts: 50
+  ipu_max_iterations: 500
+  ipu_tolerance: 1.0e-4
+  refine_swaps_per_household: 40
+  refine_counts_proposals_per_cell: 300
+  population_household_consistency_tol: 0.01
+tolerance:
+  marginal_rel_warn: 0.01
+  marginal_rel_fail: 0.05
+  cell_rel_warn: 0.10
+  cell_rel_fail: 0.25
+  cells_can_fail: false
+  min_expected_count: 20
+  small_cell_abs_tol: 3
+  rounding_slack_units: 2
+  min_group_size: 30
 parameters:
   # The values below are modelling CONVENTIONS to be confirmed, not Belgian statistics.
   adult_age:
-    {value: 18, status: assumed, source: "convention (legal age of majority) - to be confirmed by the project owner", unit: years, definition: "Age at or above which a person is an adult in household construction."}
+    {value: 18, status: assumed, source: "convention (legal age of majority)", unit: years, definition: "Age at or above which a person is an adult in household construction."}
   working_age_min:
-    {value: 15, status: assumed, source: "convention aligned with the LFS lower age limit - to be confirmed", unit: years, definition: "Lowest age for which education / labour state / arrangement are assigned."}
+    {value: 15, status: assumed, source: "convention aligned with the LFS lower age limit", unit: years, definition: "Lowest age for which education / labour state / arrangement are assigned."}
   min_parent_age_at_birth:
     {value: 16, status: assumed, source: "placeholder rule for candidate generation - to be replaced by an empirically justified bound", unit: years, definition: "Minimum parent-minus-child age accepted when linking children to parents."}
   max_parent_age_at_birth:
