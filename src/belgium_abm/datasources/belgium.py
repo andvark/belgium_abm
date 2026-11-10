@@ -50,7 +50,7 @@ ASSUMPTIONS = [
     "Households with 3+ children are split 80/20 into 3 and 4 children, and OTHER_MULTI households 75/25 into 3 and 4 adults (seed only; the maximum-entropy fit moves these to match regional totals).",
     "OTHER_MULTI requires >= 3 adults in this model; 2-adult non-couple households published as 'other type' cannot be represented separately.",
     "Population in institutions (about 1-2% of residents, mostly elderly) is not covered by the private-household tables; the household table is fitted to the full resident population, so the implied household count exceeds the published private-household count (reported in the manifest).",
-    "STUDENT is the inactive population whose main reason for inactivity is education/training (national share), applied only to ages 15-34; working students are EMPLOYED. Ages 30-34 are assumed to contain no inactive students.",
+    "STUDENT = (share of not-employed 15-24 year-olds in formal or non-formal education/training, national, Eurostat edat_lfse_18) x (national not-employed share of 15-24); applied to ages 15-24 only and capped by the regional inactive share. Non-formal training makes this an upper bound; working students are EMPLOYED; no students are assumed above 24.",
     "RETIRED is defined by convention as inactive persons aged 65+; inactive persons below 65 (including early retirees) are INACTIVE. The LFS does not publish a 'retired' status here.",
     "At ages 65+ the unemployed share of the population equals the national 65-74 share in every region (no regional unemployment rate is published for 65+).",
     "Education x labour-state joint distribution by region is reconstructed by IPF from national age x education x labour-state seeds and observed regional margins (education by age; employment and unemployment rates by age).",
@@ -71,7 +71,7 @@ class Build:
 
     # -- data access ---------------------------------------------------------------
     def es(self, code: str, **params) -> pd.DataFrame:
-        p = {**params, "time": str(self.year)}
+        p = {"time": str(self.year), **params}
         js, sha = fetch_raw(code, p, self.cache_dir, offline=self.offline)
         self.sources.append({"provider": "Eurostat", "dataset": code, "params": p, "updated": js.get("updated"), "label": js.get("label"), "sha256": sha})
         return to_frame(js)
@@ -213,7 +213,7 @@ def build_labour(b: Build, edu_tbl: pd.DataFrame) -> pd.DataFrame:
     act = b.es("lfsa_agaed", geo="BE", sex="T", unit="THS_PER")
     erate = b.es("lfst_r_lfe2emprt", geo=list(LFS_GEO.values()), sex="T", unit="PC")
     urate = b.es("lfst_r_lfu3rt", geo=list(LFS_GEO.values()), sex="T", isced11="TOTAL", unit="PC")
-    igar = b.es("lfsa_igar", geo="BE", sex="T", unit="PC_POP", reason="EDUC_TNG")
+    edu_part = b.es("edat_lfse_18", geo="BE", sex="T", wstatus="NEMP", training="FE_NFE", unit="PC")
 
     # national seeds [edu, state-group] per band: emp, une, inac as shares of population
     seeds: dict[tuple[int, int], np.ndarray] = {}
@@ -231,17 +231,13 @@ def build_labour(b: Build, edu_tbl: pd.DataFrame) -> pd.DataFrame:
         ta = sum(_national_band(act, band, e) for e in EDU)
         nat_share[band] = {"pop": tp, "emp": te / tp, "une": max(ta - te, 0) / tp}
 
-    # national student share of population (inactive, main reason education/training)
-    def g_igar(age: str) -> float:
-        s = igar[igar.age == age].value
-        return float(s.iloc[0]) / 100.0 if len(s) else 0.0
-
-    pop_tot = lambda parts: sum(_sum_age(pop, [p], "TOTAL") for p in parts)  # noqa: E731
+    # students = not-employed young people in education/training (Eurostat edat_lfse_18, formal + non-formal)
+    # x the national not-employed share; applied to ages 15-24 only.
+    pop_t = _sum_age(pop, ["Y15-24"], "TOTAL")
+    not_emp_1524 = 1.0 - _sum_age(emp, ["Y15-24"], "TOTAL") / pop_t
+    part = float(edu_part[edu_part.age == "Y15-24"].value.iloc[0]) / 100.0
     stu = {band: 0.0 for band in ATTR_BANDS}
-    stu[(15, 24)] = g_igar("Y15-24")
-    s_15_29 = g_igar("Y15-29") * pop_tot(["Y15-24", "Y25-29"])
-    s_25_29 = max(s_15_29 - stu[(15, 24)] * pop_tot(["Y15-24"]), 0.0)
-    stu[(25, 34)] = s_25_29 / pop_tot(["Y25-29", "Y30-34"])
+    stu[(15, 24)] = part * not_emp_1524
     b.diagnostics["student_share"] = {_band_label(k): v for k, v in stu.items()}
 
     rows = []
@@ -328,6 +324,53 @@ def build_tenure(b: Build) -> pd.DataFrame:
     return pd.DataFrame(rows, columns=["region", "household_type", "housing_tenure", "share"])
 
 
+def _age_num(code: str) -> int:
+    return 0 if code == "Y_LT1" else int(code[1:])
+
+
+def build_demography(b: Build, rate_year: int) -> pd.DataFrame:
+    """Observed annual death probabilities (life table qx) and fertility rates, Belgium."""
+    rows = []
+    mort = b.es("demo_mlifetable", geo="BE", sex=["M", "F"], indic_de="PROBDEATH", time=str(rate_year))
+    for sex, age, v in mort[["sex", "age", "value"]].itertuples(index=False):
+        if age.startswith("Y") and age[1:].isdigit() or age == "Y_LT1":
+            rows.append(("mortality_qx", sex, _age_num(age), float(v)))
+    fert = b.es("demo_frate", geo="BE", unit="NR", agedef="COMPLET", time=str(rate_year))
+    for age, v in fert[["age", "value"]].itertuples(index=False):
+        if age[1:].isdigit():
+            rows.append(("fertility_per_woman", "F", int(age[1:]), float(v)))
+    df = pd.DataFrame(rows, columns=["kind", "sex", "age", "rate"]).sort_values(["kind", "sex", "age"]).reset_index(drop=True)
+    return df
+
+
+def build_validation_targets(b: Build) -> pd.DataFrame:
+    """Published income-distribution indicators used only to VALIDATE simulated outputs."""
+    yr = str(b.year)
+    rows: list[tuple[str, str, float, str, str]] = []
+    d3 = b.es("ilc_di03", geo="BE", sex="T", unit="EUR", time=yr)
+    for st, nm in (("MEAN_EI", "mean_equivalised_income"), ("MED_EI", "median_equivalised_income")):
+        for age, v in d3[d3.statinfo == st][["age", "value"]].itertuples(index=False):
+            rows.append((nm, age, float(v), "EUR/year", yr))
+    g = b.es("ilc_di12", geo="BE", time=yr)
+    for age, v in g[["age", "value"]].itertuples(index=False):
+        rows.append(("gini_disposable_income", age, float(v) / 100.0, "ratio", yr))
+    a = b.es("ilc_li02", geo="BE", sex="T", unit="PC", rskpovth="B_60", statinfo="MED_EI", time=yr)
+    for age, v in a[["age", "value"]].itertuples(index=False):
+        rows.append(("at_risk_of_poverty_rate_60pct_median", age, float(v) / 100.0, "ratio", yr))
+    s = b.es("ilc_di11", geo="BE", sex="T", unit="RAT", time=yr)
+    for age, v in s[["age", "value"]].itertuples(index=False):
+        rows.append(("s80_s20", age, float(v), "ratio", yr))
+    q = b.es("ilc_di01", geo="BE", unit="EUR", statinfo="SHARE", time=yr)
+    q2 = b.es("ilc_di01", geo="BE", unit="EUR", statinfo="TC", time=yr)
+    for code, v in q[q.quant_inc.str.startswith("QU")][["quant_inc", "value"]].itertuples(index=False):
+        rows.append(("income_share_quintile", code, float(v) / 100.0, "ratio", yr))
+    for code, v in q2[q2.quant_inc.isin(["D1", "D9", "QU1", "QU4"])][["quant_inc", "value"]].itertuples(index=False):
+        rows.append(("income_cutoff", code, float(v), "EUR/year", yr))
+    return pd.DataFrame(rows, columns=["indicator", "group", "value", "unit", "income_reference_note"]).assign(
+        income_reference_note=lambda d: "EU-SILC survey year " + d["income_reference_note"] + " (income refers to the previous calendar year)"
+    )
+
+
 # -------------------------------------------------------------------- output ---------------
 def _src(b: Build, codes: list[str]) -> str:
     return "; ".join(sorted({s.get("dataset", s.get("view", "")) for s in b.sources if s.get("dataset", s.get("view")) in codes}))
@@ -349,6 +392,8 @@ def build_all(year: int, cache_dir: Path, out_dir: Path, *, offline: bool = Fals
     lab = build_labour(b, edu)
     arr = build_arrangement(b)
     ten = build_tenure(b)
+    demo = build_demography(b, rate_year=year - 1)
+    val = build_validation_targets(b)
 
     def hdr(dsid: str, status: str, unit: str, desc: str, codes: list[str]) -> dict[str, str]:
         return {"dataset_id": dsid, "synthetic_demo_only": "false", "status": status, "reference_year": str(year), "unit": unit,
@@ -362,11 +407,16 @@ def build_all(year: int, cache_dir: Path, out_dir: Path, *, offline: bool = Fals
     write_table(out_dir / "education_by_age_region.csv",
                 hdr("real_education", "observed", "share", "Highest education (ISCED 2011 3 groups) by region x age band, LFS", ["lfst_r_lfsd2pop"]), edu)
     write_table(out_dir / "labour_state_by_age_education_region.csv",
-                hdr("real_labour_state", "derived", "share", "Work-state shares by region x age band x education; IPF of national seeds to regional margins", ["lfsa_pgaed", "lfsa_egaed", "lfsa_agaed", "lfst_r_lfe2emprt", "lfst_r_lfu3rt", "lfsa_igar"]), lab)
+                hdr("real_labour_state", "derived", "share", "Work-state shares by region x age band x education; IPF of national seeds to regional margins", ["lfsa_pgaed", "lfsa_egaed", "lfsa_agaed", "lfst_r_lfe2emprt", "lfst_r_lfu3rt", "edat_lfse_18"]), lab)
     write_table(out_dir / "work_arrangement_by_age_region.csv",
                 hdr("real_work_arrangement", "derived", "share", "Employee / sole proprietor / BV owner-manager shares among employed; BV split is a proxy", ["lfsa_esgan", "lfsa_egan", BESTAT_LEGAL_FORM_VIEW]), arr)
     write_table(out_dir / "tenure_by_household_type_region.csv",
                 hdr("real_tenure", "derived", "share", "Housing tenure shares by household type (national, EU-SILC); no regional variation", ["ilc_lvho02"]), ten)
+
+    write_table(out_dir / "demography_rates.csv",
+                hdr("real_demography_rates", "observed", "annual probability / births per woman", f"Belgian life-table death probabilities and age-specific fertility, {year - 1} (latest complete year)", ["demo_mlifetable", "demo_frate"]) | {"reference_year": str(year - 1)}, demo)
+    write_table(out_dir / "validation_targets.csv",
+                hdr("real_validation_targets", "observed", "mixed", "Published EU-SILC income-distribution indicators for VALIDATION only (never used to fit the distribution)", ["ilc_di03", "ilc_di12", "ilc_li02", "ilc_di11", "ilc_di01"]), val)
 
     manifest = {
         "year": year,

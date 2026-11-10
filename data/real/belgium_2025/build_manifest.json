@@ -1,11 +1,12 @@
 {
   "year": 2025,
-  "built_utc": "2026-11-10T08:54:26.925168+00:00",
+  "built_utc": "2026-11-10T09:10:11.939897+00:00",
   "sources": [
     {
       "provider": "Eurostat",
       "dataset": "demo_r_d2jan",
       "params": {
+        "time": "2025",
         "geo": [
           "BE10",
           "BE21",
@@ -23,8 +24,7 @@
           "M",
           "F"
         ],
-        "unit": "NR",
-        "time": "2025"
+        "unit": "NR"
       },
       "updated": "2026-08-28T23:00:00+0200",
       "label": "Population on 1 January by age, sex and NUTS 2 region",
@@ -34,9 +34,9 @@
       "provider": "Eurostat",
       "dataset": "lfst_hhnhtych",
       "params": {
+        "time": "2025",
         "geo": "BE",
-        "agechild": "TOTAL",
-        "time": "2025"
+        "agechild": "TOTAL"
       },
       "updated": "2026-09-10T23:00:00+0200",
       "label": "Private households by household composition, number of children and age of youngest child",
@@ -46,13 +46,13 @@
       "provider": "Eurostat",
       "dataset": "lfst_r_lfsd2hh",
       "params": {
+        "time": "2025",
         "geo": [
           "BE10",
           "BE2",
           "BE3"
         ],
-        "deg_urb": "TOTAL",
-        "time": "2025"
+        "deg_urb": "TOTAL"
       },
       "updated": "2026-09-10T23:00:00+0200",
       "label": "Private households by degree of urbanisation and NUTS 2 region",
@@ -62,14 +62,14 @@
       "provider": "Eurostat",
       "dataset": "lfst_r_lfsd2pop",
       "params": {
+        "time": "2025",
         "geo": [
           "BE10",
           "BE2",
           "BE3"
         ],
         "sex": "T",
-        "unit": "THS_PER",
-        "time": "2025"
+        "unit": "THS_PER"
       },
       "updated": "2026-10-30T23:00:00+0100",
       "label": "Population in private households by educational attainment level and NUTS 2 region",
@@ -79,10 +79,10 @@
       "provider": "Eurostat",
       "dataset": "lfsa_pgaed",
       "params": {
+        "time": "2025",
         "geo": "BE",
         "sex": "T",
-        "unit": "THS_PER",
-        "time": "2025"
+        "unit": "THS_PER"
       },
       "updated": "2026-10-30T23:00:00+0100",
       "label": "Population in private households by educational attainment level",
@@ -92,10 +92,10 @@
       "provider": "Eurostat",
       "dataset": "lfsa_egaed",
       "params": {
+        "time": "2025",
         "geo": "BE",
         "sex": "T",
-        "unit": "THS_PER",
-        "time": "2025"
+        "unit": "THS_PER"
       },
       "updated": "2026-10-30T11:00:00+0100",
       "label": "Employed persons by educational attainment level",
@@ -105,10 +105,10 @@
       "provider": "Eurostat",
       "dataset": "lfsa_agaed",
       "params": {
+        "time": "2025",
         "geo": "BE",
         "sex": "T",
-        "unit": "THS_PER",
-        "time": "2025"
+        "unit": "THS_PER"
       },
       "updated": "2026-10-30T11:00:00+0100",
       "label": "Labour force by educational attainment level",
@@ -118,14 +118,14 @@
       "provider": "Eurostat",
       "dataset": "lfst_r_lfe2emprt",
       "params": {
+        "time": "2025",
         "geo": [
           "BE10",
           "BE2",
           "BE3"
         ],
         "sex": "T",
-        "unit": "PC",
-        "time": "2025"
+        "unit": "PC"
       },
       "updated": "2026-10-30T23:00:00+0100",
       "label": "Employment rates by NUTS 2 region",
@@ -135,6 +135,7 @@
       "provider": "Eurostat",
       "dataset": "lfst_r_lfu3rt",
       "params": {
+        "time": "2025",
         "geo": [
           "BE10",
           "BE2",
@@ -142,8 +143,7 @@
         ],
         "sex": "T",
         "isced11": "TOTAL",
-        "unit": "PC",
-        "time": "2025"
+        "unit": "PC"
       },
       "updated": "2026-10-30T23:00:00+0100",
       "label": "Unemployment rates by educational attainment level and NUTS 2 region",
@@ -151,28 +151,29 @@
     },
     {
       "provider": "Eurostat",
-      "dataset": "lfsa_igar",
+      "dataset": "edat_lfse_18",
       "params": {
+        "time": "2025",
         "geo": "BE",
         "sex": "T",
-        "unit": "PC_POP",
-        "reason": "EDUC_TNG",
-        "time": "2025"
+        "wstatus": "NEMP",
+        "training": "FE_NFE",
+        "unit": "PC"
       },
       "updated": "2026-10-30T23:00:00+0100",
-      "label": "Persons outside the labour force not seeking employment by main reason",
-      "sha256": "945e046f3f34ef4b165e22bcb2ff498fe8cb4f4d90d9e98097d2661afadd8047"
+      "label": "Participation rate of young persons in education and training by labour status (incl. NEET rates)",
+      "sha256": "19c81c0591f7630b7565f6f062a96aef4ae5cb9afd63418e421caf28df6deef1"
     },
     {
       "provider": "Eurostat",
       "dataset": "lfsa_esgan",
       "params": {
+        "time": "2025",
         "geo": "BE",
         "sex": "T",
         "unit": "THS_PER",
         "wstatus": "SELF",
-        "citizen": "TOTAL",
-        "time": "2025"
+        "citizen": "TOTAL"
       },
       "updated": "2026-10-30T11:00:00+0100",
       "label": "Self-employed persons by citizenship",
@@ -182,11 +183,11 @@
       "provider": "Eurostat",
       "dataset": "lfsa_egan",
       "params": {
+        "time": "2025",
         "geo": "BE",
         "sex": "T",
         "unit": "THS_PER",
-        "citizen": "TOTAL",
-        "time": "2025"
+        "citizen": "TOTAL"
       },
       "updated": "2026-10-30T11:00:00+0100",
       "label": "Employed persons by citizenship",
@@ -201,14 +202,121 @@
       "provider": "Eurostat",
       "dataset": "ilc_lvho02",
       "params": {
+        "time": "2025",
         "geo": "BE",
         "rskpovth": "TOTAL",
-        "unit": "PC",
-        "time": "2025"
+        "unit": "PC"
       },
       "updated": "2026-10-20T23:00:00+0200",
       "label": "Distribution of population by tenure status, type of household and income group",
       "sha256": "ae91c7daa6537abe8dd2a80ae0684aa1303bb8a2e13dfdd8f705d1b463f4db8e"
+    },
+    {
+      "provider": "Eurostat",
+      "dataset": "demo_mlifetable",
+      "params": {
+        "time": "2024",
+        "geo": "BE",
+        "sex": [
+          "M",
+          "F"
+        ],
+        "indic_de": "PROBDEATH"
+      },
+      "updated": "2026-09-25T23:00:00+0200",
+      "label": "Life table by age and sex",
+      "sha256": "5b46bafc7b494ccc0f4094b709874f417d4c9c2bf4a2c30c8b16f46afbef9a5d"
+    },
+    {
+      "provider": "Eurostat",
+      "dataset": "demo_frate",
+      "params": {
+        "time": "2024",
+        "geo": "BE",
+        "unit": "NR",
+        "agedef": "COMPLET"
+      },
+      "updated": "2026-09-30T23:00:00+0200",
+      "label": "Fertility rates by age",
+      "sha256": "e6a84e9d5410b6360ed22f2260f465154808bedd86c2b4a0886294d3cff52c7d"
+    },
+    {
+      "provider": "Eurostat",
+      "dataset": "ilc_di03",
+      "params": {
+        "time": "2025",
+        "geo": "BE",
+        "sex": "T",
+        "unit": "EUR"
+      },
+      "updated": "2026-10-20T11:00:00+0200",
+      "label": "Mean and median income by age and sex",
+      "sha256": "fdc8d7eee16052ea0b57a4546d3d5e2ef2e980683967be13f59ee72382452727"
+    },
+    {
+      "provider": "Eurostat",
+      "dataset": "ilc_di12",
+      "params": {
+        "time": "2025",
+        "geo": "BE"
+      },
+      "updated": "2026-11-06T11:00:00+0100",
+      "label": "Gini coefficient of equivalised disposable income by age",
+      "sha256": "61baf7e56ef587c7c9704a13d14fb7a453170dd1bb49dd9995b4e58fe79b8b5c"
+    },
+    {
+      "provider": "Eurostat",
+      "dataset": "ilc_li02",
+      "params": {
+        "time": "2025",
+        "geo": "BE",
+        "sex": "T",
+        "unit": "PC",
+        "rskpovth": "B_60",
+        "statinfo": "MED_EI"
+      },
+      "updated": "2026-10-20T11:00:00+0200",
+      "label": "At-risk-of-poverty rate by poverty threshold, age and sex - EU-SILC and ECHP surveys",
+      "sha256": "01d051582426df5936c2a83cd5f372f28e41d9da7d682ccb4bdd75793c9ed138"
+    },
+    {
+      "provider": "Eurostat",
+      "dataset": "ilc_di11",
+      "params": {
+        "time": "2025",
+        "geo": "BE",
+        "sex": "T",
+        "unit": "RAT"
+      },
+      "updated": "2026-10-20T11:00:00+0200",
+      "label": "Income quintile share ratio S80/S20 for disposable income by sex and age group",
+      "sha256": "0b0ae703906a9a20dfa8b02afb8c9c482c3d5def39e5711903ba7d7bea06a5fb"
+    },
+    {
+      "provider": "Eurostat",
+      "dataset": "ilc_di01",
+      "params": {
+        "time": "2025",
+        "geo": "BE",
+        "unit": "EUR",
+        "statinfo": "SHARE"
+      },
+      "updated": "2026-10-23T23:00:00+0200",
+      "label": "Distribution of income by quantiles",
+      "sha256": "90b17eee08764f10ea4d07c820c2d8c420f70cbc1da3c216ce52fec2335d0657"
+    },
+    {
+      "provider": "Eurostat",
+      "dataset": "ilc_di01",
+      "params": {
+        "time": "2025",
+        "geo": "BE",
+        "unit": "EUR",
+        "statinfo": "TC"
+      },
+      "updated": "2026-10-23T23:00:00+0200",
+      "label": "Distribution of income by quantiles",
+      "sha256": "c26ee6cdbf2e811823ed18224d4cf78b9f53f98b1ece0900619ab4f65d5b500d"
     }
   ],
   "assumptions": [
@@ -216,7 +324,7 @@
     "Households with 3+ children are split 80/20 into 3 and 4 children, and OTHER_MULTI households 75/25 into 3 and 4 adults (seed only; the maximum-entropy fit moves these to match regional totals).",
     "OTHER_MULTI requires >= 3 adults in this model; 2-adult non-couple households published as 'other type' cannot be represented separately.",
     "Population in institutions (about 1-2% of residents, mostly elderly) is not covered by the private-household tables; the household table is fitted to the full resident population, so the implied household count exceeds the published private-household count (reported in the manifest).",
-    "STUDENT is the inactive population whose main reason for inactivity is education/training (national share), applied only to ages 15-34; working students are EMPLOYED. Ages 30-34 are assumed to contain no inactive students.",
+    "STUDENT = (share of not-employed 15-24 year-olds in formal or non-formal education/training, national, Eurostat edat_lfse_18) x (national not-employed share of 15-24); applied to ages 15-24 only and capped by the regional inactive share. Non-formal training makes this an upper bound; working students are EMPLOYED; no students are assumed above 24.",
     "RETIRED is defined by convention as inactive persons aged 65+; inactive persons below 65 (including early retirees) are INACTIVE. The LFS does not publish a 'retired' status here.",
     "At ages 65+ the unemployed share of the population equals the national 65-74 share in every region (no regional unemployment rate is published for 65+).",
     "Education x labour-state joint distribution by region is reconstructed by IPF from national age x education x labour-state seeds and observed regional margins (education by age; employment and unemployment rates by age).",
@@ -256,8 +364,8 @@
       }
     },
     "student_share": {
-      "15-24": 0.063,
-      "25-34": 0.009380914194065755,
+      "15-24": 0.45943703170028816,
+      "25-34": 0.0,
       "35-44": 0.0,
       "45-54": 0.0,
       "55-64": 0.0,

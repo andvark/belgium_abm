@@ -1,0 +1,82 @@
+# ILLUSTRATIVE STYLISED POLICY -- NOT BELGIAN LAW.
+#
+# Every number below is a `scenario` placeholder chosen only so the fiscal engine, the lifecycle
+# model and the scenario machinery can run end to end. None of them was taken from Belgian
+# legislation, and none may be quoted as a Belgian rate. To obtain Belgian results, copy this
+# file, replace each value with a figure verified against an official source (FPS Finance, FPS
+# Social Security / RSZ-ONSS, INASTI/RSVZ, regional child-benefit agencies, ...), set
+# `verified: true` and fill `source` for each block. Outputs carry the banner until then.
+name: illustrative_stylised
+policy_year: 2025
+verified: false
+banner: "ILLUSTRATIVE STYLISED POLICY - NOT BELGIAN LAW; fiscal results are mechanical demonstrations, not estimates of Belgian policy effects"
+components:
+  personal_income_tax_schedule:
+    status: scenario
+    source: "illustrative placeholder"
+    basic_allowance_eur: 9000          # per adult, deducted from taxable income
+    child_allowance_eur: 1500          # per dependent child, deducted from the first adult's base
+    brackets:                          # [upper limit of taxable income (EUR), marginal rate]; null = no limit
+      - [14000, 0.25]
+      - [30000, 0.40]
+      - [55000, 0.45]
+      - [null, 0.50]
+  employee_social_contributions:
+    status: scenario
+    source: "illustrative placeholder"
+    rate: 0.10
+  employer_social_contributions:
+    status: scenario
+    source: "illustrative placeholder"
+    rate: 0.25
+  self_employed_social_contributions:
+    status: scenario
+    source: "illustrative placeholder"
+    rate: 0.17                         # on net profit (sole proprietors) and on director pay (BV owner-managers)
+    min_annual_eur: 800
+  corporate_income_tax:
+    status: scenario
+    source: "illustrative placeholder"
+    rate: 0.25
+  dividend_withholding_tax:
+    status: scenario
+    source: "illustrative placeholder"
+    rate: 0.30                         # final tax on distributed dividends
+  capital_income_tax:
+    status: scenario
+    source: "illustrative placeholder"
+    rate: 0.15                         # final tax on interest / other capital income
+  vat_by_consumption_group:
+    status: scenario
+    source: "illustrative placeholder"
+    effective_rate: 0.15               # simplified single effective rate on household consumption
+  child_benefits_regionalised:
+    status: scenario
+    source: "illustrative placeholder"
+    per_child_eur: {BE_BRUSSELS: 1700, BE_FLANDERS: 1600, BE_WALLONIA: 1700}
+  unemployment_benefits:
+    status: scenario
+    source: "illustrative placeholder"
+    replacement_rate: 0.60
+    max_annual_eur: 26000
+    min_annual_eur: 12000
+    max_years_by_age:                  # [age upper bound, maximum consecutive years of benefit]
+      - [200, 3]
+  pensions:
+    status: scenario
+    source: "illustrative placeholder"
+    retirement_age: 65
+    accrual_rate_per_year: 0.0125      # share of covered earnings accrued as annual pension per year worked
+    min_annual_eur: 14000
+    max_annual_eur: 38000
+    self_employed_accrual_factor: 0.6   # accrual per euro of profit / director pay relative to employee wages
+    annuity_factor: 15.0               # converts annual entitlement into a capitalised promise (reported separately from wealth)
+  disability_and_other_benefits:
+    status: scenario
+    source: "illustrative placeholder"
+    social_assistance_floor_per_equivalent_eur: 12500   # top-up so equivalised disposable income >= floor
+    asset_limit_eur: 20000                              # no top-up above this level of financial assets
+  targeted_rebates:
+    status: scenario
+    source: "illustrative placeholder"
+    low_income_tax_credit_eur: 0

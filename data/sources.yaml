@@ -73,7 +73,7 @@
   - lfsa_agaed
   - lfst_r_lfe2emprt
   - lfst_r_lfu3rt
-  - lfsa_igar
+  - edat_lfse_18
   method_notes: Education by region x age is OBSERVED (lfst_r_lfsd2pop). Work-state by region x age x education is DERIVED
     by IPF from national seeds (lfsa_pgaed/egaed/agaed) and regional employment/unemployment rates (lfst_r_lfe2emprt, lfst_r_lfu3rt).
     ILO definitions (LFS), not registered unemployment.

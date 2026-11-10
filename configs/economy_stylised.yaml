@@ -1,0 +1,68 @@
+# STYLISED ECONOMY PARAMETERS -- every entry is an ASSUMPTION (status `assumed`), not an estimate.
+#
+# They exist so the lifecycle model can run. None is estimated from longitudinal Belgian data (that data
+# is restricted). The only empirical anchoring is the optional single-point level calibration
+# (calibrate_level_to_target) to the published median equivalised disposable income. All distribution
+# outputs (Gini, poverty, S80/S20, ...) are then VALIDATION comparisons against published figures, not fits.
+name: economy_stylised
+banner: "STYLISED ECONOMY - behavioural and wealth parameters are assumptions, not estimates"
+parameters:
+  wage_base_low: {value: 30000, status: assumed, source: "stylised modelling assumption", unit: "EUR/year", definition: "Gross annual full-time labour earnings at age 40, low education (before level calibration)"}
+  wage_base_medium: {value: 40000, status: assumed, source: "stylised modelling assumption", unit: "EUR/year", definition: "Same, medium education"}
+  wage_base_high: {value: 58000, status: assumed, source: "stylised modelling assumption", unit: "EUR/year", definition: "Same, high education"}
+  wage_age_slope: {value: 0.25, status: assumed, source: "stylised modelling assumption", unit: "log points per decade", definition: "Linear term of the log-earnings age profile, x=(age-40)/10"}
+  wage_age_curvature: {value: -0.15, status: assumed, source: "stylised modelling assumption", unit: "log points per decade^2", definition: "Quadratic term of the log-earnings age profile"}
+  skill_sigma: {value: 0.3, status: assumed, source: "stylised modelling assumption", unit: "log points", definition: "SD of the persistent individual skill effect on log earnings"}
+  wage_shock_rho: {value: 0.9, status: assumed, source: "stylised modelling assumption", unit: "none", definition: "Persistence of the transitory log-earnings residual"}
+  wage_shock_sigma: {value: 0.08, status: assumed, source: "stylised modelling assumption", unit: "log points", definition: "Innovation SD of the log-earnings residual"}
+  real_wage_growth: {value: 0.01, status: assumed, source: "stylised modelling assumption", unit: "per year", definition: "Common real growth of earnings and productivity (constant prices)"}
+  parttime_share_f: {value: 0.3, status: assumed, source: "stylised modelling assumption", unit: "share", definition: "Share of employed women working part-time"}
+  parttime_share_m: {value: 0.1, status: assumed, source: "stylised modelling assumption", unit: "share", definition: "Share of employed men working part-time"}
+  parttime_hours: {value: 0.6, status: assumed, source: "stylised modelling assumption", unit: "fraction of full time", definition: "Hours fraction of part-time workers"}
+  sole_prop_productivity_multiplier: {value: 1.0, status: assumed, source: "stylised modelling assumption", unit: "ratio", definition: "Owner value added of a sole proprietor relative to the employee-equivalent labour cost (1 = comparable productivity)"}
+  bv_productivity_multiplier: {value: 1.0, status: assumed, source: "stylised modelling assumption", unit: "ratio", definition: "Same for a BV owner-manager"}
+  business_shock_sigma: {value: 0.25, status: assumed, source: "stylised modelling assumption", unit: "log points", definition: "Innovation SD of the self-employed business-income shock"}
+  business_shock_rho: {value: 0.6, status: assumed, source: "stylised modelling assumption", unit: "none", definition: "Persistence of the business-income shock"}
+  intermediate_cost_ratio: {value: 0.4, status: assumed, source: "stylised modelling assumption", unit: "share of turnover", definition: "Intermediate (operating) costs as a share of turnover"}
+  sole_prop_accounting_cost: {value: 1000, status: assumed, source: "stylised modelling assumption", unit: "EUR/year", definition: "Bookkeeping cost of a sole proprietor"}
+  bv_accounting_cost: {value: 4000, status: assumed, source: "stylised modelling assumption", unit: "EUR/year", definition: "Accounting, filing and administration cost of a BV"}
+  bv_director_pay_share: {value: 0.6, status: assumed, source: "stylised modelling assumption", unit: "share of surplus", definition: "Share of the BV surplus (after accounting cost) paid out as director remuneration"}
+  bv_payout_ratio: {value: 0.3, status: assumed, source: "stylised modelling assumption", unit: "share of post-tax profit", definition: "Share of post-tax BV profit distributed as dividends"}
+  bv_initial_retained_years: {value: 3.0, status: assumed, source: "stylised modelling assumption", unit: "years of retained profit", definition: "Initial BV retained earnings as a multiple of one year of retained profit"}
+  sole_prop_exit_rate: {value: 0.05, status: assumed, source: "stylised modelling assumption", unit: "per year", definition: "Annual probability a sole proprietor stops (voluntarily or by failure)"}
+  bv_exit_rate: {value: 0.03, status: assumed, source: "stylised modelling assumption", unit: "per year", definition: "Annual probability a BV owner-manager stops (voluntarily), besides insolvency"}
+  entry_wealth_sensitivity: {value: 1.0, status: assumed, source: "stylised modelling assumption", unit: "log odds per unit of wealth rank", definition: "Effect of household wealth rank (0..1, centred) on the odds of entering self-employment"}
+  entry_education_high_multiplier: {value: 1.2, status: assumed, source: "stylised modelling assumption", unit: "ratio", definition: "Odds multiplier for high-education employees entering self-employment"}
+  job_separation_rate: {value: 0.03, status: assumed, source: "stylised modelling assumption", unit: "per year", definition: "Annual probability an employee loses the job (inflow to unemployment)"}
+  unemployment_reentry_cap: {value: 0.6, status: assumed, source: "stylised modelling assumption", unit: "per year", definition: "Upper bound on the annual job-finding probability"}
+  education_wealth_sensitivity: {value: 1.5, status: assumed, source: "stylised modelling assumption", unit: "log odds per unit of parental wealth rank", definition: "Effect of parental wealth rank on the odds of upgrading education"}
+  skill_inheritance: {value: 0.4, status: assumed, source: "stylised modelling assumption", unit: "correlation-like weight", definition: "Weight of the mother's skill in a child's skill (rest is independent)"}
+  separation_rate: {value: 0.012, status: assumed, source: "stylised modelling assumption", unit: "per year", definition: "Annual probability a couple separates"}
+  partnering_rate: {value: 0.05, status: assumed, source: "stylised modelling assumption", unit: "per year", definition: "Annual probability a single adult aged 20-60 enters a new partnership"}
+  leave_home_prob: {value: 0.12, status: assumed, source: "stylised modelling assumption", unit: "per year", definition: "Annual probability a 20-29 year-old living with parents leaves to form a single household"}
+  fin_return: {value: 0.015, status: assumed, source: "stylised modelling assumption", unit: "per year", definition: "Real return on household financial assets"}
+  house_price_growth: {value: 0.01, status: assumed, source: "stylised modelling assumption", unit: "per year", definition: "Real growth of housing values"}
+  mortgage_rate: {value: 0.03, status: assumed, source: "stylised modelling assumption", unit: "per year", definition: "Interest rate on mortgages"}
+  mortgage_repay_rate: {value: 0.05, status: assumed, source: "stylised modelling assumption", unit: "per year", definition: "Principal repaid per year as a share of the opening balance"}
+  house_to_income: {value: 4.5, status: assumed, source: "stylised modelling assumption", unit: "ratio", definition: "Housing value / household labour income for owners at initialisation and purchase"}
+  housing_value_sigma: {value: 0.4, status: assumed, source: "stylised modelling assumption", unit: "log points", definition: "Dispersion of housing values around the income-based level"}
+  fin_assets_multiple_max: {value: 1.2, status: assumed, source: "stylised modelling assumption", unit: "years of household income", definition: "Asymptotic financial assets as a multiple of annual household income"}
+  fin_assets_age_tau: {value: 18.0, status: assumed, source: "stylised modelling assumption", unit: "years", definition: "Time scale of asset accumulation with age (from age 20)"}
+  fin_assets_sigma: {value: 1.0, status: assumed, source: "stylised modelling assumption", unit: "log points", definition: "Dispersion of financial assets around the age-income profile"}
+  fin_assets_skill_coupling: {value: 0.5, status: assumed, source: "stylised modelling assumption", unit: "weight", definition: "Weight of the head's skill rank in the asset draw (income-wealth coupling)"}
+  home_purchase_prob: {value: 0.05, status: assumed, source: "stylised modelling assumption", unit: "per year", definition: "Annual probability a renter aged 25-45 with enough savings buys a home"}
+  home_purchase_down_payment: {value: 0.2, status: assumed, source: "stylised modelling assumption", unit: "share of price", definition: "Down payment required from financial assets"}
+  consumption_floor_per_equivalent: {value: 11000, status: assumed, source: "stylised modelling assumption", unit: "EUR/year", definition: "Minimum consumption per equivalence unit (subsistence convention)"}
+  marginal_propensity_to_consume: {value: 0.85, status: assumed, source: "stylised modelling assumption", unit: "share", definition: "Share of disposable income above the floor that is consumed"}
+  retiree_wealth_drawdown: {value: 0.04, status: assumed, source: "stylised modelling assumption", unit: "per year", definition: "Share of financial assets consumed per year by retired households, in addition to income"}
+  unemployment_eligibility_share: {value: 0.9, status: assumed, source: "stylised modelling assumption", unit: "share", definition: "Share of job losers entitled to unemployment benefits"}
+  start_work_age: {value: 21, status: assumed, source: "stylised modelling assumption", unit: "years", definition: "Typical age at which a career (and pension accrual) starts, for initial pension rights"}
+  calibrate_level_to_target: {value: true, status: assumed, source: "stylised modelling assumption", unit: "flag", definition: "Scale all earnings and wealth so the simulated median equivalised disposable income equals the published target"}
+  mortality_multiplier: {value: 1.0, status: assumed, source: "stylised modelling assumption", unit: "ratio", definition: "Scenario knob: multiplier on observed death probabilities"}
+  fertility_multiplier: {value: 1.0, status: assumed, source: "stylised modelling assumption", unit: "ratio", definition: "Scenario knob: multiplier on observed age-specific fertility"}
+  male_birth_share: {value: 0.5, status: assumed, source: "stylised modelling assumption", unit: "share", definition: "Share of newborns assigned male (convention)"}
+  business_entry_cost_sole_prop: {value: 3000, status: assumed, source: "stylised modelling assumption", unit: "EUR", definition: "Start-up cost of becoming a sole proprietor, paid from household financial assets"}
+  bv_capital_contribution: {value: 12000, status: assumed, source: "stylised modelling assumption", unit: "EUR", definition: "Capital paid into a new BV (becomes firm equity), paid from household financial assets"}
+  max_entry_prob: {value: 0.3, status: assumed, source: "stylised modelling assumption", unit: "per year", definition: "Upper bound on the annual probability of entering self-employment"}
+  labour_force_exit_rate: {value: 0.02, status: assumed, source: "stylised modelling assumption", unit: "per year", definition: "Annual probability an employee leaves the labour force (care, illness, ...); the re-entry rate from inactivity is derived so observed shares are stationary"}
+  inactive_entry_to_employment_share: {value: 0.85, status: assumed, source: "stylised modelling assumption", unit: "share", definition: "Share of labour-force entrants from inactivity who start in employment (rest start unemployed)"}
