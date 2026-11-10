@@ -1,0 +1,161 @@
+{
+  "baseline_year": 2025,
+  "config": "belgium_baseline",
+  "config_hash_sha256": "1daf38e81d21539ddf09f0e9d8084ea4e795bbbd32531f12f41b8f9553278d70",
+  "economy": {
+    "all_parameters_status": [
+      "assumed"
+    ],
+    "banner": "STYLISED ECONOMY - behavioural and wealth parameters are assumptions, not estimates",
+    "name": "economy_stylised"
+  },
+  "horizon_years": 30,
+  "intergenerational": {
+    "0": {
+      "intergenerational_wealth_rank_correlation": 0.2812059310303555,
+      "intergenerational_wealth_rank_correlation_n": 3881.0
+    },
+    "1": {
+      "intergenerational_wealth_rank_correlation": 0.29044506973596684,
+      "intergenerational_wealth_rank_correlation_n": 3864.0
+    },
+    "2": {
+      "intergenerational_wealth_rank_correlation": 0.28726045965672464,
+      "intergenerational_wealth_rank_correlation_n": 3874.0
+    },
+    "3": {
+      "intergenerational_wealth_rank_correlation": 0.24407073410808053,
+      "intergenerational_wealth_rank_correlation_n": 3870.0
+    },
+    "4": {
+      "intergenerational_wealth_rank_correlation": 0.2861135707452142,
+      "intergenerational_wealth_rank_correlation_n": 3872.0
+    },
+    "5": {
+      "intergenerational_wealth_rank_correlation": 0.2779223149330232,
+      "intergenerational_wealth_rank_correlation_n": 3883.0
+    },
+    "6": {
+      "intergenerational_wealth_rank_correlation": 0.27584028231586477,
+      "intergenerational_wealth_rank_correlation_n": 3890.0
+    },
+    "7": {
+      "intergenerational_wealth_rank_correlation": 0.26781166775297516,
+      "intergenerational_wealth_rank_correlation_n": 3888.0
+    },
+    "8": {
+      "intergenerational_wealth_rank_correlation": 0.2898059985789731,
+      "intergenerational_wealth_rank_correlation_n": 3883.0
+    },
+    "9": {
+      "intergenerational_wealth_rank_correlation": 0.29163737651103216,
+      "intergenerational_wealth_rank_correlation_n": 3876.0
+    }
+  },
+  "invariant_failures": [],
+  "label": "baseline",
+  "level_calibration": [
+    {
+      "achieved_median": 31188.88592555033,
+      "level_scale": 1.6020879742997471,
+      "median_before_final_step": 31188.88592555033,
+      "replicate": 0,
+      "seed": 42,
+      "target_median": 31299.0
+    },
+    {
+      "achieved_median": 31168.138746511006,
+      "level_scale": 1.5966840681424939,
+      "median_before_final_step": 31168.138746511006,
+      "replicate": 1,
+      "seed": 43,
+      "target_median": 31299.0
+    },
+    {
+      "achieved_median": 31202.484919669212,
+      "level_scale": 1.5915680509938415,
+      "median_before_final_step": 31202.484919669212,
+      "replicate": 2,
+      "seed": 44,
+      "target_median": 31299.0
+    },
+    {
+      "achieved_median": 31117.840792025014,
+      "level_scale": 1.5867472500833921,
+      "median_before_final_step": 31117.840792025014,
+      "replicate": 3,
+      "seed": 45,
+      "target_median": 31299.0
+    },
+    {
+      "achieved_median": 31184.32970191301,
+      "level_scale": 1.5754308402415433,
+      "median_before_final_step": 31184.32970191301,
+      "replicate": 4,
+      "seed": 46,
+      "target_median": 31299.0
+    },
+    {
+      "achieved_median": 31188.77066189204,
+      "level_scale": 1.5727967607615658,
+      "median_before_final_step": 31188.77066189204,
+      "replicate": 5,
+      "seed": 47,
+      "target_median": 31299.0
+    },
+    {
+      "achieved_median": 31147.765259234613,
+      "level_scale": 1.6163231179133555,
+      "median_before_final_step": 31147.765259234613,
+      "replicate": 6,
+      "seed": 48,
+      "target_median": 31299.0
+    },
+    {
+      "achieved_median": 31171.99996444253,
+      "level_scale": 1.5803126327345822,
+      "median_before_final_step": 31171.99996444253,
+      "replicate": 7,
+      "seed": 49,
+      "target_median": 31299.0
+    },
+    {
+      "achieved_median": 31152.542544332722,
+      "level_scale": 1.585847620538141,
+      "median_before_final_step": 31152.542544332722,
+      "replicate": 8,
+      "seed": 50,
+      "target_median": 31299.0
+    },
+    {
+      "achieved_median": 31165.999480437,
+      "level_scale": 1.5823942562444302,
+      "median_before_final_step": 31165.999480437,
+      "replicate": 9,
+      "seed": 51,
+      "target_median": 31299.0
+    }
+  ],
+  "max_cash_identity_residual_eur": 1.862645149230957e-09,
+  "package_version": "0.1.0",
+  "policy": {
+    "banner": "ILLUSTRATIVE STYLISED POLICY - NOT BELGIAN LAW; fiscal results are mechanical demonstrations, not estimates of Belgian policy effects",
+    "fingerprint": "3bfc433169af987a",
+    "name": "illustrative_stylised",
+    "verified": false
+  },
+  "seeds": [
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51
+  ],
+  "static_shadow_scenario": "corporate_tax_plus_5pp",
+  "weighting_unit": "uniform person weights; households scaled by member share; incomes equivalised (modified OECD)"
+}

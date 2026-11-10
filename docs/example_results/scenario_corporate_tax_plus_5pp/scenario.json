@@ -1,0 +1,9 @@
+{
+  "description": "Raise the corporate income tax rate by 5 percentage points; everything else unchanged.",
+  "economy_overrides": {},
+  "name": "corporate_tax_plus_5pp",
+  "policy_deltas": {
+    "corporate_income_tax.rate": 0.05
+  },
+  "policy_overrides": {}
+}

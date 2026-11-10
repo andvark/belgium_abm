@@ -1,0 +1,18 @@
+{
+  "assets_years_of_income": 0.5,
+  "banner": "ILLUSTRATIVE STYLISED POLICY - NOT BELGIAN LAW; fiscal results are mechanical demonstrations, not estimates of Belgian policy effects",
+  "bv_productivity_multiplier": 1.0,
+  "children": 2,
+  "education": "MEDIUM",
+  "level_scale": 1.5710419948854968,
+  "partner": "employee",
+  "policy": "illustrative_stylised",
+  "policy_fingerprint": "3bfc433169af987a",
+  "policy_verified": false,
+  "region": "BE_FLANDERS",
+  "replicates": 500,
+  "seed": 42,
+  "sole_prop_productivity_multiplier": 1.0,
+  "start_age": 30,
+  "years": 40
+}
