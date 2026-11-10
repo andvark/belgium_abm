@@ -1,0 +1,4 @@
+name: retirement_age_67
+description: Statutory retirement age 67 instead of the baseline value (behavioural: everyone works and accrues longer).
+policy_overrides:
+  pensions.retirement_age: 67

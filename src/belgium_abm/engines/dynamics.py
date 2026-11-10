@@ -356,7 +356,7 @@ def _liquidate_firm(st: SimState, owner_ids: np.ndarray, policy: PolicyRules) ->
     hid = st.persons.loc[f["owner_person_id"].to_numpy(), "household_id"].to_numpy()
     net = np.clip(f["equity"].to_numpy(), 0.0, None) * (1 - wht)
     hh_add(st, "financial_assets", hid, net)
-    st.counters["gov:dividend_withholding_tax"] = st.counters.get("gov:dividend_withholding_tax", 0.0) + float((np.clip(f["equity"], 0, None) * wht).sum() * st.person_weight)
+    st.counters["gov:liquidation_dividends_gross"] = st.counters.get("gov:liquidation_dividends_gross", 0.0) + float(np.clip(f["equity"], 0, None).sum() * st.person_weight)
     st.log("bv_liquidations", len(f))
     st.firms = st.firms.drop(f.index)
 

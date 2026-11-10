@@ -1,0 +1,5 @@
+# Scenario: corporate income tax +5 percentage points (relative to the policy file in use).
+name: corporate_tax_plus_5pp
+description: Raise the corporate income tax rate by 5 percentage points; everything else unchanged.
+policy_deltas:
+  corporate_income_tax.rate: 0.05

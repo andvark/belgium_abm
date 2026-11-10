@@ -49,6 +49,18 @@ class ToleranceConfig(BaseModel):
     min_group_size: int = 30
 
 
+class SimulationConfig(BaseModel):
+    """Inputs of the dynamic model (Phases 2-4). Optional: the population generator does not need them."""
+
+    model_config = ConfigDict(extra="forbid")
+    policy_file: str
+    economy_file: str
+    demography_rates: str
+    validation_targets: str
+    years: int = Field(default=30, gt=0)
+    min_group_size: int = Field(default=30, gt=0)
+
+
 class ModelConfig(BaseModel):
     model_config = ConfigDict(extra="forbid")
     name: str
@@ -61,6 +73,7 @@ class ModelConfig(BaseModel):
     generator: GeneratorConfig = GeneratorConfig()
     tolerance: ToleranceConfig = ToleranceConfig()
     parameters: dict[str, Param]
+    simulation: SimulationConfig | None = None
 
     _root: Path = PrivateAttr(default=Path("."))
 

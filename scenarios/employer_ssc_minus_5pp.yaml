@@ -1,0 +1,4 @@
+name: employer_ssc_minus_5pp
+description: Cut employer social contributions by 5 percentage points (legal payer: employers; incidence on wages is NOT modelled).
+policy_deltas:
+  employer_social_contributions.rate: -0.05

@@ -40,6 +40,7 @@ class SimResult:
     max_cash_identity_residual: float = 0.0
     invariant_failures: list[str] = field(default_factory=list)
     extras: dict[str, float] = field(default_factory=dict)
+    snapshots: dict[int, pd.DataFrame] = field(default_factory=dict)
 
 
 def _median_eq_disp(st: SimState, policy: PolicyRules) -> float:
@@ -132,17 +133,26 @@ def run_simulation(st0: SimState, policy: PolicyRules, years: int, *, shadow: di
     fiscal: list[dict] = []
     ev_rows: list[dict] = []
     failures: list[str] = []
+    snaps: dict[int, pd.DataFrame] = {}
     max_res = 0.0
     shadow = shadow or {}
     gyears = set(group_years) if group_years is not None else {0, years // 2, years}
+
+    liq = {"gross": 0.0}
+
+    def add_liquidation(fl, pol: PolicyRules):
+        fl.gov["dividend_withholding_tax"] += pol.g("dividend_withholding_tax", "rate") * liq["gross"]
+        return fl
 
     def record(fl) -> None:
         metrics.append(yearly_metrics(st, fl, label))
         fiscal.append(fiscal_row(st, fl, label))
         if st.year in gyears:
             groups.append(group_metrics(st, fl, label, min_group_size))
+            snaps[st.year] = pd.DataFrame({"eq_disp": fl.h["eq_disp"].reindex(st.persons["household_id"]).to_numpy(),
+                                          "wq0": st.persons["wq0"].to_numpy(), "age": st.persons["age"].to_numpy()}, index=st.persons.index)
         for name, pol in shadow.items():
-            fls = compute_flows(st, pol)
+            fls = add_liquidation(compute_flows(st, pol), pol)
             tag = f"static:{name}"
             metrics.append(yearly_metrics(st, fls, tag))
             fiscal.append(fiscal_row(st, fls, tag))
@@ -154,12 +164,11 @@ def run_simulation(st0: SimState, policy: PolicyRules, years: int, *, shadow: di
         step_demography(st)
         step_education(st)
         step_work(st, policy)
-        fl = compute_flows(st, policy)
+        liq["gross"] = st.counters.pop("gov:liquidation_dividends_gross", 0.0)
+        fl = add_liquidation(compute_flows(st, policy), policy)
         record(fl)
         fl = step_finances(st, policy, fl)
-        gov = dict(fl.gov)
-        gov["dividend_withholding_tax"] += st.counters.pop("gov:dividend_withholding_tax", 0.0)
-        for cat, amt in gov.items():
+        for cat, amt in fl.gov.items():
             payer, recipient = LEDGER_PARTIES[cat]
             ledger.post(period=st.year, payer_id=payer, recipient_id=recipient, category=cat, amount_eur=round(amt, 2), policy_year=policy.policy_year)
         a = st.audit
@@ -182,4 +191,4 @@ def run_simulation(st0: SimState, policy: PolicyRules, years: int, *, shadow: di
         extras["intergenerational_wealth_rank_correlation"] = float(pd.Series(kids["wr0"].to_numpy()).corr(pd.Series(own), method="spearman"))
         extras["intergenerational_wealth_rank_correlation_n"] = float(len(kids))
     return SimResult(pd.DataFrame(metrics), pd.concat(groups, ignore_index=True) if groups else pd.DataFrame(), pd.DataFrame(fiscal),
-                     pd.DataFrame(ev_rows), mob, ledger, st, policy.banner, max_res, failures, extras)
+                     pd.DataFrame(ev_rows), mob, ledger, st, policy.banner, max_res, failures, extras, snaps)

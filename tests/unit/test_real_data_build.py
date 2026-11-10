@@ -53,7 +53,8 @@ class RealTablesTests(unittest.TestCase):
         for f in REAL.glob("*.csv"):
             meta, _ = self.table(f.name)
             self.assertEqual(meta["synthetic_demo_only"], "false", f.name)
-            self.assertEqual(meta["reference_year"], "2025", f.name)
+            expected = "2024" if f.name == "demography_rates.csv" else "2025"  # latest complete vital-statistics year
+            self.assertEqual(meta["reference_year"], expected, f.name)
             self.assertIn(meta["status"], {"observed", "derived"}, f.name)
 
     def test_population_totals_are_plausible(self) -> None:

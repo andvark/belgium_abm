@@ -55,3 +55,32 @@ def population_pyramid(persons: pd.DataFrame, targets: TargetBundle, cfg: ModelC
     path.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(path, dpi=110)
     plt.close(fig)
+
+
+def plot_timeseries(metrics, columns: dict[str, str], path, title: str, banner: str, scenario_col: str = "scenario") -> None:
+    """Small-multiples line chart of metrics by year; shaded 5-95% band across replicates when present."""
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    n = len(columns)
+    fig, axes = plt.subplots(1, n, figsize=(4.2 * n, 3.8), squeeze=False)
+    for ax, (col, label) in zip(axes[0], columns.items(), strict=True):
+        for scen, g in metrics.groupby(scenario_col):
+            if str(scen).startswith("static:"):
+                continue
+            by = g.groupby("year")[col]
+            mean = by.mean()
+            ax.plot(mean.index, mean.values, label=str(scen))
+            if g["replicate"].nunique() > 1:
+                ax.fill_between(mean.index, by.quantile(0.05).values, by.quantile(0.95).values, alpha=0.2)
+        ax.set_title(label, fontsize=10)
+        ax.set_xlabel("model year")
+        ax.grid(alpha=0.3)
+    axes[0][0].legend(fontsize=8)
+    fig.suptitle(title, fontsize=11)
+    fig.text(0.5, 0.005, banner[:230], ha="center", fontsize=6, color="firebrick")
+    fig.tight_layout(rect=(0, 0.04, 1, 0.94))
+    fig.savefig(path, dpi=130)
+    plt.close(fig)

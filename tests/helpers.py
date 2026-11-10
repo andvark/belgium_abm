@@ -34,3 +34,17 @@ def edit_first_data_row(path: Path, field_index: int, new_value: str) -> None:
     parts[field_index] = new_value
     lines[i] = ",".join(parts)
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+@lru_cache(maxsize=4)
+def real_sim_inputs(n_persons: int = 5000, seed: int = 42):
+    """Real-data population + calibrated initial dynamic state (cached; do not mutate -- copy first)."""
+    from belgium_abm.run_sim import load_inputs
+    from belgium_abm.engines.simulation import initial_state
+
+    cfg = load_config(ROOT / "configs" / "belgium_baseline.yaml").with_overrides(generator={"n_persons": n_persons})
+    inp = load_inputs(cfg)
+    targets = load_targets(cfg)
+    pop = generate_population(cfg, targets, seed)
+    st0, info = initial_state(pop.persons, pop.households, targets, inp.demography, inp.econ, inp.policy, cfg.adult_age, cfg.equivalence, seed, inp.target_median)
+    return cfg, inp, targets, st0, info

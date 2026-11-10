@@ -22,5 +22,5 @@ ANNUAL_SCHEDULE: tuple[str, ...] = (
     "persist",
 )
 
-# Which of the steps above exist in this code base (Phase 1 implements none of them).
-IMPLEMENTED_STEPS: tuple[str, ...] = ()
+# All steps are implemented by engines.simulation.run_simulation (see dynamics.py / flows.py).
+IMPLEMENTED_STEPS: tuple[str, ...] = ANNUAL_SCHEDULE

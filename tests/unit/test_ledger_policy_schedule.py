@@ -1,7 +1,6 @@
 import unittest
 
 from belgium_abm.engines import schedule
-from belgium_abm.engines.simulation import run_simulation
 from belgium_abm.policies import (
     POLICY_COMPONENTS,
     DuplicatePostingError,
@@ -61,11 +60,7 @@ class PolicyAndScheduleTests(unittest.TestCase):
         self.assertEqual(schedule.ANNUAL_SCHEDULE[0], "load_policy_and_rng")
         self.assertEqual(schedule.ANNUAL_SCHEDULE[1], "demography")  # ages increment before any other transition
         self.assertLess(schedule.ANNUAL_SCHEDULE.index("market_incomes"), schedule.ANNUAL_SCHEDULE.index("fiscal_cashflows"))
-        self.assertEqual(schedule.IMPLEMENTED_STEPS, ())
-
-    def test_simulation_is_not_implemented(self) -> None:
-        with self.assertRaises(NotImplementedError):
-            run_simulation()
+        self.assertEqual(schedule.IMPLEMENTED_STEPS, schedule.ANNUAL_SCHEDULE)
 
 
 if __name__ == "__main__":

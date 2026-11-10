@@ -8,7 +8,7 @@ from typing import Any
 import yaml
 from pydantic import BaseModel, ConfigDict
 
-from belgium_abm.provenance import Param
+from belgium_abm.provenance import Param, ParameterStatus
 
 
 class EconomyConfig(BaseModel):
@@ -29,5 +29,5 @@ class EconomyConfig(BaseModel):
         for k, val in values.items():
             if k not in params:
                 raise KeyError(f"unknown economy parameter '{k}'")
-            params[k] = params[k].model_copy(update={"value": val, "status": "scenario"})
+            params[k] = params[k].model_copy(update={"value": val, "status": ParameterStatus.SCENARIO})
         return EconomyConfig(name=self.name, banner=self.banner, parameters=params)

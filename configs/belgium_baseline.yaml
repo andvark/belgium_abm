@@ -38,6 +38,13 @@ tolerance:
   small_cell_abs_tol: 3
   rounding_slack_units: 2
   min_group_size: 30
+simulation:
+  policy_file: configs/policy_illustrative.yaml      # ILLUSTRATIVE, not Belgian law (see file header)
+  economy_file: configs/economy_stylised.yaml        # stylised assumptions
+  demography_rates: data/real/belgium_2025/demography_rates.csv
+  validation_targets: data/real/belgium_2025/validation_targets.csv
+  years: 30
+  min_group_size: 30
 parameters:
   # The values below are modelling CONVENTIONS to be confirmed, not Belgian statistics.
   adult_age:

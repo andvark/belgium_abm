@@ -23,16 +23,16 @@ class CheckResult:
 
 # Spec section 11 items that cannot be tested yet because the objects do not exist in Phase 1.
 NOT_YET_APPLICABLE: tuple[tuple[str, str], ...] = (
-    ("11.2", "retirement / pension eligibility matches policy (no pension rules yet)"),
-    ("11.3", "government receipts/payments reconcile with ledgers (ledger unit-tested only; no fiscal engine)"),
-    ("11.4", "firm wages = person wages; dividends paid = received (no firms or incomes yet)"),
-    ("11.5", "BV equity counted once in household wealth (no wealth yet)"),
-    ("11.6", "household cash identity (no cash flows yet)"),
-    ("11.7", "no unexplained negative stock values (no stocks yet)"),
-    ("11.10", "baseline vs identical policy override (no policy scenarios yet)"),
-    ("11.11", "fixed-behaviour policy isolation (no policy scenarios yet)"),
-    ("11.13", "tax bracket / cap / threshold property tests (no tax rules yet)"),
-    ("11.14", "charts carry uncertainty bands (single realisation only)"),
+    ("11.2", "retirement / pension eligibility matches policy -- checked in the dynamic model (`abm simulate --check-invariants`, tests/integration/test_simulation.py)"),
+    ("11.3", "government receipts/payments reconcile with ledgers to the cent -- checked in the dynamic model"),
+    ("11.4", "firm wages/dividends paid = received; contributions not doubled -- checked in the dynamic model"),
+    ("11.5", "BV equity counted once in household wealth -- checked in the dynamic model"),
+    ("11.6", "household cash identity -- checked in the dynamic model"),
+    ("11.7", "no unexplained negative stock values -- checked in the dynamic model"),
+    ("11.10", "baseline vs identical policy override -- checked in the dynamic model"),
+    ("11.11", "fixed-behaviour policy isolation -- checked in the dynamic model"),
+    ("11.13", "tax bracket / cap / threshold property tests -- tests/unit/test_policy_rules.py"),
+    ("11.14", "charts and reports carry horizon, vintage, weighting unit, scenario and uncertainty -- dynamic-model reports"),
 )
 
 

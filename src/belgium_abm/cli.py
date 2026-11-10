@@ -128,6 +128,40 @@ def cmd_fetch_data(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_simulate(args: argparse.Namespace) -> int:
+    from belgium_abm.run_sim import simulate
+
+    cfg = _load_cfg(args.config, args.root)
+    out_dir = Path(args.output_dir) if args.output_dir else cfg.resolve(cfg.output_dir) / "simulation"
+    outs = simulate(cfg, seed=args.seed, years=args.years, replicates=args.replicates, n_persons=args.n_persons, scenario_path=args.scenario,
+                    out_dir=out_dir, policy_file=args.policy, check_invariants=args.check_invariants)
+    for k, v in outs.items():
+        print(f"[abm simulate] {k}: {v}")
+    print("[abm simulate] NOTE: results use a stylised economy and, unless a verified policy file is supplied, an ILLUSTRATIVE policy (not Belgian law).")
+    return 0
+
+
+def cmd_compare(args: argparse.Namespace) -> int:
+    from belgium_abm.run_sim import compare
+
+    out = compare(Path(args.baseline), Path(args.scenario), Path(args.output_dir) if args.output_dir else None)
+    print(f"[abm compare] wrote comparison tables and comparison_report.md to {out}")
+    return 0
+
+
+def cmd_arrangements(args: argparse.Namespace) -> int:
+    from belgium_abm.analysis.arrangements import run_arrangement_comparison
+
+    cfg = _load_cfg(args.config, args.root)
+    out = Path(args.output_dir) if args.output_dir else cfg.resolve(cfg.output_dir) / "arrangements"
+    summary = run_arrangement_comparison(cfg, out, seed=args.seed, years=args.years, replicates=args.replicates, education=args.education, region=args.region,
+                                         children=args.children, partner=args.partner, start_age=args.start_age, policy_file=args.policy, scenario_path=args.scenario)
+    print(summary.to_string(index=False, float_format=lambda v: f"{v:,.3f}"))
+    print(f"[abm arrangements] wrote tables, plot and report to {out}")
+    print("[abm arrangements] NOTE: illustrative policy and stylised business parameters; this reveals trade-offs, not Belgian facts.")
+    return 0
+
+
 def cmd_demo(args: argparse.Namespace) -> int:
     ns = argparse.Namespace(
         config=args.config, root=args.root, seed=args.seed, n_persons=10_000,
@@ -184,6 +218,39 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("--cache-dir", default=None)
     sp.add_argument("--offline", action="store_true", help="use only cached raw responses")
     sp.set_defaults(func=cmd_fetch_data)
+
+    sp = sub.add_parser("simulate", help="run the dynamic lifecycle model (optionally with a policy scenario)")
+    common(sp)
+    sp.add_argument("--seed", type=int, default=42)
+    sp.add_argument("--years", type=int, default=None)
+    sp.add_argument("--replicates", type=int, default=1)
+    sp.add_argument("--n-persons", type=int, default=None)
+    sp.add_argument("--scenario", default=None, help="scenario YAML (policy overrides/deltas)")
+    sp.add_argument("--policy", default=None, help="policy YAML overriding simulation.policy_file")
+    sp.add_argument("--output-dir", default=None)
+    sp.add_argument("--check-invariants", action="store_true", help="validate the state every year (slower)")
+    sp.set_defaults(func=cmd_simulate)
+
+    sp = sub.add_parser("compare", help="compare a scenario run with its baseline (paired, common random numbers)")
+    sp.add_argument("--baseline", required=True, help="baseline run directory")
+    sp.add_argument("--scenario", required=True, help="scenario run directory")
+    sp.add_argument("--output-dir", default=None)
+    sp.set_defaults(func=cmd_compare)
+
+    sp = sub.add_parser("arrangements", help="employee vs sole proprietor vs BV owner-manager over a working life (spec section 12)")
+    common(sp)
+    sp.add_argument("--seed", type=int, default=42)
+    sp.add_argument("--years", type=int, default=40)
+    sp.add_argument("--replicates", type=int, default=500)
+    sp.add_argument("--education", default="MEDIUM", choices=["LOW", "MEDIUM", "HIGH"])
+    sp.add_argument("--region", default="BE_FLANDERS")
+    sp.add_argument("--children", type=int, default=0)
+    sp.add_argument("--partner", default="none", choices=["none", "inactive", "employee"])
+    sp.add_argument("--start-age", type=int, default=30)
+    sp.add_argument("--policy", default=None)
+    sp.add_argument("--scenario", default=None)
+    sp.add_argument("--output-dir", default=None)
+    sp.set_defaults(func=cmd_arrangements)
 
     sp = sub.add_parser("demo", help="10,000-person demo run on the FICTIONAL inputs")
     sp.add_argument("--config", default=DEMO_CONFIG)

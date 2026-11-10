@@ -1,0 +1,4 @@
+name: dividend_tax_plus_10pp
+description: Raise the final withholding tax on distributed dividends by 10 percentage points.
+policy_deltas:
+  dividend_withholding_tax.rate: 0.10
