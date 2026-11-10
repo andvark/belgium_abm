@@ -1,8 +1,10 @@
 # Calibration method (Phase 1)
 
-> Everything below describes **method**. The numbers in `data/demo/*.csv` are **FICTIONAL**
-> (`synthetic_demo_only: true`); no real Belgian statistics are loaded. See
-> `docs/model_assumptions.md` and `abm sources` for what is still missing.
+> The method below is the same for fictional and real inputs. `configs/demo_synthetic.yaml` uses
+> FICTIONAL tables (`data/demo/`); `configs/belgium_baseline.yaml` uses the real 2025 tables built by
+> `abm fetch-data` (`data/real/belgium_2025/`, see `docs/data_real.md`; the labour, household,
+> work-arrangement and tenure tables are *derived*, not observed joint distributions).
+> On the real tables a 20,000-person run passes all 832 comparison rows with no invariant failure.
 
 ## 1. Inputs
 
@@ -26,8 +28,8 @@ agree on the number of adults and children (default tolerance 1%). Synthetic tab
 refused unless `allow_synthetic_demo_data: true`; empty templates are always refused; real
 tables need a `reference_year` equal to `baseline_year`; synthetic and real tables cannot be
 mixed. Empty real-data templates live in `data/templates/` (`abm make-templates`).
-`configs/belgium_baseline.yaml` points at `data/raw/*`, which is empty, so it exits with code 2
-and a list of missing files by design.
+`configs/belgium_baseline.yaml` points at `data/real/belgium_2025/*`; if a file is missing the run exits
+with code 2 and lists the missing files (real data is never substituted).
 
 ## 2. Generation pipeline (`engines/population.py`)
 
@@ -81,6 +83,6 @@ command. Spec §11 checks that need later phases are listed as *not yet applicab
 
 ## 5. What this does not do
 
-No income, wealth, tax, benefit or behavioural process is implemented. The population is
-validated only against the aggregates supplied; agreement with fictional targets says nothing
-about Belgium.
+The population is validated only against the aggregates supplied. Agreement with *derived* targets
+(household mix, labour state by education) reflects the reconstruction method, not an independent
+observation. Income, wealth, taxes and behaviour belong to the dynamic model (`docs/model_description.md`).
