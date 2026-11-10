@@ -1,0 +1,47 @@
+# BASELINE configuration for REAL Belgian data -- intentionally NOT runnable yet.
+#
+# `abm init --config configs/belgium_baseline.yaml` exits with code 2 and lists the missing
+# files: no real data has been acquired and none is ever substituted. To make it runnable:
+#   1. acquire the datasets listed by `abm sources`, convert them to the layouts in data/templates/
+#      and save them under data/raw/ (never commit restricted microdata);
+#   2. set baseline_year to the single reference year the tables share and set every table's
+#      `# reference_year:` header to it;
+#   3. replace each `assumed` parameter below with an `observed`/`derived` value (with source and
+#      year) or keep it explicitly `assumed`, and set the region labels to match your tables.
+name: belgium_baseline
+baseline_year: 0              # PLACEHOLDER: set to the real baseline year when data are acquired
+allow_synthetic_demo_data: false
+regions: [BE_BRUSSELS, BE_FLANDERS, BE_WALLONIA]
+sources_registry: data/sources.yaml
+output_dir: outputs/belgium_baseline
+inputs:
+  population: data/raw/population_age_sex_region.csv
+  households: data/raw/household_templates_region.csv
+  education: data/raw/education_by_age_region.csv
+  labour_state: data/raw/labour_state_by_age_education_region.csv
+  work_arrangement: data/raw/work_arrangement_by_age_region.csv
+  tenure: null
+generator:
+  n_persons: 100000
+parameters:
+  # The values below are modelling CONVENTIONS to be confirmed, not Belgian statistics.
+  adult_age:
+    {value: 18, status: assumed, source: "convention (legal age of majority) - to be confirmed by the project owner", unit: years, definition: "Age at or above which a person is an adult in household construction."}
+  working_age_min:
+    {value: 15, status: assumed, source: "convention aligned with the LFS lower age limit - to be confirmed", unit: years, definition: "Lowest age for which education / labour state / arrangement are assigned."}
+  min_parent_age_at_birth:
+    {value: 16, status: assumed, source: "placeholder rule for candidate generation - to be replaced by an empirically justified bound", unit: years, definition: "Minimum parent-minus-child age accepted when linking children to parents."}
+  max_parent_age_at_birth:
+    {value: 50, status: assumed, source: "placeholder rule for candidate generation - to be replaced by an empirically justified bound", unit: years, definition: "Maximum parent-minus-child age accepted when linking children to parents."}
+  couple_age_difference_sd:
+    {value: 3.0, status: assumed, source: "placeholder proposal width; IPU re-weights candidates, so it is not an estimate of Belgian couple age gaps", unit: years, definition: "SD of partner-minus-head age difference used only to propose candidate couples."}
+  within_band_age_distribution:
+    {value: uniform, status: assumed, source: "modelling convention", unit: none, definition: "Single-year age distribution inside a published age band."}
+  equivalence_first_adult_weight:
+    {value: 1.0, status: assumed, source: "project specification section 5 (modified OECD scale); convention, not an estimate", unit: weight, definition: "Equivalence scale weight of the first adult."}
+  equivalence_additional_person_weight:
+    {value: 0.5, status: assumed, source: "project specification section 5 (modified OECD scale); convention, not an estimate", unit: weight, definition: "Weight of each additional person aged at/above the child-age threshold."}
+  equivalence_child_weight:
+    {value: 0.3, status: assumed, source: "project specification section 5 (modified OECD scale); convention, not an estimate", unit: weight, definition: "Weight of each child below the child-age threshold."}
+  equivalence_child_age_threshold:
+    {value: 14, status: assumed, source: "project specification section 5 (modified OECD scale); convention, not an estimate", unit: years, definition: "Age below which a household member counts as a child in the equivalence scale."}

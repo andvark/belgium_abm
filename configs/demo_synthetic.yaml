@@ -1,0 +1,56 @@
+# DEMO configuration -- FICTIONAL inputs (data/demo/*.csv). Not Belgian data.
+# Run:  abm init --config configs/demo_synthetic.yaml --seed 42
+name: demo_synthetic
+baseline_year: 2000          # placeholder year label for the fictional world; NOT a real reference year
+allow_synthetic_demo_data: true
+regions: [REGION_A, REGION_B, REGION_C]
+sources_registry: data/sources.yaml
+output_dir: outputs/demo
+inputs:
+  population: data/demo/population_age_sex_region.csv
+  households: data/demo/household_templates_region.csv
+  education: data/demo/education_by_age_region.csv
+  labour_state: data/demo/labour_state_by_age_education_region.csv
+  work_arrangement: data/demo/work_arrangement_by_age_region.csv
+  tenure: data/demo/tenure_by_household_type_region.csv
+generator:
+  n_persons: 10000
+  pool_multiplier: 10.0
+  min_pool_per_template: 200
+  max_candidate_attempts: 50
+  ipu_max_iterations: 500
+  ipu_tolerance: 1.0e-4
+  refine_swaps_per_household: 40   # 0 disables the swap-refinement step
+  refine_counts_proposals_per_cell: 300   # 0 = independent per-cell rounding only
+  population_household_consistency_tol: 0.01
+tolerance:
+  marginal_rel_warn: 0.01
+  marginal_rel_fail: 0.05
+  cell_rel_warn: 0.10
+  cell_rel_fail: 0.25
+  cells_can_fail: false
+  min_expected_count: 20
+  small_cell_abs_tol: 3
+  rounding_slack_units: 2   # |diff| <= this many persons/households is integer-rounding noise
+  min_group_size: 30
+parameters:
+  adult_age:
+    {value: 18, status: assumed, source: "FICTIONAL demo value", unit: years, definition: "Age at or above which a person is an adult in household construction.", synthetic_demo_only: true}
+  working_age_min:
+    {value: 15, status: assumed, source: "FICTIONAL demo value", unit: years, definition: "Lowest age for which education / labour state / arrangement are assigned.", synthetic_demo_only: true}
+  min_parent_age_at_birth:
+    {value: 16, status: assumed, source: "FICTIONAL demo value", unit: years, definition: "Minimum parent-minus-child age accepted when linking children to parents.", synthetic_demo_only: true}
+  max_parent_age_at_birth:
+    {value: 50, status: assumed, source: "FICTIONAL demo value", unit: years, definition: "Maximum parent-minus-child age accepted when linking children to parents.", synthetic_demo_only: true}
+  couple_age_difference_sd:
+    {value: 3.0, status: assumed, source: "FICTIONAL demo value", unit: years, definition: "SD of partner-minus-head age difference used only to propose candidate couples.", synthetic_demo_only: true}
+  within_band_age_distribution:
+    {value: uniform, status: assumed, source: "modelling convention", unit: none, definition: "Single-year age distribution inside a published age band."}
+  equivalence_first_adult_weight:
+    {value: 1.0, status: assumed, source: "project specification section 5 (modified OECD scale); convention, not an estimate", unit: weight, definition: "Equivalence scale weight of the first adult."}
+  equivalence_additional_person_weight:
+    {value: 0.5, status: assumed, source: "project specification section 5 (modified OECD scale); convention, not an estimate", unit: weight, definition: "Weight of each additional person aged at/above the child-age threshold."}
+  equivalence_child_weight:
+    {value: 0.3, status: assumed, source: "project specification section 5 (modified OECD scale); convention, not an estimate", unit: weight, definition: "Weight of each child below the child-age threshold."}
+  equivalence_child_age_threshold:
+    {value: 14, status: assumed, source: "project specification section 5 (modified OECD scale); convention, not an estimate", unit: years, definition: "Age below which a household member counts as a child in the equivalence scale."}

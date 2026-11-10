@@ -1,0 +1,8 @@
+# dataset_id: REAL_TEMPLATE_education_by_age_region
+# synthetic_demo_only: false
+# status: template
+# reference_year: null
+# unit: see description
+# source: FILL IN (real dataset, release and table id) -- this file is an EMPTY TEMPLATE
+# description: Share of persons in each education level, by region x age band
+region,age_min,age_max,education_level,share

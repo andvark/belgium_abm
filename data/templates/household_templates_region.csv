@@ -1,0 +1,8 @@
+# dataset_id: REAL_TEMPLATE_household_templates_region
+# synthetic_demo_only: false
+# status: template
+# reference_year: null
+# unit: see description
+# source: FILL IN (real dataset, release and table id) -- this file is an EMPTY TEMPLATE
+# description: Households by region x household type x number of adults x number of children
+region,household_type,n_adults,n_children,count

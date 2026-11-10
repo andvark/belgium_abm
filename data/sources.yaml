@@ -1,0 +1,241 @@
+# Dataset registry / provenance manifest (spec section 8).
+#
+# EVERY entry is currently `not_acquired`: no real Belgian dataset has been loaded into this
+# project. Set `file_path`, `reference_year` and `status: acquired` only when a real file is
+# genuinely in place. URLs are the ones named in the specification; entries without a URL in
+# the specification are left null rather than guessed.
+# `license_or_terms: verify` means the terms have NOT been checked yet.
+
+- id: statbel_population
+  producer: Statbel
+  url: https://statbel.fgov.be/en/open-data
+  reference_year: null
+  geography: Belgium
+  unit: persons
+  dimensions:
+  - age
+  - sex
+  - municipality
+  - nationality
+  access: open
+  file_path: null
+  license_or_terms: verify
+  variables_used: []
+  method_notes: Public aggregate counts of population by age/sex/place. Feeds the population targets table.
+  model_input: population (age x sex x region)
+  needed_for_phase: 1
+  restricted_microdata: false
+  status: not_acquired
+- id: statbel_households
+  producer: Statbel
+  url: https://statbel.fgov.be/en/themes/population/structure-population/households
+  reference_year: null
+  geography: Belgium
+  unit: households
+  dimensions:
+  - household type
+  - household size
+  - children
+  access: open
+  file_path: null
+  license_or_terms: verify
+  variables_used: []
+  method_notes: Public aggregate household counts. Joint person-household detail is not necessarily available.
+  model_input: households (region x type x adults x children)
+  needed_for_phase: 1
+  restricted_microdata: false
+  status: not_acquired
+- id: statbel_lfs_labour
+  producer: Statbel
+  url: https://statbel.fgov.be/en/themes/work-training/labour-market/employment-and-unemployment
+  reference_year: null
+  geography: Belgium
+  unit: persons
+  dimensions:
+  - age
+  - education
+  - labour status
+  - region
+  access: mixed
+  file_path: null
+  license_or_terms: verify
+  variables_used: []
+  method_notes: Labour Force Survey aggregates (employment, unemployment, inactivity, education). Research microdata need
+    controlled access; check ILO vs registered unemployment definitions.
+  model_input: education and labour_state tables
+  needed_for_phase: 1
+  restricted_microdata: false
+  status: not_acquired
+- id: statbel_lfs_occupations
+  producer: Statbel
+  url: https://statbel.fgov.be/en/themes/work-training/labour-market/occupations-belgium
+  reference_year: null
+  geography: Belgium
+  unit: persons
+  dimensions:
+  - occupation
+  - labour status
+  access: open
+  file_path: null
+  license_or_terms: verify
+  variables_used: []
+  method_notes: Published aggregates on employee vs self-employed and occupations. The BV distinction needs business/legal
+    sources.
+  model_input: work_arrangement table
+  needed_for_phase: 1
+  restricted_microdata: false
+  status: not_acquired
+- id: eurostat_eu_silc_research
+  producer: Eurostat / Statbel
+  url: https://ec.europa.eu/eurostat/web/microdata/collections-research/european-union-statistics-on-income-and-living-conditions
+  reference_year: null
+  geography: Belgium
+  unit: persons and households
+  dimensions:
+  - income
+  - benefits
+  - poverty
+  - household budget
+  access: restricted
+  file_path: null
+  license_or_terms: verify
+  variables_used: []
+  method_notes: Scientific-use microdata require an application to Eurostat. Not available to this project.
+  model_input: income seeding and tenure (Phase 2+)
+  needed_for_phase: 2
+  restricted_microdata: true
+  status: not_acquired
+- id: eurostat_eu_silc_public_use
+  producer: Eurostat
+  url: https://ec.europa.eu/eurostat/en/web/microdata/public-microdata/statistics-on-income-and-living-conditions
+  reference_year: null
+  geography: Belgium
+  unit: persons and households
+  dimensions:
+  - income
+  - living conditions
+  access: open
+  file_path: null
+  license_or_terms: verify
+  variables_used: []
+  method_notes: 'Public-use files are SYNTHETIC: only for tooling and schema prototyping, never for calibration.'
+  model_input: tooling only
+  needed_for_phase: 2
+  restricted_microdata: false
+  status: not_acquired
+- id: nbb_hfcs
+  producer: National Bank of Belgium / ECB
+  url: https://www.nbb.be/en/publications-and-research/publications/other-publications/household-finance-and-consumption-survey-0
+  reference_year: null
+  geography: Belgium
+  unit: households
+  dimensions:
+  - net wealth
+  - homeownership
+  - mortgages
+  - business ownership
+  access: mixed
+  file_path: null
+  license_or_terms: verify
+  variables_used: []
+  method_notes: Published results are public; microdata access is subject to research conditions.
+  model_input: wealth seeding (Phase 2+); tenure shares
+  needed_for_phase: 2
+  restricted_microdata: true
+  status: not_acquired
+- id: belmod_euromod_documentation
+  producer: Belgian social security / EUROMOD
+  url: https://socialsecurity.belgium.be/en/shaping-social-policy/belmod/what-belmod
+  reference_year: null
+  geography: Belgium
+  unit: policy rules
+  dimensions:
+  - tax-benefit rules
+  - benchmarks
+  access: mixed
+  file_path: null
+  license_or_terms: verify
+  variables_used: []
+  method_notes: Documentation is public; BELMOD administrative microdata require controlled access. Statutory rates must come
+    from verified sources, never from an LLM.
+  model_input: PolicyConfig (Phase 2)
+  needed_for_phase: 2
+  restricted_microdata: true
+  status: not_acquired
+- id: statbel_enterprise_demography
+  producer: Statbel
+  url: https://statbel.fgov.be/en/themes/enterprises/demography-enterprises/demography-enterprises-market-sector
+  reference_year: null
+  geography: Belgium
+  unit: enterprises
+  dimensions:
+  - legal form
+  - size
+  - births
+  - deaths
+  access: open
+  file_path: null
+  license_or_terms: verify
+  variables_used: []
+  method_notes: Public tables of company counts, births, deaths, size and legal form. Check sector coverage and enterprise
+    vs legal-unit definitions.
+  model_input: firms (Phase 3)
+  needed_for_phase: 3
+  restricted_microdata: false
+  status: not_acquired
+- id: fpb_input_output_2022
+  producer: Federal Planning Bureau
+  url: https://www.plan.be/en/data/input-output-tables-2022
+  reference_year: null
+  geography: Belgium
+  unit: EUR
+  dimensions:
+  - sector
+  - products
+  access: open
+  file_path: null
+  license_or_terms: verify
+  variables_used: []
+  method_notes: Input-output tables for macro/sector constraints.
+  model_input: macro constraints (later)
+  needed_for_phase: 5
+  restricted_microdata: false
+  status: not_acquired
+- id: nbb_national_accounts
+  producer: National Bank of Belgium
+  url: null
+  reference_year: null
+  geography: Belgium
+  unit: EUR
+  dimensions:
+  - institutional sector
+  - aggregates
+  access: open
+  file_path: null
+  license_or_terms: verify
+  variables_used: []
+  method_notes: National accounts totals for aggregate consistency checks. URL not listed in the specification; to be confirmed.
+  model_input: macro totals (later)
+  needed_for_phase: 5
+  restricted_microdata: false
+  status: not_acquired
+- id: statbel_vital_statistics
+  producer: Statbel / Federal Planning Bureau
+  url: null
+  reference_year: null
+  geography: Belgium
+  unit: persons
+  dimensions:
+  - births
+  - deaths
+  - projections
+  access: open
+  file_path: null
+  license_or_terms: verify
+  variables_used: []
+  method_notes: Fertility, mortality and demographic projections for the dynamic model. URL not listed in the specification;
+    to be confirmed.
+  model_input: demography module (Phase 3)
+  needed_for_phase: 3
+  restricted_microdata: false
+  status: not_acquired

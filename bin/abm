@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Run the CLI without installing the package.
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+PYTHONPATH="$DIR/src${PYTHONPATH:+:$PYTHONPATH}" exec python3 -m belgium_abm "$@"

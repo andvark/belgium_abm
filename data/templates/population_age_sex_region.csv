@@ -1,0 +1,8 @@
+# dataset_id: REAL_TEMPLATE_population_age_sex_region
+# synthetic_demo_only: false
+# status: template
+# reference_year: null
+# unit: persons
+# source: FILL IN (real dataset, release and table id) -- this file is an EMPTY TEMPLATE
+# description: Persons by region x sex x age band
+region,sex_or_demographic_stratum,age_min,age_max,count
