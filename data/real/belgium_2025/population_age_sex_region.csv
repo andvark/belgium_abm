@@ -3,7 +3,7 @@
 # status: observed
 # reference_year: 2025
 # unit: persons
-# source: Eurostat dissemination API / Statbel BeStat (demo_r_d2jan); fetched 2026-11-10; see build_manifest.json
+# source: Eurostat dissemination API / Statbel BeStat (demo_r_d2jan); fetched 2026-11-12; see build_manifest.json
 # description: Resident population on 1 January by region x sex x age band (NUTS-2 summed to regions)
 region,sex_or_demographic_stratum,age_min,age_max,count
 BE_BRUSSELS,F,0,4,34659.00000000

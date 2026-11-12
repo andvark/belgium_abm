@@ -1,0 +1,33 @@
+# dataset_id: real_hfcs_wealth_targets
+# synthetic_demo_only: false
+# status: observed
+# reference_year: 2023
+# unit: mixed
+# source: ECB Household Finance and Consumption Survey, wave 2023, statistical tables (Belgium, BE column); file HFCS_Statistical_Tables_Wave_2023_October_2026.xlsx sha256 b50223c0d9deae3f62178e7bae7a09a01b9708d49eaaf5aa81664fb96e7b5890
+# description: Published HFCS aggregates for Belgium, used only to VALIDATE simulated wealth (definitions differ: HFCS net wealth includes vehicles, valuables, pension plans and private business)
+indicator,group,value,unit
+net_wealth_median,TOTAL,254200.00000000,EUR
+share_with_debt,TOTAL,0.48800000,ratio
+homeowner_share,TOTAL,0.66700000,ratio
+net_wealth_median,HOMEOWNER,375900.00000000,EUR
+net_wealth_median,NON_OWNER,17700.00000000,EUR
+net_wealth_mean,TOTAL,411500.00000000,EUR
+net_wealth_percentile,p10,4600.00000000,EUR
+net_wealth_percentile,p20,24700.00000000,EUR
+net_wealth_percentile,p30,91400.00000000,EUR
+net_wealth_percentile,p40,176000.00000000,EUR
+net_wealth_percentile,p50,254200.00000000,EUR
+net_wealth_percentile,p60,326800.00000000,EUR
+net_wealth_percentile,p70,446100.00000000,EUR
+net_wealth_percentile,p80,620700.00000000,EUR
+net_wealth_percentile,p90,927900.00000000,EUR
+net_wealth_share_top5,TOTAL,0.29400000,ratio
+net_wealth_share_top10,TOTAL,0.42400000,ratio
+net_wealth_gini,TOTAL,0.60400000,ratio
+net_wealth_median_by_age_of_reference_person,16-34,97200.00000000,EUR
+net_wealth_median_by_age_of_reference_person,35-44,177700.00000000,EUR
+net_wealth_median_by_age_of_reference_person,45-54,280500.00000000,EUR
+net_wealth_median_by_age_of_reference_person,55-64,337800.00000000,EUR
+net_wealth_median_by_age_of_reference_person,65-74,274500.00000000,EUR
+net_wealth_median_by_age_of_reference_person,75+,334400.00000000,EUR
+owns_self_employment_business_share,TOTAL,0.12200000,ratio

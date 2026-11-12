@@ -3,7 +3,7 @@
 # status: observed
 # reference_year: 2025
 # unit: share
-# source: Eurostat dissemination API / Statbel BeStat (lfst_r_lfsd2pop); fetched 2026-11-10; see build_manifest.json
+# source: Eurostat dissemination API / Statbel BeStat (lfst_r_lfsd2pop); fetched 2026-11-12; see build_manifest.json
 # description: Highest education (ISCED 2011 3 groups) by region x age band, LFS
 region,age_min,age_max,education_level,share
 BE_BRUSSELS,15,24,LOW,0.48241826

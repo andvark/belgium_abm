@@ -57,6 +57,7 @@ class SimulationConfig(BaseModel):
     economy_file: str
     demography_rates: str
     validation_targets: str
+    wealth_targets: str | None = None
     years: int = Field(default=30, gt=0)
     min_group_size: int = Field(default=30, gt=0)
 

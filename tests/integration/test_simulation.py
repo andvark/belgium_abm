@@ -241,3 +241,18 @@ class CliSimulationTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class WealthValidationTests(unittest.TestCase):
+    def test_wealth_validation_table_against_hfcs_targets(self) -> None:
+        from belgium_abm.analysis.benchmarks import wealth_validation_table
+
+        _, inp, _, st0, _ = real_sim_inputs()
+        self.assertIsNotNone(inp.wealth)
+        t = wealth_validation_table(st0, inp.wealth)
+        self.assertTrue({"net_wealth_median", "net_wealth_gini", "net_wealth_share_top10", "homeowner_share"} <= set(t.indicator))
+        g = t[(t.indicator == "net_wealth_gini")].iloc[0]
+        self.assertTrue(0.4 < g.simulated < 0.8)
+        # retirees are seeded from career income, so older households are not wealth-poor (regression test for the validated flaw)
+        old = t[(t.indicator == "net_wealth_median_by_age_of_reference_person") & (t.group.isin(["65-74", "75+"]))]
+        self.assertTrue((old.simulated > 0.4 * old.published).all())

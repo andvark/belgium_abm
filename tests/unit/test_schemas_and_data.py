@@ -45,12 +45,12 @@ class SchemaTests(unittest.TestCase):
 
     def test_registry_acquired_entries_point_to_existing_files(self) -> None:
         reg = load_registry(ROOT / "data" / "sources.yaml")
-        self.assertEqual(len(reg), 13)
+        self.assertEqual(len(reg), 15)
         acquired = [s for s in reg if s.status == "acquired"]
-        self.assertEqual(len(acquired), 5)
+        self.assertEqual(len(acquired), 7)
         for s in acquired:
             self.assertTrue((ROOT / str(s.file_path)).is_file(), s.id)
-            self.assertEqual(s.reference_year, 2025)
+            self.assertIn(s.reference_year, (2023, 2025))  # HFCS wave 2023 is the only non-2025 vintage
         # restricted microdata must never be marked acquired
         self.assertTrue(all(s.status == "not_acquired" for s in reg if s.restricted_microdata))
 

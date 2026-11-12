@@ -149,6 +149,8 @@ def build_state(persons_in: pd.DataFrame, households_in: pd.DataFrame, labour: p
     se_factor = np.where(p["arrangement"].isin(["SOLE_PROPRIETOR", "BV_OWNER_MANAGER"]).to_numpy(), pc.get("self_employed_accrual_factor", 1.0), 1.0)
     has_career = p["work_state"].isin(["EMPLOYED", "UNEMPLOYED", "RETIRED"]).to_numpy() | (p["age"].to_numpy() >= 30)
     p["pension_rights"] = np.where(has_career, pc["accrual_rate_per_year"] * years_worked * ref_wage * se_factor, 0.0)
+    # career-based permanent income, used only to seed the wealth of retired households (their current income is a pension)
+    p["perm_income"] = np.where(has_career, ref_wage * se_factor, 0.0)
 
     hh = households_in.copy()
     hh.index = hh["household_id"].to_numpy()
@@ -184,7 +186,10 @@ def _init_wealth(st: SimState, policy: PolicyRules, compute_flows) -> None:
     e = np.sqrt(c) * head_z + np.sqrt(1 - c) * crn.normal(st.seed, "init_assets", 0, hid)
     sig = econ.v("fin_assets_sigma")
     mult = econ.v("fin_assets_multiple_max") * (1 - np.exp(-np.clip(head_age - 20, 0, None) / econ.v("fin_assets_age_tau")))
-    income_ref = np.maximum(inc, 0.0) + 0.1 * st.level_scale * econ.v("wage_base_medium")
+    retired = (p["work_state"] == "RETIRED").to_numpy()
+    perm = pd.Series(np.where(retired, p["perm_income"].to_numpy(float), 0.0), index=p.index).groupby(p["household_id"]).sum().reindex(hh.index, fill_value=0.0).to_numpy()
+    # retired households accumulated wealth over a career: use the larger of current income and a share of past earnings
+    income_ref = np.maximum(np.maximum(inc, 0.0), econ.v("retiree_permanent_income_share") * perm) + 0.1 * st.level_scale * econ.v("wage_base_medium")
     fin = mult * income_ref * np.exp(sig * e - sig**2 / 2)
     tenure = hh["housing_tenure"].to_numpy()
     owner = np.isin(tenure, ["MORTGAGED_OWNER", "OUTRIGHT_OWNER"])

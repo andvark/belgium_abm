@@ -16,6 +16,8 @@ from belgium_abm.io.loaders import parse_annotated_csv
 from tests.helpers import ROOT
 
 REAL = ROOT / "data" / "real" / "belgium_2025"
+BUILT = ["population_age_sex_region.csv", "household_templates_region.csv", "education_by_age_region.csv", "labour_state_by_age_education_region.csv",
+         "work_arrangement_by_age_region.csv", "tenure_by_household_type_region.csv", "demography_rates.csv", "validation_targets.csv"]
 
 
 class JsonStatTests(unittest.TestCase):
@@ -50,7 +52,8 @@ class RealTablesTests(unittest.TestCase):
         return meta, df
 
     def test_all_tables_flagged_real_2025(self) -> None:
-        for f in REAL.glob("*.csv"):
+        for name in BUILT:
+            f = REAL / name
             meta, _ = self.table(f.name)
             self.assertEqual(meta["synthetic_demo_only"], "false", f.name)
             expected = "2024" if f.name == "demography_rates.csv" else "2025"  # latest complete vital-statistics year
@@ -92,7 +95,7 @@ class RealTablesTests(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as d:
             build_all(2025, ROOT / "data" / "real" / "cache", Path(d), offline=True)
-            for f in REAL.glob("*.csv"):
+            for f in (REAL / n for n in BUILT):
                 a, b = f.read_text().splitlines(), (Path(d) / f.name).read_text().splitlines()
                 self.assertEqual([x for x in a if not x.startswith("# source")], [x for x in b if not x.startswith("# source")], f.name)
 

@@ -97,6 +97,7 @@
   - lfsa_esgan
   - lfsa_egan
   - bestat:efedbaa1-1478-4366-9d9a-5318af8f90ab
+  - lfst_r_lfe2estat
   method_notes: DERIVED. National self-employed share of employment by age band (lfsa_esgan/lfsa_egan). The sole-proprietor
     vs BV split is only a PROXY from Statbel BeStat counts of VAT-subject enterprises by legal form and region (2024); no
     source observes BV owner-managers directly.
@@ -275,6 +276,56 @@
   method_notes: DERIVED. Published EU-SILC tenure distribution by household type, national only; applied unchanged to every
     region and to households (shares of persons used as shares of households). NOT microdata.
   model_input: tenure table
+  needed_for_phase: 1
+  restricted_microdata: false
+  status: acquired
+- id: ecb_hfcs_published_tables
+  producer: ECB (Household Finance and Consumption Survey, wave 2023)
+  url: https://www.ecb.europa.eu/stats/ecb_surveys/hfcs/html/index.en.html
+  reference_year: 2023
+  geography: Belgium
+  unit: EUR / ratios
+  dimensions:
+  - net wealth
+  - distribution
+  - tenure
+  - age of reference person
+  access: open
+  file_path: data/real/belgium_2025/hfcs_wealth_targets.csv
+  license_or_terms: verify
+  variables_used:
+  - DN3001
+  - J3 percentiles
+  - J4 Gini and top shares
+  - A1 homeowner share
+  - A3 medians by age
+  method_notes: OBSERVED published aggregates (BE column of the statistical-tables workbook supplied by the project owner;
+    file hash in the CSV header). Used only to VALIDATE simulated wealth; HFCS net wealth includes vehicles, valuables, pension
+    plans and private business, unlike the model's net worth. Microdata remain restricted and NOT acquired (see nbb_hfcs).
+  model_input: wealth validation (not calibration)
+  needed_for_phase: 2
+  restricted_microdata: false
+  status: acquired
+- id: statbel_lfs_crosschecks
+  producer: Statbel (LFS) / Statbel education statistics
+  url: https://statbel.fgov.be/en/themes/work-training/labour-market/employment-and-unemployment
+  reference_year: 2025
+  geography: Belgium
+  unit: rates / shares
+  dimensions:
+  - region
+  - education
+  - age band
+  - year
+  access: open
+  file_path: data/real/belgium_2025/crosscheck_labour_vs_statbel.csv
+  license_or_terms: verify
+  variables_used:
+  - employment and unemployment rate by region x education x age
+  - education attainment 15+ 1987-2025
+  method_notes: OBSERVED Statbel tables (workbooks supplied by the project owner) used as INDEPENDENT cross-checks of the
+    derived labour and education tables; never fed back into the generator.
+  model_input: cross-check of labour_state and education tables
   needed_for_phase: 1
   restricted_microdata: false
   status: acquired

@@ -11,7 +11,7 @@ The full brief is in [`docs/specification.md`](docs/specification.md).
 >
 > * **Real (2025 Belgian aggregates):** population by region x sex x age, education by age, household
 >   composition (derived), labour-market status (derived), life tables and fertility, and published
->   EU-SILC income indicators used for validation. See [`docs/data_real.md`](docs/data_real.md).
+>   EU-SILC income indicators and ECB HFCS 2023 wealth aggregates used for validation. See [`docs/data_real.md`](docs/data_real.md).
 > * **Assumptions:** the lifecycle economy (earnings profiles, wealth, business, behaviour). Every value
 >   is tagged `assumed` with its source in `configs/economy_stylised.yaml`.
 > * **Illustrative, NOT Belgian law:** the tax-benefit file `configs/policy_illustrative.yaml`. No statutory
@@ -38,6 +38,8 @@ abm simulate --config configs/belgium_baseline.yaml --years 30 --seed 42 --repli
     --scenario scenarios/corporate_tax_plus_5pp.yaml --output-dir outputs/run1
 abm compare --baseline outputs/run1/baseline --scenario outputs/run1/scenario_corporate_tax_plus_5pp
 abm arrangements --config configs/belgium_baseline.yaml --children 2 --partner employee   # spec section 12
+abm import-hfcs --xlsx <HFCS workbook>                      # Belgian wealth targets (validation only)
+abm crosscheck --lfs-xlsx <file> --education-xls <file>      # test the derived tables against Statbel workbooks
 abm sources                                                  # datasets acquired / still required
 abm demo                                                     # 10,000-person run on FICTIONAL inputs (tooling check)
 ```
@@ -71,7 +73,7 @@ src/belgium_abm/
   policies/      rules (pure tax/benefit functions, overrides), ledger (integer cents), config
   analysis/      inequality, measures, benchmarks, arrangements, calibration, validation, plots
   io/ agents/    schemas, loaders, registry; person / household / firm tables
-tests/       unit / integration / properties (165 tests)
+tests/       unit / integration / properties (171 tests)
 ```
 
 ## Method in brief (details in `docs/model_description.md`)

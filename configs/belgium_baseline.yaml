@@ -43,6 +43,7 @@ simulation:
   economy_file: configs/economy_stylised.yaml        # stylised assumptions
   demography_rates: data/real/belgium_2025/demography_rates.csv
   validation_targets: data/real/belgium_2025/validation_targets.csv
+  wealth_targets: data/real/belgium_2025/hfcs_wealth_targets.csv   # ECB HFCS 2023, validation only
   years: 30
   min_group_size: 30
 parameters:

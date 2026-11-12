@@ -68,7 +68,7 @@ class CliTests(unittest.TestCase):
     def test_sources_reports_acquired_and_missing_datasets(self) -> None:
         code, out, _ = run_cli("sources", "--config", str(DEMO_CONFIG))
         self.assertEqual(code, 0)
-        self.assertIn("8 of 13 registered datasets are NOT acquired", out)
+        self.assertIn("8 of 15 registered datasets are NOT acquired", out)
         self.assertIn("statbel_population", out)
 
     def test_assumptions_command_matches_committed_doc(self) -> None:

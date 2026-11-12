@@ -162,6 +162,36 @@ def cmd_arrangements(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_import_hfcs(args: argparse.Namespace) -> int:
+    from belgium_abm.datasources.hfcs import parse_hfcs
+    from belgium_abm.datasources.belgium import write_table
+
+    df, meta = parse_hfcs(Path(args.xlsx))
+    out = Path(args.output) if args.output else find_project_root(Path.cwd()) / "data" / "real" / "belgium_2025" / "hfcs_wealth_targets.csv"
+    header = {"dataset_id": "real_hfcs_wealth_targets", "synthetic_demo_only": "false", "status": "observed", "reference_year": "2023", "unit": "mixed",
+              "source": f"{meta['publication']}; file {meta['source_file']} sha256 {meta['source_sha256']}", "description": "Published HFCS aggregates for Belgium, used only to VALIDATE simulated wealth (definitions differ: HFCS net wealth includes vehicles, valuables, pension plans and private business)"}
+    write_table(out, header, df)
+    print(f"[abm import-hfcs] wrote {len(df)} Belgian indicators to {out}")
+    return 0
+
+
+def cmd_crosscheck(args: argparse.Namespace) -> int:
+    from belgium_abm.analysis.crosschecks import education_vs_statbel, labour_vs_statbel
+
+    real = Path(args.real_dir) if args.real_dir else find_project_root(Path.cwd()) / "data" / "real" / "belgium_2025"
+    outd = Path(args.output_dir) if args.output_dir else real
+    if args.lfs_xlsx:
+        d = labour_vs_statbel(real, Path(args.lfs_xlsx))
+        d.to_csv(outd / "crosscheck_labour_vs_statbel.csv", index=False, lineterminator="\n")
+        print(f"[abm crosscheck] labour: {len(d)} region x education x age cells; mean |employment diff| = {d.employment_diff.abs().mean():.3f}, "
+              f"mean |unemployment diff| = {d.unemployment_diff.abs().dropna().mean():.3f}; worst: {d.loc[d.employment_diff.abs().idxmax(), ['region', 'education', 'age_band']].tolist()}")
+    if args.education_xls:
+        e = education_vs_statbel(real, Path(args.education_xls))
+        e.to_csv(outd / "crosscheck_education_vs_statbel.csv", index=False, lineterminator="\n")
+        print("[abm crosscheck] education 15+: " + "; ".join(f"{r.education} model {r.model_share:.3f} vs Statbel {r.statbel_share:.3f}" for r in e.itertuples()))
+    return 0
+
+
 def cmd_demo(args: argparse.Namespace) -> int:
     ns = argparse.Namespace(
         config=args.config, root=args.root, seed=args.seed, n_persons=10_000,
@@ -251,6 +281,18 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("--scenario", default=None)
     sp.add_argument("--output-dir", default=None)
     sp.set_defaults(func=cmd_arrangements)
+
+    sp = sub.add_parser("import-hfcs", help="extract Belgian wealth-validation targets from the ECB HFCS statistical-tables workbook")
+    sp.add_argument("--xlsx", required=True)
+    sp.add_argument("--output", default=None)
+    sp.set_defaults(func=cmd_import_hfcs)
+
+    sp = sub.add_parser("crosscheck", help="compare derived tables with independent Statbel workbooks (user-supplied)")
+    sp.add_argument("--lfs-xlsx", default=None, help="Statbel LFS rates by region x education x age (xlsx)")
+    sp.add_argument("--education-xls", default=None, help="Statbel education attainment series (xls)")
+    sp.add_argument("--real-dir", default=None)
+    sp.add_argument("--output-dir", default=None)
+    sp.set_defaults(func=cmd_crosscheck)
 
     sp = sub.add_parser("demo", help="10,000-person demo run on the FICTIONAL inputs")
     sp.add_argument("--config", default=DEMO_CONFIG)

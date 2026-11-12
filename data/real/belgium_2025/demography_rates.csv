@@ -3,7 +3,7 @@
 # status: observed
 # reference_year: 2024
 # unit: annual probability / births per woman
-# source: Eurostat dissemination API / Statbel BeStat (demo_mlifetable, demo_frate); fetched 2026-11-10; see build_manifest.json
+# source: Eurostat dissemination API / Statbel BeStat (demo_mlifetable, demo_frate); fetched 2026-11-12; see build_manifest.json
 # description: Belgian life-table death probabilities and age-specific fertility, 2024 (latest complete year)
 kind,sex,age,rate
 fertility_per_woman,F,15,0.00054000

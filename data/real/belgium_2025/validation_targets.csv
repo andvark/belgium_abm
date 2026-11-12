@@ -3,7 +3,7 @@
 # status: observed
 # reference_year: 2025
 # unit: mixed
-# source: Eurostat dissemination API / Statbel BeStat (ilc_di03, ilc_di12, ilc_li02, ilc_di11, ilc_di01); fetched 2026-11-10; see build_manifest.json
+# source: Eurostat dissemination API / Statbel BeStat (ilc_di03, ilc_di12, ilc_li02, ilc_di11, ilc_di01); fetched 2026-11-12; see build_manifest.json
 # description: Published EU-SILC income-distribution indicators for VALIDATION only (never used to fit the distribution)
 indicator,group,value,unit,income_reference_note
 mean_equivalised_income,TOTAL,33873.00000000,EUR/year,EU-SILC survey year 2025 (income refers to the previous calendar year)

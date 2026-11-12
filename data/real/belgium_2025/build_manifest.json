@@ -1,6 +1,6 @@
 {
   "year": 2025,
-  "built_utc": "2026-11-10T09:10:11.939897+00:00",
+  "built_utc": "2026-11-12T22:47:44.784974+00:00",
   "sources": [
     {
       "provider": "Eurostat",
@@ -200,6 +200,29 @@
     },
     {
       "provider": "Eurostat",
+      "dataset": "lfst_r_lfe2estat",
+      "params": {
+        "time": "2025",
+        "geo": [
+          "BE",
+          "BE10",
+          "BE2",
+          "BE3"
+        ],
+        "sex": "T",
+        "age": "Y15-64",
+        "unit": "THS_PER",
+        "wstatus": [
+          "EMP",
+          "SELF"
+        ]
+      },
+      "updated": "2026-10-30T23:00:00+0100",
+      "label": "Employed persons by professional status and NUTS 2 region",
+      "sha256": "2bdcbc3f25c3939066007adbc83f4eb9ddd555b150444673c8bd4fddd01b7514"
+    },
+    {
+      "provider": "Eurostat",
       "dataset": "ilc_lvho02",
       "params": {
         "time": "2025",
@@ -328,7 +351,7 @@
     "RETIRED is defined by convention as inactive persons aged 65+; inactive persons below 65 (including early retirees) are INACTIVE. The LFS does not publish a 'retired' status here.",
     "At ages 65+ the unemployed share of the population equals the national 65-74 share in every region (no regional unemployment rate is published for 65+).",
     "Education x labour-state joint distribution by region is reconstructed by IPF from national age x education x labour-state seeds and observed regional margins (education by age; employment and unemployment rates by age).",
-    "Self-employment share of employment by age is national (no regional x age breakdown); it is applied in every region.",
+    "The age profile of the self-employed share of employment is national; the regional level is scaled by the regional / national self-employed share at ages 15-64 (Eurostat lfst_r_lfe2estat, 2025). No regional x age breakdown is published.",
     "The BV/SRL share of the self-employed is proxied by regional counts of VAT-subject enterprises: private limited liability companies / (private limited liability companies + natural persons), 2024. Enterprise counts are not persons; this is a rough proxy, not an observation.",
     "Housing-tenure shares are national population shares by household type (EU-SILC via Eurostat) applied to households and to all regions. RENTER = tenant at market rent; OTHER = tenant at reduced or free rent.",
     "Age 100+ residents are included in the 85-99 band; within-band ages are uniform (model convention)."
@@ -376,6 +399,11 @@
       "BE_BRUSSELS": 0.6032543366723675,
       "BE_FLANDERS": 0.49614653010538456,
       "BE_WALLONIA": 0.41179426397087876
+    },
+    "regional_self_employment_factor": {
+      "BE_BRUSSELS": 1.0030041541852952,
+      "BE_FLANDERS": 1.070098302457731,
+      "BE_WALLONIA": 0.8512541988058108
     },
     "self_employed_share_of_employment": {
       "15-24": 0.05016468203699012,

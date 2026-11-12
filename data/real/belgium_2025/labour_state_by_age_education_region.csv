@@ -3,7 +3,7 @@
 # status: derived
 # reference_year: 2025
 # unit: share
-# source: Eurostat dissemination API / Statbel BeStat (lfsa_pgaed, lfsa_egaed, lfsa_agaed, lfst_r_lfe2emprt, lfst_r_lfu3rt, edat_lfse_18); fetched 2026-11-10; see build_manifest.json
+# source: Eurostat dissemination API / Statbel BeStat (lfsa_pgaed, lfsa_egaed, lfsa_agaed, lfst_r_lfe2emprt, lfst_r_lfu3rt, edat_lfse_18); fetched 2026-11-12; see build_manifest.json
 # description: Work-state shares by region x age band x education; IPF of national seeds to regional margins
 region,age_min,age_max,education_level,work_state,share
 BE_BRUSSELS,15,24,LOW,STUDENT,0.51079931

@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 
 from belgium_abm import __version__
-from belgium_abm.analysis.benchmarks import validation_table
+from belgium_abm.analysis.benchmarks import validation_table, wealth_validation_table
 from belgium_abm.analysis.plots import plot_timeseries
 from belgium_abm.config import ModelConfig
 from belgium_abm.engines.economy import EconomyConfig
@@ -57,6 +57,7 @@ class Inputs:
     demography: pd.DataFrame
     validation: pd.DataFrame
     target_median: float
+    wealth: pd.DataFrame | None = None
 
 
 def load_inputs(cfg: ModelConfig, policy_file: str | None = None) -> Inputs:
@@ -66,7 +67,8 @@ def load_inputs(cfg: ModelConfig, policy_file: str | None = None) -> Inputs:
     dem = _read_numeric(cfg.resolve(sim.demography_rates))
     val = _read_numeric(cfg.resolve(sim.validation_targets))
     tm = float(val[(val.indicator == "median_equivalised_income") & (val.group == "TOTAL")].value.iloc[0])
-    return Inputs(cfg, EconomyConfig.load(cfg.resolve(sim.economy_file)), PolicyRules.load(cfg.resolve(policy_file or sim.policy_file)), dem, val, tm)
+    wealth = _read_numeric(cfg.resolve(sim.wealth_targets)) if sim.wealth_targets and cfg.resolve(sim.wealth_targets).is_file() else None
+    return Inputs(cfg, EconomyConfig.load(cfg.resolve(sim.economy_file)), PolicyRules.load(cfg.resolve(policy_file or sim.policy_file)), dem, val, tm, wealth)
 
 
 def _combine(results: list[tuple[int, SimResult]], attr: str) -> pd.DataFrame:
@@ -79,7 +81,7 @@ def _combine(results: list[tuple[int, SimResult]], attr: str) -> pd.DataFrame:
 
 
 def _write_run(out: Path, label: str, results: list[tuple[int, SimResult]], seeds: list[int], inp: Inputs, years: int, info: list[dict], policy: PolicyRules,
-               extra_validation: list[pd.DataFrame], static_name: str | None) -> dict:
+               extra_validation: list[pd.DataFrame], static_name: str | None, wealth_validation: list[pd.DataFrame] | None = None) -> dict:
     out.mkdir(parents=True, exist_ok=True)
     metrics = _combine(results, "metrics")
     groups = _combine(results, "groups")
@@ -105,6 +107,12 @@ def _write_run(out: Path, label: str, results: list[tuple[int, SimResult]], seed
         agg["rel_gap"] = agg["simulated"] / agg["published"] - 1
         agg["status"] = np.where(agg["role"].str.startswith("calibration"), "calibrated", np.where(agg["rel_gap"].abs() <= 0.15, "close (<=15%)", np.where(agg["rel_gap"].abs() <= 0.35, "gap (15-35%)", "LARGE GAP (>35%)")))
         agg.to_csv(out / "validation_vs_published.csv", index=False, lineterminator="\n")
+    if wealth_validation:
+        wv = pd.concat(wealth_validation, ignore_index=True)
+        wa = wv.groupby(["indicator", "group"], as_index=False, sort=False).agg(simulated=("simulated", "mean"), published=("published", "first"))
+        wa["rel_gap"] = wa["simulated"] / wa["published"] - 1
+        wa["status"] = np.where(wa["rel_gap"].abs() <= 0.15, "close (<=15%)", np.where(wa["rel_gap"].abs() <= 0.35, "gap (15-35%)", "LARGE GAP (>35%)"))
+        wa.to_csv(out / "validation_wealth_vs_hfcs.csv", index=False, lineterminator="\n")
     ledger_rows = [{"replicate": rep, "year": e.period, "category": e.category, "payer": e.payer_id, "recipient": e.recipient_id, "amount_cents": e.amount_cents}
                    for rep, r in results for e in r.ledger.entries]
     pd.DataFrame(ledger_rows).to_csv(out / "ledger_summary.csv", index=False, lineterminator="\n")
@@ -145,6 +153,14 @@ def render_report(label: str, m: dict, summary: list[dict], out: Path) -> str:
               "| indicator | group | simulated | published | rel. gap | status |", "|---|---|---|---|---|---|"]
         for _, r in v.iterrows():
             L.append(f"| {r['indicator']} | {r['group']} | {r['simulated']:.4g} | {r['published']:.4g} | {r['rel_gap']:+.1%} | {r['status']} |")
+    wv = out / "validation_wealth_vs_hfcs.csv"
+    if wv.is_file():
+        v = pd.read_csv(wv)
+        L += ["", "## Baseline wealth vs ECB HFCS 2023 (validation only, NOT calibrated)", "",
+              "Definitions differ: HFCS net wealth also includes vehicles, valuables, voluntary pension plans and private business, so simulated wealth is expected to be lower.", "",
+              "| indicator | group | simulated | published | rel. gap | status |", "|---|---|---|---|---|---|"]
+        for _, r in v.iterrows():
+            L.append(f"| {r['indicator']} | {r['group']} | {r['simulated']:.4g} | {r['published']:.4g} | {r['rel_gap']:+.1%} | {r['status']} |")
     L += ["", "Files: `metrics_by_year.csv`, `group_metrics.csv`, `fiscal_by_year.csv`, `events.csv`, `income_mobility.csv`, `uncertainty_summary.csv`, `ledger_summary.csv`, `inequality_over_time.png`, `run_manifest.json`.", ""]
     return "\n".join(L)
 
@@ -166,6 +182,7 @@ def simulate(cfg: ModelConfig, *, seed: int, years: int | None, replicates: int,
     scen_res: list[tuple[int, SimResult]] = []
     infos: list[dict] = []
     vals: list[pd.DataFrame] = []
+    wvals: list[pd.DataFrame] = []
     wl_rows: list[pd.DataFrame] = []
     for rep, sd in enumerate(seeds):
         pop = generate_population(cfg, targets, sd)
@@ -176,6 +193,8 @@ def simulate(cfg: ModelConfig, *, seed: int, years: int | None, replicates: int,
         base_res.append((rep, b))
         m0 = b.metrics[(b.metrics.scenario == "baseline") & (b.metrics.year == 0)].iloc[0].to_dict()
         vals.append(validation_table(m0, b.snapshots[0]["eq_disp"].to_numpy(), inp.validation))
+        if inp.wealth is not None:
+            wvals.append(wealth_validation_table(st0, inp.wealth))
         if scen:
             st_s = st0.copy()
             st_s.econ = scen_econ
@@ -191,7 +210,7 @@ def simulate(cfg: ModelConfig, *, seed: int, years: int | None, replicates: int,
     outs: dict[str, Path] = {}
     root = out_dir
     bdir = root / "baseline"
-    _write_run(bdir, "baseline", base_res, seeds, inp, years, infos, base_pol, vals, scen.name if scen else None)
+    _write_run(bdir, "baseline", base_res, seeds, inp, years, infos, base_pol, vals, scen.name if scen else None, wvals)
     outs["baseline"] = bdir
     if scen:
         sdir = root / f"scenario_{scen.name}"

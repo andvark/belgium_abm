@@ -54,7 +54,7 @@ ASSUMPTIONS = [
     "RETIRED is defined by convention as inactive persons aged 65+; inactive persons below 65 (including early retirees) are INACTIVE. The LFS does not publish a 'retired' status here.",
     "At ages 65+ the unemployed share of the population equals the national 65-74 share in every region (no regional unemployment rate is published for 65+).",
     "Education x labour-state joint distribution by region is reconstructed by IPF from national age x education x labour-state seeds and observed regional margins (education by age; employment and unemployment rates by age).",
-    "Self-employment share of employment by age is national (no regional x age breakdown); it is applied in every region.",
+    "The age profile of the self-employed share of employment is national; the regional level is scaled by the regional / national self-employed share at ages 15-64 (Eurostat lfst_r_lfe2estat, 2025). No regional x age breakdown is published.",
     "The BV/SRL share of the self-employed is proxied by regional counts of VAT-subject enterprises: private limited liability companies / (private limited liability companies + natural persons), 2024. Enterprise counts are not persons; this is a rough proxy, not an observation.",
     "Housing-tenure shares are national population shares by household type (EU-SILC via Eurostat) applied to households and to all regions. RENTER = tenant at market rent; OTHER = tenant at reduced or free rent.",
     "Age 100+ residents are included in the 85-99 band; within-band ages are uniform (model convention).",
@@ -291,6 +291,14 @@ def build_arrangement(b: Build) -> pd.DataFrame:
         natural, bv = float(reg["Natural persons"]), float(reg["Private limited liability company"])
         q[r] = bv / (bv + natural)
     b.diagnostics["bv_share_of_self_employed_proxy"] = q
+    # regional level of self-employment: ratio of the regional to the national self-employed share (ages 15-64, 2025)
+    es_reg = b.es("lfst_r_lfe2estat", geo=["BE", *LFS_GEO.values()], sex="T", age="Y15-64", unit="THS_PER", wstatus=["EMP", "SELF"])
+    ratio_nat = float(es_reg[(es_reg.geo == "BE") & (es_reg.wstatus == "SELF")].value.iloc[0]) / float(es_reg[(es_reg.geo == "BE") & (es_reg.wstatus == "EMP")].value.iloc[0])
+    reg_factor = {}
+    for r in REGIONS:
+        g = es_reg[es_reg.geo == LFS_GEO[r]].set_index("wstatus").value
+        reg_factor[r] = float(g["SELF"] / g["EMP"]) / ratio_nat
+    b.diagnostics["regional_self_employment_factor"] = reg_factor
     parts = {(15, 24): ["Y15-24"], (25, 34): ["Y25-29", "Y30-34"], (35, 44): ["Y35-39", "Y40-44"],
              (45, 54): ["Y45-49", "Y50-54"], (55, 64): ["Y55-64"], (65, 99): ["Y_GE65"]}
     rows = []
@@ -301,9 +309,10 @@ def build_arrangement(b: Build) -> pd.DataFrame:
         sh = se / em
         sh_report[_band_label(band)] = sh
         for r in REGIONS:
-            rows += [(r, band[0], band[1], "EMPLOYEE", 1.0 - sh),
-                     (r, band[0], band[1], "SOLE_PROPRIETOR", sh * (1.0 - q[r])),
-                     (r, band[0], band[1], "BV_OWNER_MANAGER", sh * q[r])]
+            shr = min(0.9, sh * reg_factor[r])
+            rows += [(r, band[0], band[1], "EMPLOYEE", 1.0 - shr),
+                     (r, band[0], band[1], "SOLE_PROPRIETOR", shr * (1.0 - q[r])),
+                     (r, band[0], band[1], "BV_OWNER_MANAGER", shr * q[r])]
     b.diagnostics["self_employed_share_of_employment"] = sh_report
     return pd.DataFrame(rows, columns=["region", "age_min", "age_max", "primary_work_arrangement", "share"])
 
@@ -409,7 +418,7 @@ def build_all(year: int, cache_dir: Path, out_dir: Path, *, offline: bool = Fals
     write_table(out_dir / "labour_state_by_age_education_region.csv",
                 hdr("real_labour_state", "derived", "share", "Work-state shares by region x age band x education; IPF of national seeds to regional margins", ["lfsa_pgaed", "lfsa_egaed", "lfsa_agaed", "lfst_r_lfe2emprt", "lfst_r_lfu3rt", "edat_lfse_18"]), lab)
     write_table(out_dir / "work_arrangement_by_age_region.csv",
-                hdr("real_work_arrangement", "derived", "share", "Employee / sole proprietor / BV owner-manager shares among employed; BV split is a proxy", ["lfsa_esgan", "lfsa_egan", BESTAT_LEGAL_FORM_VIEW]), arr)
+                hdr("real_work_arrangement", "derived", "share", "Employee / sole proprietor / BV owner-manager shares among employed; BV split is a proxy", ["lfsa_esgan", "lfsa_egan", "lfst_r_lfe2estat", BESTAT_LEGAL_FORM_VIEW]), arr)
     write_table(out_dir / "tenure_by_household_type_region.csv",
                 hdr("real_tenure", "derived", "share", "Housing tenure shares by household type (national, EU-SILC); no regional variation", ["ilc_lvho02"]), ten)
 
