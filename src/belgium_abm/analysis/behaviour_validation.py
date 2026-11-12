@@ -34,3 +34,17 @@ def behaviour_validation(metrics: pd.DataFrame, events: pd.DataFrame, behaviour:
     df["rel_gap"] = df["simulated"] / df["observed"] - 1
     df["status"] = np.where(df["rel_gap"].abs() <= 0.15, "close (<=15%)", np.where(df["rel_gap"].abs() <= 0.35, "gap (15-35%)", "LARGE GAP (>35%)"))
     return df
+
+
+def cross_section_drift(initial_persons: pd.DataFrame, final_persons: pd.DataFrame) -> pd.DataFrame:
+    """Work-state shares by age band at the start and at the end of a run. A faithful stationary model keeps these close; the gap is a
+    diagnostic of cohort-flow artifacts (not a forecast of labour-market change)."""
+    bands = [(18, 24), (25, 34), (35, 44), (45, 54), (55, 64)]
+    rows = []
+    for lo, hi in bands:
+        a = initial_persons[initial_persons.age.between(lo, hi)].work_state.value_counts(normalize=True)
+        b = final_persons[final_persons.age.between(lo, hi)].work_state.value_counts(normalize=True)
+        for st in ("EMPLOYED", "UNEMPLOYED", "INACTIVE", "STUDENT"):
+            x, y = float(a.get(st, 0.0)), float(b.get(st, 0.0))
+            rows.append((f"{lo}-{hi}", st, x, y, y - x))
+    return pd.DataFrame(rows, columns=["age_band", "work_state", "share_start", "share_end", "diff"])

@@ -130,6 +130,9 @@ def _write_run(out: Path, label: str, results: list[tuple[int, SimResult]], seed
             bv["rel_gap"] = bv["simulated"] / bv["observed"] - 1
             bv["status"] = np.where(bv["rel_gap"].abs() <= 0.15, "close (<=15%)", np.where(bv["rel_gap"].abs() <= 0.35, "gap (15-35%)", "LARGE GAP (>35%)"))
             bv.to_csv(out / "validation_behaviour_vs_public.csv", index=False, lineterminator="\n")
+    dr = [r.drift.assign(replicate=rep) for rep, r in results if r.drift is not None]
+    if dr:
+        pd.concat(dr).groupby(["age_band", "work_state"], as_index=False, sort=False).mean(numeric_only=True).drop(columns="replicate").to_csv(out / "cross_section_drift.csv", index=False, lineterminator="\n")
     ledger_rows = [{"replicate": rep, "year": e.period, "category": e.category, "payer": e.payer_id, "recipient": e.recipient_id, "amount_cents": e.amount_cents}
                    for rep, r in results for e in r.ledger.entries]
     pd.DataFrame(ledger_rows).to_csv(out / "ledger_summary.csv", index=False, lineterminator="\n")
@@ -177,6 +180,14 @@ def render_report(label: str, m: dict, summary: list[dict], out: Path) -> str:
               "| indicator | simulated | observed | rel. gap | status | role |", "|---|---|---|---|---|---|"]
         for _, r in v.iterrows():
             L.append(f"| {r['indicator']} | {r['simulated']:.4g} | {r['observed']:.4g} | {r['rel_gap']:+.1%} | {r['status']} | {r['role']} |")
+    cd = out / "cross_section_drift.csv"
+    if cd.is_file():
+        v = pd.read_csv(cd)
+        L += ["", "## Cross-section drift diagnostic (work-state shares by age band: start vs end of the run)", "",
+              "A stationary model would keep these equal. The residual gap is an artifact of imperfect cohort-flow derivation, not a labour-market forecast; it also drifts inequality measures slightly over long horizons.", "",
+              "| age band | state | start | end | diff |", "|---|---|---|---|---|"]
+        for _, r in v[v.work_state.isin(["EMPLOYED", "UNEMPLOYED"])].iterrows():
+            L.append(f"| {r['age_band']} | {r['work_state']} | {r['share_start']:.3f} | {r['share_end']:.3f} | {r['diff']:+.3f} |")
     wv = out / "validation_wealth_vs_hfcs.csv"
     if wv.is_file():
         v = pd.read_csv(wv)

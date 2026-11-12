@@ -9,6 +9,7 @@ import numpy as np
 import pandas as pd
 
 from belgium_abm.analysis.inequality import weighted_quantile
+from belgium_abm.analysis.behaviour_validation import cross_section_drift
 from belgium_abm.analysis.measures import (
     fiscal_row,
     group_metrics,
@@ -47,6 +48,7 @@ class SimResult:
     invariant_failures: list[str] = field(default_factory=list)
     extras: dict[str, float] = field(default_factory=dict)
     snapshots: dict[int, pd.DataFrame] = field(default_factory=dict)
+    drift: pd.DataFrame | None = None
 
 
 def _median_eq_disp(st: SimState, policy: PolicyRules) -> float:
@@ -207,4 +209,4 @@ def run_simulation(st0: SimState, policy: PolicyRules, years: int, *, shadow: di
         extras["intergenerational_wealth_rank_correlation"] = float(pd.Series(kids["wr0"].to_numpy()).corr(pd.Series(own), method="spearman"))
         extras["intergenerational_wealth_rank_correlation_n"] = float(len(kids))
     return SimResult(pd.DataFrame(metrics), pd.concat(groups, ignore_index=True) if groups else pd.DataFrame(), pd.DataFrame(fiscal),
-                     pd.DataFrame(ev_rows), mob, ledger, st, policy.banner, max_res, failures, extras, snaps)
+                     pd.DataFrame(ev_rows), mob, ledger, st, policy.banner, max_res, failures, extras, snaps, cross_section_drift(st0.persons, st.persons))

@@ -324,27 +324,59 @@ def _hours(st: SimState, sub: pd.DataFrame, stream: str) -> np.ndarray:
 
 
 def _entry_probs(st: SimState, sub: pd.DataFrame) -> np.ndarray:
-    """P(EMPLOYED), P(UNEMPLOYED) for school leavers from the 25-34 cross-section (non-students)."""
-    lab = st.labour_table[st.labour_table["age_min"] == 25].pivot_table(index=["region", "education_level"], columns="work_state", values="share", aggfunc="sum").fillna(0)
-    key = list(zip(sub["region"], sub["education_level"], strict=True))
-    rows = lab.reindex(key).fillna(0.0)
-    non_student = (1.0 - rows.get("STUDENT", 0.0)).to_numpy()
-    non_student = np.where(non_student > 0, non_student, 1.0)
-    emp = rows.get("EMPLOYED", pd.Series(0.0, index=rows.index)).to_numpy() / non_student
-    une = rows.get("UNEMPLOYED", pd.Series(0.0, index=rows.index)).to_numpy() / non_student
-    return np.column_stack([emp, une])
+    """P(EMPLOYED), P(UNEMPLOYED) for school leavers: the observed non-student shares at the leaver's own age (interpolated
+    from the region x education x age-band table), so entering cohorts are consistent with the age profile the hazards preserve."""
+    E, U, I = _profile_shares(st, sub, 0)  # noqa: E741
+    tot = np.where(E + U + I > 0, E + U + I, 1.0)
+    return np.column_stack([E / tot, U / tot])
 
 
-# ------------------------------------------------------------------------ labour & firms ----
-def _job_finding(st: SimState, sub: pd.DataFrame) -> np.ndarray:
-    """Stationary finding probability f = s*E/U per region x age band x education, capped."""
+_MIDS = np.array([20.0, 29.5, 39.5, 49.5, 59.5])
+
+
+def _profile_shares(st: SimState, sub: pd.DataFrame, offset: int) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Employed / unemployed / inactive shares (among non-students, non-retired) at age + offset, linearly interpolated across the band
+    midpoints of the observed region x education table."""
+    lab = st.labour_table[st.labour_table["age_min"] <= 55].pivot_table(index=["region", "education_level", "age_min"], columns="work_state", values="share", aggfunc="sum").fillna(0)
+    E = np.zeros(len(sub))
+    U = np.zeros(len(sub))
+    I = np.zeros(len(sub))  # noqa: E741
+    ages = sub["age"].to_numpy(float) + offset
+    for (region, edu), idx in sub.groupby(["region", "education_level"]).indices.items():
+        try:
+            t = lab.loc[(region, edu)].sort_index()
+        except KeyError:
+            continue
+        tot = (t["EMPLOYED"] + t["UNEMPLOYED"] + t["INACTIVE"]).to_numpy()
+        tot = np.where(tot > 0, tot, 1.0)
+        for arr, col in ((E, "EMPLOYED"), (U, "UNEMPLOYED"), (I, "INACTIVE")):
+            arr[idx] = np.interp(ages[idx], _MIDS, t[col].to_numpy() / tot)
+    return E, U, I
+
+
+def _profile_hazards(st: SimState, sub: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
+    """(re-entry g from inactivity, job-finding f from unemployment) that keep a cohort on the observed age profile of shares.
+
+    Inactive: I(a+1) = I(a) + l E(a) - g I(a)  ->  g = (l E(a) - (I(a+1) - I(a))) / I(a).
+    Unemployed: U(a+1) = U(a) + inflow - f U(a), with inflow = s E + (1 - eps) g I + half of self-employed exits -> f = (inflow - dU) / U.
+    Both are clipped to [0, cap]; where the profile cannot be matched the cross-section is only approximately preserved.
+    """
     e = st.econ
-    lab = st.labour_table.pivot_table(index=["region", "age_min", "education_level"], columns="work_state", values="share", aggfunc="sum").fillna(0)
-    key = list(zip(sub["region"], _band_of(sub["age"].to_numpy()), sub["education_level"], strict=True))
-    rows = lab.reindex(key).fillna(0.0)
-    E, U = rows["EMPLOYED"].to_numpy(), rows["UNEMPLOYED"].to_numpy()
-    f = np.where(U > 1e-9, e.v("job_separation_rate") * E / np.maximum(U, 1e-9), e.v("unemployment_reentry_cap"))
-    return np.clip(f, 0.0, e.v("unemployment_reentry_cap"))
+    E0, U0, I0 = _profile_shares(st, sub, 0)
+    E1, U1, I1 = _profile_shares(st, sub, 1)
+    l, s, eps = e.v("labour_force_exit_rate"), e.v("job_separation_rate"), e.v("inactive_entry_to_employment_share")
+    g = np.where(I0 > 1e-9, (l * E0 - (I1 - I0)) / np.maximum(I0, 1e-9), 0.0)
+    g = np.clip(g, 0.0, 0.9)
+    arr = st.arrangement_table.pivot_table(index=["region", "age_min"], columns="primary_work_arrangement", values="share", aggfunc="sum").fillna(0)
+    sh = arr.reindex(list(zip(sub["region"], _band_of(sub["age"].to_numpy()), strict=True))).fillna(0.0)
+    self_fail = 0.5 * (e.v("sole_prop_exit_rate") * sh["SOLE_PROPRIETOR"].to_numpy() + e.v("bv_exit_rate") * sh["BV_OWNER_MANAGER"].to_numpy()) * E0
+    inflow = s * E0 + (1.0 - eps) * g * I0 + self_fail
+    f = np.where(U0 > 1e-9, (inflow - (U1 - U0)) / np.maximum(U0, 1e-9), e.v("unemployment_reentry_cap"))
+    return g, np.clip(f, 0.0, e.v("unemployment_reentry_cap"))
+
+
+def _job_finding(st: SimState, sub: pd.DataFrame) -> np.ndarray:
+    return _profile_hazards(st, sub)[1]
 
 
 def _liquidate_firm(st: SimState, owner_ids: np.ndarray, policy: PolicyRules) -> None:
@@ -405,9 +437,7 @@ def step_work(st: SimState, policy: PolicyRules) -> None:
     inact = (p["work_state"] == "INACTIVE") & (p["age"] < ret_age) & (p["age"] >= 18)
     if inact.any():
         sub = p[inact]
-        lab = st.labour_table.pivot_table(index=["region", "age_min", "education_level"], columns="work_state", values="share", aggfunc="sum").fillna(0)
-        rows = lab.reindex(list(zip(sub["region"], _band_of(sub["age"].to_numpy()), sub["education_level"], strict=True))).fillna(0.0)
-        g = np.clip(e.v("labour_force_exit_rate") * rows["EMPLOYED"].to_numpy() / np.maximum(rows["INACTIVE"].to_numpy(), 1e-9), 0.0, 0.5)
+        g, _ = _profile_hazards(st, sub)
         u3 = crn.uniform(st.seed, "lf_entry", yr, sub.index.to_numpy())
         enter = u3 < g
         to_emp = enter & (crn.uniform(st.seed, "lf_entry_kind", yr, sub.index.to_numpy()) < e.v("inactive_entry_to_employment_share"))
