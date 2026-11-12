@@ -11,6 +11,7 @@ import pandas as pd
 
 from belgium_abm import __version__
 from belgium_abm.analysis.benchmarks import validation_table, wealth_validation_table
+from belgium_abm.analysis.behaviour_validation import behaviour_validation
 from belgium_abm.analysis.plots import plot_timeseries
 from belgium_abm.config import ModelConfig
 from belgium_abm.engines.economy import EconomyConfig
@@ -58,6 +59,7 @@ class Inputs:
     validation: pd.DataFrame
     target_median: float
     wealth: pd.DataFrame | None = None
+    behaviour: pd.DataFrame | None = None
 
 
 def load_inputs(cfg: ModelConfig, policy_file: str | None = None) -> Inputs:
@@ -68,7 +70,14 @@ def load_inputs(cfg: ModelConfig, policy_file: str | None = None) -> Inputs:
     val = _read_numeric(cfg.resolve(sim.validation_targets))
     tm = float(val[(val.indicator == "median_equivalised_income") & (val.group == "TOTAL")].value.iloc[0])
     wealth = _read_numeric(cfg.resolve(sim.wealth_targets)) if sim.wealth_targets and cfg.resolve(sim.wealth_targets).is_file() else None
-    return Inputs(cfg, EconomyConfig.load(cfg.resolve(sim.economy_file)), PolicyRules.load(cfg.resolve(policy_file or sim.policy_file)), dem, val, tm, wealth)
+    econ = EconomyConfig.load(cfg.resolve(sim.economy_file))
+    beh = None
+    if sim.behaviour_parameters and cfg.resolve(sim.behaviour_parameters).is_file():
+        beh = _read_numeric(cfg.resolve(sim.behaviour_parameters))
+        econ = econ.apply_observed(beh)
+    if sim.calibrated_parameters and cfg.resolve(sim.calibrated_parameters).is_file():
+        econ = econ.apply_observed(_read_numeric(cfg.resolve(sim.calibrated_parameters)))
+    return Inputs(cfg, econ, PolicyRules.load(cfg.resolve(policy_file or sim.policy_file)), dem, val, tm, wealth, beh)
 
 
 def _combine(results: list[tuple[int, SimResult]], attr: str) -> pd.DataFrame:
@@ -113,6 +122,14 @@ def _write_run(out: Path, label: str, results: list[tuple[int, SimResult]], seed
         wa["rel_gap"] = wa["simulated"] / wa["published"] - 1
         wa["status"] = np.where(wa["rel_gap"].abs() <= 0.15, "close (<=15%)", np.where(wa["rel_gap"].abs() <= 0.35, "gap (15-35%)", "LARGE GAP (>35%)"))
         wa.to_csv(out / "validation_wealth_vs_hfcs.csv", index=False, lineterminator="\n")
+    if inp.behaviour is not None:
+        bvs = [behaviour_validation(r.metrics, r.events, inp.behaviour, i, label).assign(replicate=rep) for (rep, r), i in zip(results, info, strict=False)]
+        bvs = [x for x in bvs if len(x)]
+        if bvs:
+            bv = pd.concat(bvs, ignore_index=True).groupby(["indicator", "role"], as_index=False, sort=False).agg(simulated=("simulated", "mean"), observed=("observed", "first"))
+            bv["rel_gap"] = bv["simulated"] / bv["observed"] - 1
+            bv["status"] = np.where(bv["rel_gap"].abs() <= 0.15, "close (<=15%)", np.where(bv["rel_gap"].abs() <= 0.35, "gap (15-35%)", "LARGE GAP (>35%)"))
+            bv.to_csv(out / "validation_behaviour_vs_public.csv", index=False, lineterminator="\n")
     ledger_rows = [{"replicate": rep, "year": e.period, "category": e.category, "payer": e.payer_id, "recipient": e.recipient_id, "amount_cents": e.amount_cents}
                    for rep, r in results for e in r.ledger.entries]
     pd.DataFrame(ledger_rows).to_csv(out / "ledger_summary.csv", index=False, lineterminator="\n")
@@ -153,6 +170,13 @@ def render_report(label: str, m: dict, summary: list[dict], out: Path) -> str:
               "| indicator | group | simulated | published | rel. gap | status |", "|---|---|---|---|---|---|"]
         for _, r in v.iterrows():
             L.append(f"| {r['indicator']} | {r['group']} | {r['simulated']:.4g} | {r['published']:.4g} | {r['rel_gap']:+.1%} | {r['status']} |")
+    bvf = out / "validation_behaviour_vs_public.csv"
+    if bvf.is_file():
+        v = pd.read_csv(bvf)
+        L += ["", "## Simulated flows vs public aggregates (Eurostat LFS flows, business demography, national accounts)", "",
+              "| indicator | simulated | observed | rel. gap | status | role |", "|---|---|---|---|---|---|"]
+        for _, r in v.iterrows():
+            L.append(f"| {r['indicator']} | {r['simulated']:.4g} | {r['observed']:.4g} | {r['rel_gap']:+.1%} | {r['status']} | {r['role']} |")
     wv = out / "validation_wealth_vs_hfcs.csv"
     if wv.is_file():
         v = pd.read_csv(wv)
@@ -197,7 +221,7 @@ def simulate(cfg: ModelConfig, *, seed: int, years: int | None, replicates: int,
             wvals.append(wealth_validation_table(st0, inp.wealth))
         if scen:
             st_s = st0.copy()
-            st_s.econ = scen_econ
+            st_s.econ = scen.apply_economy(st0.econ)  # scenario knobs on top of the calibrated economy
             s = run_simulation(st_s, scen_pol, years, label=scen.name, check_invariants=check_invariants, min_group_size=cfg.simulation.min_group_size)
             scen_res.append((rep, s))
             for y, snap in b.snapshots.items():

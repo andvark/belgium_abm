@@ -1,0 +1,28 @@
+# dataset_id: real_behaviour_parameters
+# synthetic_demo_only: false
+# status: derived
+# reference_year: 2025
+# unit: mixed
+# source: Eurostat dissemination API / Statbel BeStat (lfsi_long_q, bd_l_form, lfsa_eppga, lfsa_ewhuis, earn_ses22_14, earn_ses_pub2i, earn_ses_pub1s, tipsho10, nasa_10_ki); fetched 2026-11-12; see build_manifest.json
+# description: Behavioural parameters derived from public aggregates (labour flows, business demography, part-time, earnings structure, house prices); rows tagged VALIDATION ONLY are not model inputs
+name,value,status,unit,source,year,definition
+job_separation_rate,0.02722292,derived,per year,"Eurostat lfsi_long_q (EU-LFS quarterly flows, 2024-Q3..2026-Q2, NSA, quarterly matrix averaged and raised to the 4th power)",2025,"Annual probability an employed person is unemployed a year later (all ages 15-74, all employment statuses)"
+labour_force_exit_total_observed,0.12039775,derived,per year,"Eurostat lfsi_long_q (EU-LFS quarterly flows, 2024-Q3..2026-Q2, NSA, quarterly matrix averaged and raised to the 4th power)",2025,Annual probability an employed person is outside the labour force a year later; includes retirement. The model's non-retirement exit rate is derived as this minus the modelled retirement flow
+observed_flow_unemployed_to_employed,0.47244366,derived,per year,"Eurostat lfsi_long_q (EU-LFS quarterly flows, 2024-Q3..2026-Q2, NSA, quarterly matrix averaged and raised to the 4th power)",2025,VALIDATION ONLY: annual unemployment-to-employment probability
+observed_flow_inactive_to_employed,0.19729678,derived,per year,"Eurostat lfsi_long_q (EU-LFS quarterly flows, 2024-Q3..2026-Q2, NSA, quarterly matrix averaged and raised to the 4th power)",2025,VALIDATION ONLY: annual inactivity-to-employment probability (inactive includes students and retirees aged <= 74)
+observed_flow_inactive_to_unemployed,0.04980043,derived,per year,"Eurostat lfsi_long_q (EU-LFS quarterly flows, 2024-Q3..2026-Q2, NSA, quarterly matrix averaged and raised to the 4th power)",2025,VALIDATION ONLY: annual inactivity-to-unemployment probability
+inactive_entry_to_employment_share,0.79845816,derived,share,"Eurostat lfsi_long_q (EU-LFS quarterly flows, 2024-Q3..2026-Q2, NSA, quarterly matrix averaged and raised to the 4th power)",2025,Share of labour-force entrants from inactivity who go to employment rather than unemployment
+sole_prop_exit_rate,0.10150000,observed,per year,"Eurostat bd_l_form, enterprise death rate of sole proprietorships, 2024",2024,Annual enterprise death rate used as the exit rate of sole proprietors (a closure is not always an owner leaving self-employment)
+bv_exit_rate,0.02500000,observed,per year,"Eurostat bd_l_form, enterprise death rate of limited-liability enterprises, 2024",2024,"Annual closure rate of limited-liability enterprises; includes insolvency and winding-up at owner retirement, which the model also generates separately"
+observed_birth_rate_sole_prop,0.10390000,observed,per year,"Eurostat bd_l_form, 2024",2024,VALIDATION ONLY: enterprise birth rate of sole proprietorships
+observed_birth_rate_bv,0.06500000,observed,per year,"Eurostat bd_l_form, 2024",2024,VALIDATION ONLY: enterprise birth rate of limited-liability enterprises
+parttime_share_f,0.38900000,observed,share,"Eurostat lfsa_eppga, ages 15-64, 2025",2025,Part-time share of female employment
+parttime_share_m,0.13400000,observed,share,"Eurostat lfsa_eppga, ages 15-64, 2025",2025,Part-time share of male employment
+parttime_hours,0.59057072,derived,fraction of full time,"Eurostat lfsa_ewhuis, usual weekly hours part-time / full-time, 2025",2025,Part-time hours as a fraction of full-time hours
+wage_age_slope,0.18039266,derived,log points per decade,"Eurostat earn_ses22_14, mean hourly gross earnings by age group (<30, 30-49, 50+), 2022",2022,"Linear term of the cross-sectional age-earnings profile through three age groups (cross-section, not a lifecycle path)"
+wage_age_curvature,-0.03697238,derived,log points per decade^2,"Eurostat earn_ses22_14, mean hourly gross earnings by age group (<30, 30-49, 50+), 2022",2022,Quadratic term of the same profile
+education_wage_ratio_medium,1.08864697,observed,ratio,"Eurostat earn_ses_pub2i, median hourly earnings, 2022",2022,Median hourly earnings of upper-secondary relative to lower-secondary or less
+education_wage_ratio_high,1.71176776,observed,ratio,"Eurostat earn_ses_pub2i, median hourly earnings, 2022",2022,Median hourly earnings of tertiary relative to lower-secondary or less
+low_wage_share_target,0.15860000,observed,share,"Eurostat earn_ses_pub1s, employees below 2/3 of median hourly earnings, 2022",2022,Calibration target for the dispersion of earnings (skill_sigma is solved so the simulated low-wage share matches it)
+house_price_growth,0.01059273,derived,per year,"Eurostat tipsho10 (deflated house price index), log growth 2005-2025",2025,Average real annual growth of house prices over the last 20 years
+observed_household_saving_rate,0.14010000,observed,share of disposable income,"Eurostat nasa_10_ki, gross household saving rate, 2024",2024,VALIDATION ONLY: national-accounts gross saving rate of households and NPISH

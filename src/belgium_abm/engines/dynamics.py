@@ -299,6 +299,7 @@ def step_education(st: SimState) -> None:
         v = crn.uniform(st.seed, "school_exit", yr, sub.index.to_numpy())
         state = np.where(v < pe[:, 0], "EMPLOYED", np.where(v < pe[:, 0] + pe[:, 1], "UNEMPLOYED", "INACTIVE"))
         p.loc[sub.index, "work_state"] = state
+        st.log("school_leavers_employed", int((state == "EMPLOYED").sum()))
         p.loc[sub.index, "tertiary"] = False
         emp = sub.index[state == "EMPLOYED"]
         p.loc[emp, "arrangement"] = "EMPLOYEE"
@@ -371,6 +372,7 @@ def step_work(st: SimState, policy: PolicyRules) -> None:
     # retirement -------------------------------------------------------------------------
     ret = (p["age"] >= ret_age) & p["work_state"].isin(["EMPLOYED", "UNEMPLOYED", "INACTIVE"])
     if ret.any():
+        st.log("retirements_employed", int((ret & (p["work_state"] == "EMPLOYED")).sum()))
         bv_ret = p.index[ret & (p["arrangement"] == "BV_OWNER_MANAGER")].to_numpy()
         _liquidate_firm(st, bv_ret, policy)
         p.loc[ret, "work_state"] = "RETIRED"
@@ -416,6 +418,8 @@ def step_work(st: SimState, policy: PolicyRules) -> None:
         p.loc[sub.index[to_une], "work_state"] = "UNEMPLOYED"
         p.loc[sub.index[to_une], ["unemp_elig", "unemp_years"]] = [False, 0]
         st.log("labour_force_entries", enter.sum())
+        st.log("lf_entries_employed", int(to_emp.sum()))
+        st.log("lf_entries_unemployed", int(to_une.sum()))
     p.loc[lf_out, ["work_state", "arrangement"]] = ["INACTIVE", "NONE"]
     st.log("labour_force_exits", lf_out.sum())
 

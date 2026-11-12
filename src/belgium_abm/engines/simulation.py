@@ -60,6 +60,15 @@ def initial_state(persons: pd.DataFrame, households: pd.DataFrame, targets, demo
     """Build the t=0 state; optionally scale earnings/wealth so the median equivalised disposable income hits a published target."""
     scale = 1.0
     info: dict[str, float] = {"level_scale": 1.0}
+    if "labour_force_exit_total_observed" in econ.parameters:
+        # observed employment -> inactivity flow includes retirement; the model's non-retirement exit is the remainder
+        ret_age = policy.g("pensions", "retirement_age")
+        emp = persons[(persons["work_state"] == "EMPLOYED") & (persons["age"] <= 74)]
+        retire_flow = float((emp["age"] == ret_age - 1).sum() / max(len(emp), 1))
+        l_exit = max(float(econ.v("labour_force_exit_total_observed")) - retire_flow, 0.0)
+        econ = econ.with_derived("observed EMP->INAC annual flow (Eurostat lfsi_long_q) minus the modelled retirement flow", labour_force_exit_rate=l_exit)
+        info["labour_force_exit_rate_derived"] = l_exit
+        info["retirement_flow_share"] = retire_flow
     for _ in range(iterations if (target_median and econ.v("calibrate_level_to_target")) else 1):
         st = build_state(persons, households, targets.labour_state, targets.work_arrangement, targets.education, demography, econ, policy, adult_age, equivalence, seed, scale)
         if not (target_median and econ.v("calibrate_level_to_target")):
@@ -70,6 +79,7 @@ def initial_state(persons: pd.DataFrame, households: pd.DataFrame, targets, demo
             break
         scale *= target_median / med
     info["level_scale"] = scale
+    info["skill_sigma"] = float(st.econ.v("skill_sigma"))
     info["target_median"] = float(target_median) if target_median else float("nan")
     info["achieved_median"] = _median_eq_disp(st, policy)
     # baseline markers for group cuts and mobility

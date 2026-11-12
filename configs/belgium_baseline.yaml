@@ -44,6 +44,8 @@ simulation:
   demography_rates: data/real/belgium_2025/demography_rates.csv
   validation_targets: data/real/belgium_2025/validation_targets.csv
   wealth_targets: data/real/belgium_2025/hfcs_wealth_targets.csv   # ECB HFCS 2023, validation only
+  behaviour_parameters: data/real/belgium_2025/behaviour_observed.csv   # public aggregates that replace assumed behavioural parameters
+  calibrated_parameters: data/real/belgium_2025/wealth_calibration.csv  # wealth parameters fitted to HFCS medians (abm calibrate-wealth)
   years: 30
   min_group_size: 30
 parameters:

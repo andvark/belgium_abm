@@ -76,6 +76,12 @@ class Build:
         self.sources.append({"provider": "Eurostat", "dataset": code, "params": p, "updated": js.get("updated"), "label": js.get("label"), "sha256": sha})
         return to_frame(js)
 
+    def es_any(self, code: str, **params) -> pd.DataFrame:
+        """Like :meth:`es` but without a default time dimension (the caller specifies time or lastTimePeriod)."""
+        js, sha = fetch_raw(code, params, self.cache_dir, offline=self.offline)
+        self.sources.append({"provider": "Eurostat", "dataset": code, "params": params, "updated": js.get("updated"), "label": js.get("label"), "sha256": sha})
+        return to_frame(js)
+
     def bestat(self, view_id: str) -> pd.DataFrame:
         df, sha = fetch_view_csv(view_id, self.cache_dir, offline=self.offline)
         self.sources.append({"provider": "Statbel BeStat", "view": view_id, "sha256": sha})
@@ -403,6 +409,9 @@ def build_all(year: int, cache_dir: Path, out_dir: Path, *, offline: bool = Fals
     ten = build_tenure(b)
     demo = build_demography(b, rate_year=year - 1)
     val = build_validation_targets(b)
+    from belgium_abm.datasources.behaviour import build_behaviour
+
+    beh = build_behaviour(b)
 
     def hdr(dsid: str, status: str, unit: str, desc: str, codes: list[str]) -> dict[str, str]:
         return {"dataset_id": dsid, "synthetic_demo_only": "false", "status": status, "reference_year": str(year), "unit": unit,
@@ -426,6 +435,9 @@ def build_all(year: int, cache_dir: Path, out_dir: Path, *, offline: bool = Fals
                 hdr("real_demography_rates", "observed", "annual probability / births per woman", f"Belgian life-table death probabilities and age-specific fertility, {year - 1} (latest complete year)", ["demo_mlifetable", "demo_frate"]) | {"reference_year": str(year - 1)}, demo)
     write_table(out_dir / "validation_targets.csv",
                 hdr("real_validation_targets", "observed", "mixed", "Published EU-SILC income-distribution indicators for VALIDATION only (never used to fit the distribution)", ["ilc_di03", "ilc_di12", "ilc_li02", "ilc_di11", "ilc_di01"]), val)
+
+    write_table(out_dir / "behaviour_observed.csv",
+                hdr("real_behaviour_parameters", "derived", "mixed", "Behavioural parameters derived from public aggregates (labour flows, business demography, part-time, earnings structure, house prices); rows tagged VALIDATION ONLY are not model inputs", ["lfsi_long_q", "bd_l_form", "lfsa_eppga", "lfsa_ewhuis", "earn_ses22_14", "earn_ses_pub2i", "earn_ses_pub1s", "tipsho10", "nasa_10_ki"]), beh)
 
     manifest = {
         "year": year,

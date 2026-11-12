@@ -67,6 +67,31 @@ def labour_productivity(persons: pd.DataFrame, econ: EconomyConfig, year: int, l
     return np.where(base > 0, out, 0.0)
 
 
+def calibrate_skill_sigma(p: pd.DataFrame, econ: EconomyConfig, level_scale: float) -> EconomyConfig:
+    """Solve ``skill_sigma`` so the total SD of log hourly earnings among employees equals the lognormal-equivalent SD implied by the
+    published low-wage share (share of employees below 2/3 of the median: sigma = |ln(2/3)| / |Phi^-1(share)|). The simulated low-wage
+    share itself is reported as a validation."""
+    from belgium_abm.datasources.behaviour import lognormal_sd_from_low_wage_share
+
+    if "low_wage_share_target" not in econ.parameters:
+        return econ
+    target_share = float(econ.v("low_wage_share_target"))
+    target_sd = lognormal_sd_from_low_wage_share(target_share)
+    emp = ((p["work_state"] == "EMPLOYED") & (p["arrangement"] == "EMPLOYEE")).to_numpy()
+    if emp.sum() < 50:
+        return econ
+    base = np.log(np.clip(labour_productivity(p, econ.with_values(skill_sigma=0.0), 0, level_scale), 1e-9, None))[emp]
+    z = p["skill_z"].to_numpy(float)[emp]
+    lo, hi = 0.0, 1.5
+    for _ in range(50):
+        mid = (lo + hi) / 2
+        if float(np.std(base + mid * z)) < target_sd:
+            lo = mid
+        else:
+            hi = mid
+    return econ.with_derived(f"solved so the SD of log hourly earnings equals {target_sd:.3f}, the lognormal equivalent of the published low-wage share {target_share:.3f} (Eurostat earn_ses_pub1s, 2022)", skill_sigma=(lo + hi) / 2)
+
+
 def equivalence_sizes(persons: pd.DataFrame, households: pd.DataFrame, eq: tuple[float, float, float, int]) -> pd.Series:
     first, extra, child, thr = eq
     ge = (persons["age"] >= thr).groupby(persons["household_id"]).sum()
@@ -124,6 +149,7 @@ def build_state(persons_in: pd.DataFrame, households_in: pd.DataFrame, labour: p
     p["resid"] = crn.normal(seed, "init_resid", 0, ids) * econ.v("wage_shock_sigma") / np.sqrt(1 - econ.v("wage_shock_rho") ** 2)
     p["biz"] = crn.normal(seed, "init_biz", 0, ids) * econ.v("business_shock_sigma") / np.sqrt(1 - econ.v("business_shock_rho") ** 2)
     p["hours"] = _hour_fraction(p, econ, seed, "init_hours", 0)
+    econ = calibrate_skill_sigma(p, econ, level_scale)
     p["last_wage"] = 0.0
     p["pension_rights"] = 0.0
     p["unemp_elig"] = False
@@ -196,6 +222,8 @@ def _init_wealth(st: SimState, policy: PolicyRules, compute_flows) -> None:
     hs = econ.v("housing_value_sigma")
     housing = np.where(owner, econ.v("house_to_income") * income_ref * np.exp(hs * crn.normal(st.seed, "init_house", 0, hid) - hs**2 / 2), 0.0)
     ltv = np.clip(0.70 - 0.015 * (head_age - 30), 0.05, 0.70)
+    renter_like = np.isin(tenure, ["RENTER", "OTHER"])
+    fin = np.where(renter_like, fin * float(econ.v("renter_financial_asset_factor")), fin)
     hh["financial_assets"] = fin
     hh["housing_value"] = housing
     hh["mortgage_balance"] = np.where(tenure == "MORTGAGED_OWNER", ltv * housing, 0.0)

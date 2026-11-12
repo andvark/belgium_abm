@@ -192,6 +192,23 @@ def cmd_crosscheck(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_calibrate_wealth(args: argparse.Namespace) -> int:
+    from belgium_abm.analysis.calibrate_wealth import calibrate_wealth
+    from belgium_abm.datasources.belgium import write_table
+
+    cfg = _load_cfg(args.config, args.root)
+    params, out = calibrate_wealth(cfg, seed=args.seed, n_persons=args.n_persons, maxiter=args.maxiter)
+    path = cfg.resolve(cfg.simulation.calibrated_parameters or "data/real/belgium_2025/wealth_calibration.csv")
+    header = {"dataset_id": "wealth_calibration", "synthetic_demo_only": "false", "status": "derived", "reference_year": "2023", "unit": "mixed",
+              "source": "calibration of stylised wealth parameters to ECB HFCS 2023 medians (abm calibrate-wealth)", "description": "Fitted: overall and by-age medians. Held out: Gini, top shares, percentiles, owner/non-owner medians"}
+    write_table(path, header, params)
+    d = out["diagnostics"]
+    print(f"[abm calibrate-wealth] loss {d['loss_before']:.4f} -> {d['loss_after']:.4f} in {d['evaluations']} evaluations; wrote {path}")
+    print(params[["name", "value"]].to_string(index=False))
+    print(out["table"][["indicator", "group", "before_calibration_simulated", "simulated", "published", "status"]].to_string(index=False, float_format=lambda v: f"{v:,.3f}"))
+    return 0
+
+
 def cmd_demo(args: argparse.Namespace) -> int:
     ns = argparse.Namespace(
         config=args.config, root=args.root, seed=args.seed, n_persons=10_000,
@@ -293,6 +310,13 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("--real-dir", default=None)
     sp.add_argument("--output-dir", default=None)
     sp.set_defaults(func=cmd_crosscheck)
+
+    sp = sub.add_parser("calibrate-wealth", help="fit stylised wealth parameters to HFCS medians (age groups, overall, non-owners); the rest is held out for validation")
+    common(sp)
+    sp.add_argument("--seed", type=int, default=42)
+    sp.add_argument("--n-persons", type=int, default=12000)
+    sp.add_argument("--maxiter", type=int, default=70)
+    sp.set_defaults(func=cmd_calibrate_wealth)
 
     sp = sub.add_parser("demo", help="10,000-person demo run on the FICTIONAL inputs")
     sp.add_argument("--config", default=DEMO_CONFIG)

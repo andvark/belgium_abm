@@ -88,6 +88,12 @@ def yearly_metrics(st: SimState, fl: Flows, label: str = "dynamic") -> dict[str,
         "employment_share_sole_prop": float(((arr == "SOLE_PROPRIETOR") & emp).sum() / max(emp.sum(), 1)),
         "employment_share_bv": float(((arr == "BV_OWNER_MANAGER") & emp).sum() / max(emp.sum(), 1)),
         "n_bv_firms": len(st.firms),
+        "n_employed_le74": int((emp & (st.persons["age"] <= 74)).sum()),
+        "n_unemployed": int((work == "UNEMPLOYED").sum()),
+        "n_inactive_like_le74": int((work.isin(["INACTIVE", "STUDENT", "RETIRED"]) & (st.persons["age"] <= 74)).sum()),
+        "n_sole_prop": int(((arr == "SOLE_PROPRIETOR") & emp).sum()),
+        "n_bv_owner_managers": int(((arr == "BV_OWNER_MANAGER") & emp).sum()),
+        "household_saving_rate": float(1.0 - fl.h["consumption"].sum() / max(fl.h["disp"].sum(), 1e-9)) if "consumption" in fl.h else float("nan"),
     }
     out["redistribution_gini_reduction"] = out["gini_market_pensions_as_transfers"] - out["gini_disposable"]
     for k, val in fl.gov.items():

@@ -1,6 +1,6 @@
 {
   "year": 2025,
-  "built_utc": "2026-11-12T22:47:44.784974+00:00",
+  "built_utc": "2026-11-12T23:16:30.757199+00:00",
   "sources": [
     {
       "provider": "Eurostat",
@@ -340,6 +340,121 @@
       "updated": "2026-10-23T23:00:00+0200",
       "label": "Distribution of income by quantiles",
       "sha256": "c26ee6cdbf2e811823ed18224d4cf78b9f53f98b1ece0900619ab4f65d5b500d"
+    },
+    {
+      "provider": "Eurostat",
+      "dataset": "lfsi_long_q",
+      "params": {
+        "geo": "BE",
+        "s_adj": "NSA",
+        "sex": "T",
+        "unit": "THS_PER",
+        "lastTimePeriod": "8"
+      },
+      "updated": "2026-09-15T23:00:00+0200",
+      "label": "Labour market transitions - quarterly data",
+      "sha256": "80f9beb239ff388dbe489e0043ea968fd834509fcd64419bd0d88c346d287ccd"
+    },
+    {
+      "provider": "Eurostat",
+      "dataset": "bd_l_form",
+      "params": {
+        "geo": "BE",
+        "nace_r2": "B-S_X_O_S94",
+        "time": "2024"
+      },
+      "updated": "2026-10-23T23:00:00+0200",
+      "label": "Business demography by legal form and NACE Rev. 2 activity",
+      "sha256": "f64a8364ecd6f8b8706409afc018e9d3abe868fba84e8532b7492867277f511d"
+    },
+    {
+      "provider": "Eurostat",
+      "dataset": "lfsa_eppga",
+      "params": {
+        "geo": "BE",
+        "time": "2025",
+        "age": "Y15-64"
+      },
+      "updated": "2026-10-30T11:00:00+0100",
+      "label": "Persons in part-time employment by age - % of total employment",
+      "sha256": "45f0e3ded563aad7353ae7999e4a7c9ff8f202063d71936f82bdafebfc79f0a5"
+    },
+    {
+      "provider": "Eurostat",
+      "dataset": "lfsa_ewhuis",
+      "params": {
+        "geo": "BE",
+        "time": "2025",
+        "wstatus": "EMP",
+        "isco08": "TOTAL",
+        "age": "Y15-64",
+        "sex": "T"
+      },
+      "updated": "2026-10-30T11:00:00+0100",
+      "label": "Average usual weekly hours worked in the main job by professional status, full-time/part-time employment and occupation",
+      "sha256": "6766b127f04d7dbdc04b6919881229c5bc584ea0b5290c8f509e930c175db1e4"
+    },
+    {
+      "provider": "Eurostat",
+      "dataset": "earn_ses22_14",
+      "params": {
+        "geo": "BE",
+        "time": "2022",
+        "sex": "T",
+        "indic_se": "ERN",
+        "unit": "EUR",
+        "isco08": "TOTAL",
+        "sizeclas": "GE10"
+      },
+      "updated": "2026-02-09T23:00:00+0100",
+      "label": "Mean hourly earnings by sex, age and occupation - NACE Rev. 2, B-S excluding O (2022)",
+      "sha256": "6b08db31199e80a04df224a3ceaa1a852b5a30dcbdfe9b15647cdb50b022f939"
+    },
+    {
+      "provider": "Eurostat",
+      "dataset": "earn_ses_pub2i",
+      "params": {
+        "geo": "BE",
+        "time": "2022",
+        "unit": "EUR"
+      },
+      "updated": "2026-02-09T23:00:00+0100",
+      "label": "Median hourly earnings, all employees (excluding apprentices) by educational attainment level",
+      "sha256": "061e58261b28bcc544e6dfd6c50f29bd0d65d5714d79a6a0fd743d4e2b7a2cbc"
+    },
+    {
+      "provider": "Eurostat",
+      "dataset": "earn_ses_pub1s",
+      "params": {
+        "geo": "BE",
+        "time": "2022",
+        "sex": "T"
+      },
+      "updated": "2026-02-09T23:00:00+0100",
+      "label": "Low-wage earners as a proportion of all employees (excluding apprentices) by sex",
+      "sha256": "c0b81f7f426e4815beb8415527f23061a8f6c74c4bb66055343f69641906c01a"
+    },
+    {
+      "provider": "Eurostat",
+      "dataset": "tipsho10",
+      "params": {
+        "geo": "BE",
+        "unit": "I15_A_AVG"
+      },
+      "updated": "2026-11-03T11:00:00+0100",
+      "label": "House price index, deflated - annual data",
+      "sha256": "1cf0b92fa56a35613b529747524e62824a83624a9e9137267778615a134b3f6f"
+    },
+    {
+      "provider": "Eurostat",
+      "dataset": "nasa_10_ki",
+      "params": {
+        "geo": "BE",
+        "time": "2024"
+      },
+      "updated": "2026-10-28T11:00:00+0100",
+      "label": "Key indicators for sector accounts - annual data",
+      "sha256": "aee7a31032ebf317d23420b78800e5726d8550cbaaf2a6f451825fc3cb640286"
     }
   ],
   "assumptions": [
@@ -412,6 +527,11 @@
       "45-54": 0.15202016096252338,
       "55-64": 0.1743022643496577,
       "65-99": 0.43194706994328924
+    },
+    "labour_flow_quarters": "2024-Q3..2026-Q2",
+    "behaviour_education_ratio": {
+      "medium": 1.088646967340591,
+      "high": 1.7117677553136343
     }
   },
   "n_sources_before_households": 1

@@ -1,0 +1,12 @@
+# dataset_id: wealth_calibration
+# synthetic_demo_only: false
+# status: derived
+# reference_year: 2023
+# unit: mixed
+# source: calibration of stylised wealth parameters to ECB HFCS 2023 medians (abm calibrate-wealth)
+# description: Fitted: overall and by-age medians. Held out: Gini, top shares, percentiles, owner/non-owner medians
+name,value,status,unit,source,year,definition
+fin_assets_multiple_max,1.14831578,derived,years of household income,"calibrated to ECB HFCS 2023 median net wealth by age of reference person, overall and non-owner (simulated method of moments on the initial state)",2023,Asymptotic financial assets as a multiple of annual household income
+fin_assets_age_tau,0.53556400,derived,years,"calibrated to ECB HFCS 2023 median net wealth by age of reference person, overall and non-owner (simulated method of moments on the initial state)",2023,Time scale of asset accumulation with age (from age 20)
+house_to_income,5.39470050,derived,ratio,"calibrated to ECB HFCS 2023 median net wealth by age of reference person, overall and non-owner (simulated method of moments on the initial state)",2023,Housing value / household labour income for owners at initialisation and purchase
+renter_financial_asset_factor,0.66611168,derived,ratio,"calibrated to ECB HFCS 2023 median net wealth by age of reference person, overall and non-owner (simulated method of moments on the initial state)",2023,Initial financial assets of renting / other-tenure households relative to owners at the same age and income (calibrated to the HFCS non-owner median by abm calibrate-wealth)

@@ -58,6 +58,8 @@ class SimulationConfig(BaseModel):
     demography_rates: str
     validation_targets: str
     wealth_targets: str | None = None
+    behaviour_parameters: str | None = None
+    calibrated_parameters: str | None = None
     years: int = Field(default=30, gt=0)
     min_group_size: int = Field(default=30, gt=0)
 
