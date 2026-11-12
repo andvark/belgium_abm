@@ -9,6 +9,6 @@ Same skill, same earnings residual path and the same starting assets in every ar
 
 | arrangement | lifetime disposable income (mean) | p10 | p90 | P(below employee) | volatility | net worth at end (mean) | p10 | pension at end | lifetime net fiscal contribution |
 |---|---|---|---|---|---|---|---|---|---|
-| EMPLOYEE | 3,423,283 | 3,031,648 | 3,846,202 |  | 0.099 | 436,940 | 333,320 | 31,110 | 3,334,949 |
-| SOLE_PROPRIETOR | 3,562,921 | 3,087,812 | 4,033,449 | 19% | 0.158 | 454,951 | 342,499 | 23,316 | 3,202,821 |
-| BV_OWNER_MANAGER | 3,150,724 | 2,738,690 | 3,564,091 | 98% | 0.143 | 812,515 | 643,403 | 14,722 | 3,050,699 |
+| EMPLOYEE | 3,352,794 | 2,969,701 | 3,765,373 |  | 0.099 | 424,188 | 323,049 | 30,328 | 3,229,402 |
+| SOLE_PROPRIETOR | 3,487,935 | 3,023,545 | 3,947,734 | 19% | 0.158 | 441,455 | 331,743 | 22,693 | 3,100,526 |
+| BV_OWNER_MANAGER | 3,083,902 | 2,681,507 | 3,486,247 | 98% | 0.142 | 787,891 | 623,805 | 14,558 | 2,952,654 |

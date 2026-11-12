@@ -1,11 +1,11 @@
 indicator,group,role,simulated,published,rel_gap,status
-at_risk_of_poverty_rate_60pct_median,TOTAL,validation (not fitted),0.22470729642937268,0.109,1.0615348296272722,LARGE GAP (>35%)
-gini_disposable_income,TOTAL,validation (not fitted),0.2913012625106863,0.234,0.24487719021660803,gap (15-35%)
-income_share_quintile,QU1,validation (not fitted),0.07612897763902038,0.103,-0.2608837122425206,gap (15-35%)
-income_share_quintile,QU2,validation (not fitted),0.13239670548623234,0.148,-0.1054276656335652,close (<=15%)
-income_share_quintile,QU3,validation (not fitted),0.1832196720150486,0.186,-0.014947999919093569,close (<=15%)
-income_share_quintile,QU4,validation (not fitted),0.24118173392540726,0.228,0.05781462247985636,close (<=15%)
-income_share_quintile,QU5,validation (not fitted),0.3670729109342914,0.336,0.09247890159015282,close (<=15%)
-mean_equivalised_income,TOTAL,validation (not fitted),34136.23503151161,33873.0,0.007771234656263504,close (<=15%)
-median_equivalised_income,TOTAL,calibration target (one-point level),31168.875799600744,31299.0,-0.004157455522516895,calibrated
-s80_s20,TOTAL,validation (not fitted),4.823038094620027,3.25,0.4840117214215467,LARGE GAP (>35%)
+at_risk_of_poverty_rate_60pct_median,TOTAL,validation (not fitted),0.22752707906533795,0.109,1.0874043950948438,LARGE GAP (>35%)
+gini_disposable_income,TOTAL,validation (not fitted),0.288940042180352,0.234,0.23478650504423926,gap (15-35%)
+income_share_quintile,QU1,validation (not fitted),0.07643700824961101,0.103,-0.25789312379018425,gap (15-35%)
+income_share_quintile,QU2,validation (not fitted),0.1325840513902806,0.148,-0.10416181493053644,close (<=15%)
+income_share_quintile,QU3,validation (not fitted),0.1847447976546051,0.186,-0.006748399706424157,close (<=15%)
+income_share_quintile,QU4,validation (not fitted),0.24162217157440852,0.228,0.059746366554423336,close (<=15%)
+income_share_quintile,QU5,validation (not fitted),0.36461197113109484,0.336,0.08515467598540116,close (<=15%)
+mean_equivalised_income,TOTAL,validation (not fitted),33871.566982949975,33873.0,-4.230558409423768e-05,close (<=15%)
+median_equivalised_income,TOTAL,calibration target (one-point level),31156.60287749829,31299.0,-0.004549574187728278,calibrated
+s80_s20,TOTAL,validation (not fitted),4.771314699128091,3.25,0.46809683050095097,LARGE GAP (>35%)

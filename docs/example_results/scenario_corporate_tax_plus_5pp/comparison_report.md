@@ -12,44 +12,44 @@
 
 | metric | effect | mean diff | p05 | p95 | baseline |
 |---|---|---|---|---|---|
-| Gini, market income (pensions as transfers) | dynamic_total | 0.0001233 | 6.379e-05 | 0.0001735 | 0.4996 |
-| Gini, market income (pensions as transfers) | static_fixed_behaviour | -1.287e-05 | -2.165e-05 | -3.065e-06 | 0.4996 |
-| Gini, market income (pensions as transfers) | behavioural_residual_NOT_CAUSAL | 0.0001362 | 7.351e-05 | 0.0001899 | 0.4996 |
-| Gini, market income (pensions as deferred income) | dynamic_total | 1.348e-05 | -5.373e-05 | 6.252e-05 | 0.3694 |
-| Gini, market income (pensions as deferred income) | static_fixed_behaviour | -5.888e-05 | -7.017e-05 | -5.187e-05 | 0.3694 |
-| Gini, market income (pensions as deferred income) | behavioural_residual_NOT_CAUSAL | 7.235e-05 | 5.889e-06 | 0.0001238 | 0.3694 |
-| Gini, disposable income | dynamic_total | -4.539e-05 | -9.327e-05 | 1.784e-05 | 0.2887 |
-| Gini, disposable income | static_fixed_behaviour | -9.805e-05 | -0.000113 | -9.002e-05 | 0.2887 |
-| Gini, disposable income | behavioural_residual_NOT_CAUSAL | 5.267e-05 | 1.294e-07 | 0.0001138 | 0.2887 |
-| Gini, after VAT | dynamic_total | -6.106e-05 | -0.0001097 | 6.397e-06 | 0.2937 |
-| Gini, after VAT | static_fixed_behaviour | -9.872e-05 | -0.000114 | -9.063e-05 | 0.2937 |
-| Gini, after VAT | behavioural_residual_NOT_CAUSAL | 3.766e-05 | -1.663e-05 | 0.000103 | 0.2937 |
-| At-risk-of-poverty rate | dynamic_total | -0.0001025 | -0.0004597 | 0.0002013 | 0.1802 |
-| At-risk-of-poverty rate | static_fixed_behaviour | -4.539e-05 | -0.0003778 | 0.0001504 | 0.1802 |
-| At-risk-of-poverty rate | behavioural_residual_NOT_CAUSAL | -5.706e-05 | -0.000409 | 0.0002015 | 0.1802 |
-| S80/S20 | dynamic_total | -0.001137 | -0.002934 | 0.0008144 | 4.835 |
-| S80/S20 | static_fixed_behaviour | -0.002378 | -0.002777 | -0.00208 | 4.835 |
-| S80/S20 | behavioural_residual_NOT_CAUSAL | 0.001241 | -0.0005733 | 0.003326 | 4.835 |
-| P90/P10 | dynamic_total | 0.001302 | -0.002584 | 0.006494 | 4.336 |
-| P90/P10 | static_fixed_behaviour | -2.152e-05 | -0.003189 | 0.002676 | 4.336 |
-| P90/P10 | behavioural_residual_NOT_CAUSAL | 0.001324 | -0.0009584 | 0.004958 | 4.336 |
-| Gini, net worth | dynamic_total | -0.000323 | -0.000363 | -0.000266 | 0.586 |
-| Gini, net worth | static_fixed_behaviour | 0 | 0 | 0 | 0.586 |
-| Gini, net worth | behavioural_residual_NOT_CAUSAL | -0.000323 | -0.000363 | -0.000266 | 0.586 |
-| Top-10% wealth share | dynamic_total | -0.000292 | -0.0003953 | -0.0001547 | 0.3784 |
-| Top-10% wealth share | static_fixed_behaviour | 0 | 0 | 0 | 0.3784 |
-| Top-10% wealth share | behavioural_residual_NOT_CAUSAL | -0.000292 | -0.0003953 | -0.0001547 | 0.3784 |
-| Top-1% wealth share | dynamic_total | 1.382e-05 | -2.788e-05 | 5.689e-05 | 0.06833 |
-| Top-1% wealth share | static_fixed_behaviour | 0 | 0 | 0 | 0.06833 |
-| Top-1% wealth share | behavioural_residual_NOT_CAUSAL | 1.382e-05 | -2.788e-05 | 5.689e-05 | 0.06833 |
-| Median equivalised disposable income (EUR) | dynamic_total | -23.31 | -42.88 | -7.954 | 3.863e+04 |
-| Median equivalised disposable income (EUR) | static_fixed_behaviour | -10.72 | -29.12 | -0.2417 | 3.863e+04 |
-| Median equivalised disposable income (EUR) | behavioural_residual_NOT_CAUSAL | -12.59 | -18.7 | -4.151 | 3.863e+04 |
-| Unemployment rate | dynamic_total | 1.367e-05 | -8.719e-06 | 7.763e-05 | 0.07336 |
-| Unemployment rate | static_fixed_behaviour | 0 | 0 | 0 | 0.07336 |
-| Unemployment rate | behavioural_residual_NOT_CAUSAL | 1.367e-05 | -8.719e-06 | 7.763e-05 | 0.07336 |
-| Net fiscal balance (EUR) | dynamic_total | 3.808e+08 | 3.126e+08 | 4.81e+08 | 2.261e+11 |
-| Net fiscal balance (EUR) | static_fixed_behaviour | 5.947e+08 | 5.518e+08 | 6.393e+08 | 2.261e+11 |
-| Net fiscal balance (EUR) | behavioural_residual_NOT_CAUSAL | -2.14e+08 | -2.721e+08 | -1.414e+08 | 2.261e+11 |
+| Gini, market income (pensions as transfers) | dynamic_total | 9.492e-05 | 1.714e-07 | 0.0001919 | 0.4982 |
+| Gini, market income (pensions as transfers) | static_fixed_behaviour | -1.502e-05 | -2.836e-05 | -2.219e-06 | 0.4982 |
+| Gini, market income (pensions as transfers) | behavioural_residual_NOT_CAUSAL | 0.0001099 | 2.279e-05 | 0.0002057 | 0.4982 |
+| Gini, market income (pensions as deferred income) | dynamic_total | -1.431e-05 | -0.0001157 | 8.429e-05 | 0.3677 |
+| Gini, market income (pensions as deferred income) | static_fixed_behaviour | -6.042e-05 | -7.336e-05 | -4.866e-05 | 0.3677 |
+| Gini, market income (pensions as deferred income) | behavioural_residual_NOT_CAUSAL | 4.611e-05 | -4.676e-05 | 0.000143 | 0.3677 |
+| Gini, disposable income | dynamic_total | -7.178e-05 | -0.0001383 | -5.731e-06 | 0.2877 |
+| Gini, disposable income | static_fixed_behaviour | -9.772e-05 | -0.0001125 | -8.431e-05 | 0.2877 |
+| Gini, disposable income | behavioural_residual_NOT_CAUSAL | 2.593e-05 | -2.923e-05 | 9.005e-05 | 0.2877 |
+| Gini, after VAT | dynamic_total | -8.765e-05 | -0.0001537 | -2.146e-05 | 0.2927 |
+| Gini, after VAT | static_fixed_behaviour | -9.836e-05 | -0.0001132 | -8.482e-05 | 0.2927 |
+| Gini, after VAT | behavioural_residual_NOT_CAUSAL | 1.071e-05 | -4.397e-05 | 7.485e-05 | 0.2927 |
+| At-risk-of-poverty rate | dynamic_total | -7.355e-05 | -0.0004851 | 0.0003216 | 0.1799 |
+| At-risk-of-poverty rate | static_fixed_behaviour | -9.077e-05 | -0.0004141 | 0.0001568 | 0.1799 |
+| At-risk-of-poverty rate | behavioural_residual_NOT_CAUSAL | 1.722e-05 | -0.0002004 | 0.0002012 | 0.1799 |
+| S80/S20 | dynamic_total | -0.002034 | -0.005235 | 0.0001401 | 4.78 |
+| S80/S20 | static_fixed_behaviour | -0.002353 | -0.002808 | -0.002049 | 4.78 |
+| S80/S20 | behavioural_residual_NOT_CAUSAL | 0.0003195 | -0.002431 | 0.002396 | 4.78 |
+| P90/P10 | dynamic_total | -0.004682 | -0.01588 | 0.001449 | 4.316 |
+| P90/P10 | static_fixed_behaviour | -0.003814 | -0.01129 | 0.001414 | 4.316 |
+| P90/P10 | behavioural_residual_NOT_CAUSAL | -0.0008679 | -0.006442 | 0.002255 | 4.316 |
+| Gini, net worth | dynamic_total | -0.0001522 | -0.0002303 | -7.983e-05 | 0.5857 |
+| Gini, net worth | static_fixed_behaviour | 0 | 0 | 0 | 0.5857 |
+| Gini, net worth | behavioural_residual_NOT_CAUSAL | -0.0001522 | -0.0002303 | -7.983e-05 | 0.5857 |
+| Top-10% wealth share | dynamic_total | -0.0001017 | -0.0001992 | 1.911e-05 | 0.3714 |
+| Top-10% wealth share | static_fixed_behaviour | 0 | 0 | 0 | 0.3714 |
+| Top-10% wealth share | behavioural_residual_NOT_CAUSAL | -0.0001017 | -0.0001992 | 1.911e-05 | 0.3714 |
+| Top-1% wealth share | dynamic_total | 3.665e-05 | -3.741e-05 | 9.709e-05 | 0.06887 |
+| Top-1% wealth share | static_fixed_behaviour | 0 | 0 | 0 | 0.06887 |
+| Top-1% wealth share | behavioural_residual_NOT_CAUSAL | 3.665e-05 | -3.741e-05 | 9.709e-05 | 0.06887 |
+| Median equivalised disposable income (EUR) | dynamic_total | -25.54 | -58.78 | -4.35 | 3.848e+04 |
+| Median equivalised disposable income (EUR) | static_fixed_behaviour | -14.13 | -49.1 | 0 | 3.848e+04 |
+| Median equivalised disposable income (EUR) | behavioural_residual_NOT_CAUSAL | -11.41 | -25.37 | -0.01489 | 3.848e+04 |
+| Unemployment rate | dynamic_total | -1.081e-05 | -7.354e-05 | 1.845e-05 | 0.07384 |
+| Unemployment rate | static_fixed_behaviour | 0 | 0 | 0 | 0.07384 |
+| Unemployment rate | behavioural_residual_NOT_CAUSAL | -1.081e-05 | -7.354e-05 | 1.845e-05 | 0.07384 |
+| Net fiscal balance (EUR) | dynamic_total | 3.76e+08 | 3.018e+08 | 4.656e+08 | 2.197e+11 |
+| Net fiscal balance (EUR) | static_fixed_behaviour | 5.795e+08 | 5.469e+08 | 6.128e+08 | 2.197e+11 |
+| Net fiscal balance (EUR) | behavioural_residual_NOT_CAUSAL | -2.035e+08 | -3.016e+08 | -1.182e+08 | 2.197e+11 |
 
 Group-level winners and losers: `group_differences.csv`, `winners_losers_by_baseline_wealth_quintile.csv`; fiscal flows: `fiscal_differences.csv`.
