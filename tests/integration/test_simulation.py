@@ -256,3 +256,35 @@ class WealthValidationTests(unittest.TestCase):
         # retirees are seeded from career income, so older households are not wealth-poor (regression test for the validated flaw)
         old = t[(t.indicator == "net_wealth_median_by_age_of_reference_person") & (t.group.isin(["65-74", "75+"]))]
         self.assertTrue((old.simulated > 0.4 * old.published).all())
+
+
+class SensitivityAndWealthCalibrationTests(unittest.TestCase):
+    def test_wealth_calibration_file_is_applied_with_provenance(self) -> None:
+        _, inp, _, _, _ = real_sim_inputs()
+        for name in ("fin_assets_multiple_max", "fin_assets_age_tau", "house_to_income", "renter_financial_asset_factor"):
+            self.assertEqual(inp.econ.parameters[name].status.value, "derived", name)
+            self.assertIn("HFCS", inp.econ.parameters[name].source)
+
+    def test_work_intensity_validation_row(self) -> None:
+        from belgium_abm.analysis.benchmarks import work_intensity_row
+
+        _, inp, _, st0, _ = real_sim_inputs()
+        r = work_intensity_row(st0, inp.validation).iloc[0]
+        self.assertTrue(0.03 < r.simulated < 0.25)
+        self.assertAlmostEqual(r.published, 0.11, delta=0.03)
+
+    def test_sensitivity_runs_and_ranks(self) -> None:
+        from belgium_abm.analysis.sensitivity import run_sensitivity
+        from belgium_abm.config import load_config
+
+        cfg = load_config(ROOT / "configs" / "belgium_baseline.yaml")
+        with tempfile.TemporaryDirectory() as d:
+            sw = run_sensitivity(cfg, str(ROOT / "scenarios" / "corporate_tax_plus_5pp.yaml"), Path(d), n_persons=2500, years=2, replicates=1,
+                                 params=["bv_payout_ratio", "fin_return"])
+            for f in ("sensitivity_by_setting.csv", "sensitivity_ranking.csv", "sensitivity_tornado.png", "sensitivity_report.md"):
+                self.assertTrue((Path(d) / f).is_file(), f)
+        m = sw[sw.metric == "effect_net_fiscal_balance_static"]
+        self.assertEqual(set(m.parameter), {"bv_payout_ratio", "fin_return"})
+        self.assertTrue((m.rank_within_metric.isin([1, 2])).all())
+        # a higher payout ratio shifts profit from retained to distributed: the static corporate-tax effect must be positive either way
+        self.assertTrue((sw[sw.metric == "effect_net_fiscal_balance_static"].at_baseline > 0).all())

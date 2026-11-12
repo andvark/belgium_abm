@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 
 from belgium_abm import __version__
-from belgium_abm.analysis.benchmarks import validation_table, wealth_validation_table
+from belgium_abm.analysis.benchmarks import validation_table, wealth_validation_table, work_intensity_row
 from belgium_abm.analysis.behaviour_validation import behaviour_validation
 from belgium_abm.analysis.plots import plot_timeseries
 from belgium_abm.config import ModelConfig
@@ -216,7 +216,7 @@ def simulate(cfg: ModelConfig, *, seed: int, years: int | None, replicates: int,
         b = run_simulation(st0, base_pol, years, shadow=shadow, label="baseline", check_invariants=check_invariants, min_group_size=cfg.simulation.min_group_size)
         base_res.append((rep, b))
         m0 = b.metrics[(b.metrics.scenario == "baseline") & (b.metrics.year == 0)].iloc[0].to_dict()
-        vals.append(validation_table(m0, b.snapshots[0]["eq_disp"].to_numpy(), inp.validation))
+        vals.append(pd.concat([validation_table(m0, b.snapshots[0]["eq_disp"].to_numpy(), inp.validation), work_intensity_row(st0, inp.validation)], ignore_index=True))
         if inp.wealth is not None:
             wvals.append(wealth_validation_table(st0, inp.wealth))
         if scen:

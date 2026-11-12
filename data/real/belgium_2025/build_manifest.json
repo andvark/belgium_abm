@@ -1,6 +1,6 @@
 {
   "year": 2025,
-  "built_utc": "2026-11-12T23:16:30.757199+00:00",
+  "built_utc": "2026-11-12T23:23:14.482173+00:00",
   "sources": [
     {
       "provider": "Eurostat",
@@ -340,6 +340,24 @@
       "updated": "2026-10-23T23:00:00+0200",
       "label": "Distribution of income by quantiles",
       "sha256": "c26ee6cdbf2e811823ed18224d4cf78b9f53f98b1ece0900619ab4f65d5b500d"
+    },
+    {
+      "provider": "Eurostat",
+      "dataset": "ilc_lvhl11",
+      "params": {
+        "time": "2025",
+        "geo": "BE",
+        "sex": "T",
+        "age": [
+          "Y_LT60",
+          "Y_LT18",
+          "Y18-59"
+        ],
+        "unit": "PC"
+      },
+      "updated": "2026-10-20T23:00:00+0200",
+      "label": "Persons living in households with very low work intensity by age and sex (population aged 0 to 59 years) - EU 2020 strategy",
+      "sha256": "6f1240545227b282b80cd27904c5e98c616d733de00850542d5a8a83f578f189"
     },
     {
       "provider": "Eurostat",

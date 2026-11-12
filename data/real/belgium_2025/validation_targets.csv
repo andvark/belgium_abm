@@ -3,7 +3,7 @@
 # status: observed
 # reference_year: 2025
 # unit: mixed
-# source: Eurostat dissemination API / Statbel BeStat (ilc_di03, ilc_di12, ilc_li02, ilc_di11, ilc_di01); fetched 2026-11-12; see build_manifest.json
+# source: Eurostat dissemination API / Statbel BeStat (ilc_di03, ilc_di12, ilc_li02, ilc_di11, ilc_di01, ilc_lvhl11); fetched 2026-11-12; see build_manifest.json
 # description: Published EU-SILC income-distribution indicators for VALIDATION only (never used to fit the distribution)
 indicator,group,value,unit,income_reference_note
 mean_equivalised_income,TOTAL,33873.00000000,EUR/year,EU-SILC survey year 2025 (income refers to the previous calendar year)
@@ -95,3 +95,6 @@ income_cutoff,QU1,21798.00000000,EUR/year,EU-SILC survey year 2025 (income refer
 income_cutoff,QU4,42927.00000000,EUR/year,EU-SILC survey year 2025 (income refers to the previous calendar year)
 income_cutoff,D1,18337.00000000,EUR/year,EU-SILC survey year 2025 (income refers to the previous calendar year)
 income_cutoff,D9,50393.00000000,EUR/year,EU-SILC survey year 2025 (income refers to the previous calendar year)
+very_low_work_intensity_rate,Y_LT18,0.09600000,ratio,EU-SILC survey year 2025 (income refers to the previous calendar year)
+very_low_work_intensity_rate,Y18-59,0.11500000,ratio,EU-SILC survey year 2025 (income refers to the previous calendar year)
+very_low_work_intensity_rate,Y_LT60,0.11000000,ratio,EU-SILC survey year 2025 (income refers to the previous calendar year)

@@ -381,6 +381,9 @@ def build_validation_targets(b: Build) -> pd.DataFrame:
         rows.append(("income_share_quintile", code, float(v) / 100.0, "ratio", yr))
     for code, v in q2[q2.quant_inc.isin(["D1", "D9", "QU1", "QU4"])][["quant_inc", "value"]].itertuples(index=False):
         rows.append(("income_cutoff", code, float(v), "EUR/year", yr))
+    wi = b.es("ilc_lvhl11", geo="BE", sex="T", age=["Y_LT60", "Y_LT18", "Y18-59"], unit="PC")
+    for age, v in wi[["age", "value"]].itertuples(index=False):
+        rows.append(("very_low_work_intensity_rate", age, float(v) / 100.0, "ratio", yr))
     return pd.DataFrame(rows, columns=["indicator", "group", "value", "unit", "income_reference_note"]).assign(
         income_reference_note=lambda d: "EU-SILC survey year " + d["income_reference_note"] + " (income refers to the previous calendar year)"
     )
@@ -434,7 +437,7 @@ def build_all(year: int, cache_dir: Path, out_dir: Path, *, offline: bool = Fals
     write_table(out_dir / "demography_rates.csv",
                 hdr("real_demography_rates", "observed", "annual probability / births per woman", f"Belgian life-table death probabilities and age-specific fertility, {year - 1} (latest complete year)", ["demo_mlifetable", "demo_frate"]) | {"reference_year": str(year - 1)}, demo)
     write_table(out_dir / "validation_targets.csv",
-                hdr("real_validation_targets", "observed", "mixed", "Published EU-SILC income-distribution indicators for VALIDATION only (never used to fit the distribution)", ["ilc_di03", "ilc_di12", "ilc_li02", "ilc_di11", "ilc_di01"]), val)
+                hdr("real_validation_targets", "observed", "mixed", "Published EU-SILC income-distribution indicators for VALIDATION only (never used to fit the distribution)", ["ilc_di03", "ilc_di12", "ilc_li02", "ilc_di11", "ilc_di01", "ilc_lvhl11"]), val)
 
     write_table(out_dir / "behaviour_observed.csv",
                 hdr("real_behaviour_parameters", "derived", "mixed", "Behavioural parameters derived from public aggregates (labour flows, business demography, part-time, earnings structure, house prices); rows tagged VALIDATION ONLY are not model inputs", ["lfsi_long_q", "bd_l_form", "lfsa_eppga", "lfsa_ewhuis", "earn_ses22_14", "earn_ses_pub2i", "earn_ses_pub1s", "tipsho10", "nasa_10_ki"]), beh)

@@ -12,13 +12,16 @@ The full brief is in [`docs/specification.md`](docs/specification.md).
 > * **Real (2025 Belgian aggregates):** population by region x sex x age, education by age, household
 >   composition (derived), labour-market status (derived), life tables and fertility, and published
 >   EU-SILC income indicators and ECB HFCS 2023 wealth aggregates used for validation. See [`docs/data_real.md`](docs/data_real.md).
-> * **Assumptions:** the lifecycle economy (earnings profiles, wealth, business, behaviour). Every value
->   is tagged `assumed` with its source in `configs/economy_stylised.yaml`.
+> * **Public-aggregate parameters:** labour-market flows, business closure rates, part-time, earnings structure and
+>   house prices come from public Eurostat tables (`data/real/belgium_2025/behaviour_observed.csv`); wealth parameters are
+>   calibrated to ECB HFCS medians. **Assumptions:** the rest (earnings persistence, consumption, business payout,
+>   entry and education sensitivities, ...), each tagged `assumed` in `configs/economy_stylised.yaml`.
 > * **Illustrative, NOT Belgian law:** the tax-benefit file `configs/policy_illustrative.yaml`. No statutory
 >   rate was invented as law; every number is a labelled placeholder (`verified: false`) and **every output
 >   carries a banner**. Supply a verified policy file before quoting any Belgian fiscal result.
 > * **Nothing here is a validated forecast or an estimate of real policy effects.** At baseline the model
->   overstates poverty and the Gini (see the validation table in any run report).
+>   overstates poverty and the Gini (see the validation tables in any run report); the poverty rate is dominated
+>   by the placeholder minimum-income level of the illustrative policy (see Known limitations).
 
 ## Install
 
@@ -40,6 +43,8 @@ abm compare --baseline outputs/run1/baseline --scenario outputs/run1/scenario_co
 abm arrangements --config configs/belgium_baseline.yaml --children 2 --partner employee   # spec section 12
 abm import-hfcs --xlsx <HFCS workbook>                      # Belgian wealth targets (validation only)
 abm crosscheck --lfs-xlsx <file> --education-xls <file>      # test the derived tables against Statbel workbooks
+abm calibrate-wealth --config configs/belgium_baseline.yaml   # fit stylised wealth parameters to HFCS medians
+abm sensitivity --config configs/belgium_baseline.yaml        # one-at-a-time sensitivity of outcomes and of a scenario effect
 abm sources                                                  # datasets acquired / still required
 abm demo                                                     # 10,000-person run on FICTIONAL inputs (tooling check)
 ```
@@ -73,7 +78,7 @@ src/belgium_abm/
   policies/      rules (pure tax/benefit functions, overrides), ledger (integer cents), config
   analysis/      inequality, measures, benchmarks, arrangements, calibration, validation, plots
   io/ agents/    schemas, loaders, registry; person / household / firm tables
-tests/       unit / integration / properties (171 tests)
+tests/       unit / integration / properties (180 tests)
 ```
 
 ## Method in brief (details in `docs/model_description.md`)
@@ -105,8 +110,8 @@ isolation, Gini toy cases, tax brackets/caps/thresholds) plus the real-data buil
 
 ## Known limitations
 
-* Labour status, education and tenure are independent across members of a household (Phase 1
-  construction); this inflates the share of earner-less households and with it poverty and the Gini.
+* **Poverty and the income Gini are overstated, mainly because of the placeholder policy.** The share of persons in very-low-work-intensity households matches the published figure (12% vs 11%), so household worklessness is not the cause. Poverty is highly sensitive to the illustrative social-assistance floor: raising it from 12,500 to 19,000 EUR per equivalent adult (the 60%-of-median line) cuts the poverty rate from 20% to 5%. A verified minimum-income level is needed before poverty results mean anything.
+* Labour status, education and tenure are still drawn independently across members of a household; partner correlation is absent (not a driver of the poverty gap, see above).
 * Wealth, firms and behaviour are stylised; wealth is not validated against HFCS (restricted).
 * The BV owner-manager share is a coarse proxy; regional household composition is the national mix refitted.
 * No migration; the population ages and shrinks. Constant prices.

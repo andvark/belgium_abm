@@ -74,3 +74,35 @@ BV owner counts, person-to-firm links, institutional population by age. See `abm
 
 Rebuild the cross-checks with `abm crosscheck --lfs-xlsx <file> --education-xls <file>` and the wealth targets with
 `abm import-hfcs --xlsx <file>`. The raw workbooks are not committed (size, redistribution terms); their sha256 is recorded in the CSV headers.
+
+## Behavioural parameters from public aggregates (`behaviour_observed.csv`)
+
+These replace parameters that were previously pure assumptions. All are aggregates, not microdata; "derived" means a documented transformation.
+
+| model parameter | was (assumed) | now | source |
+|---|---|---|---|
+| `job_separation_rate` (employment -> unemployment, per year) | 3.0% | 2.7% | Eurostat `lfsi_long_q`, 8 quarters, quarterly matrix to the 4th power |
+| `labour_force_exit_rate` (non-retirement) | 2.0% | observed employment -> inactivity 12.0% minus modelled retirement flow (~2%), about 10% | same |
+| `inactive_entry_to_employment_share` | 85% | 80% | same |
+| `sole_prop_exit_rate` / `bv_exit_rate` | 5% / 3% | 10.2% / 2.5% (enterprise death rates, 2024) | Eurostat `bd_l_form` |
+| `parttime_share_f` / `_m` / `parttime_hours` | 30% / 10% / 0.60 | 38.9% / 13.4% / 0.59 | `lfsa_eppga`, `lfsa_ewhuis` |
+| `wage_age_slope` / `wage_age_curvature` | 0.25 / -0.15 | 0.18 / -0.04 | `earn_ses22_14` (SES 2022) |
+| education wage ratios (medium, high vs low) | 1.33, 1.93 | 1.09, 1.71 | `earn_ses_pub2i` |
+| `skill_sigma` | 0.30 | solved at run time (about 0.1) so total earnings dispersion matches the published low-wage share (15.9%) | `earn_ses_pub1s` |
+| `house_price_growth` | 1.0% | 1.06% (real, 20-year average) | `tipsho10` |
+| wealth parameters (4) | assumed | calibrated to HFCS 2023 medians (`abm calibrate-wealth`, `wealth_calibration.csv`) | ECB HFCS |
+
+Rows tagged VALIDATION ONLY (observed flows from unemployment and inactivity to employment, enterprise birth rates, the household saving
+rate) are not inputs; every simulation compares its own flows with them (`validation_behaviour_vs_public.csv`).
+
+Still assumptions (no public data): earnings and business-shock persistence, the marginal propensity to consume, BV director pay and payout
+shares, entry sensitivity to wealth, education sensitivity to family wealth, partnering and separation rates, and the real return on savings.
+They are covered by the sensitivity analysis (`abm sensitivity`).
+
+## What a check against the public data showed about the model
+
+* Household worklessness is **not** the cause of the poverty overshoot: the share of persons aged 0-59 in very-low-work-intensity households
+  is 12% in the model vs 11% published (Eurostat `ilc_lvhl11`).
+* The poverty rate is dominated by the placeholder minimum-income floor of the illustrative policy (12.5k EUR per equivalent adult, below the
+  poverty line): at a floor equal to the line the model's poverty rate falls from 20% to 5%.
+* The earlier assumption that tertiary education pays a 1.9x premium was too high for Belgium (observed 1.7x, and medium/low only 1.09x).

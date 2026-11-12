@@ -86,3 +86,20 @@ def wealth_validation_table(st, targets: pd.DataFrame) -> pd.DataFrame:
     df["status"] = np.where(df["rel_gap"].abs() <= 0.15, "close (<=15%)", np.where(df["rel_gap"].abs() <= 0.35, "gap (15-35%)", "LARGE GAP (>35%)"))
     df["note"] = "HFCS 2023 vs simulated 2025 baseline; definitions differ (see docs); not calibrated"
     return df
+
+
+def work_intensity_row(st, targets: pd.DataFrame) -> pd.DataFrame:
+    """Share of persons aged 0-59 living in households of very low work intensity (< 0.2), Eurostat definition approximated:
+    working-age members are 18-59 excluding students aged 18-24; work intensity = mean of (employed x hours) over them."""
+    p = st.persons
+    wa = p["age"].between(18, 59) & ~((p["work_state"] == "STUDENT") & (p["age"] <= 24))
+    worked = ((p["work_state"] == "EMPLOYED") * p["hours"]).where(wa, 0.0)
+    wi = worked.groupby(p["household_id"]).sum() / wa.groupby(p["household_id"]).sum().replace(0, np.nan)
+    pi = p["household_id"].map(wi)
+    lt60 = p["age"] < 60
+    sim = float((pi[lt60 & pi.notna()] < 0.2).mean())
+    t = targets
+    pub = float(t[(t.indicator == "very_low_work_intensity_rate") & (t.group == "Y_LT60")].value.astype(float).iloc[0])
+    rel = sim / pub - 1
+    return pd.DataFrame([{"indicator": "very_low_work_intensity_rate", "group": "Y_LT60", "simulated": sim, "published": pub, "abs_gap": sim - pub, "rel_gap": rel,
+                          "role": "validation (not fitted)", "status": "close (<=15%)" if abs(rel) <= 0.15 else "gap (15-35%)" if abs(rel) <= 0.35 else "LARGE GAP (>35%)"}])

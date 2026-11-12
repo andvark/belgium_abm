@@ -209,6 +209,19 @@ def cmd_calibrate_wealth(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_sensitivity(args: argparse.Namespace) -> int:
+    from belgium_abm.analysis.sensitivity import run_sensitivity
+
+    cfg = _load_cfg(args.config, args.root)
+    out = Path(args.output_dir) if args.output_dir else cfg.resolve(cfg.output_dir) / "sensitivity"
+    sw = run_sensitivity(cfg, args.scenario, out, seed=args.seed, n_persons=args.n_persons, years=args.years, replicates=args.replicates)
+    for m in ("wealth_top10_share", "gini_disposable", "effect_net_fiscal_balance_dynamic", "effect_bv_owner_eq_income"):
+        top = sw[sw.metric == m].sort_values("rank_within_metric").head(3)
+        print(f"[abm sensitivity] {m}: " + "; ".join(f"{r.parameter} ({r.swing:+.4g})" for r in top.itertuples()))
+    print(f"[abm sensitivity] wrote tables, tornado plot and report to {out}")
+    return 0
+
+
 def cmd_demo(args: argparse.Namespace) -> int:
     ns = argparse.Namespace(
         config=args.config, root=args.root, seed=args.seed, n_persons=10_000,
@@ -317,6 +330,16 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("--n-persons", type=int, default=12000)
     sp.add_argument("--maxiter", type=int, default=70)
     sp.set_defaults(func=cmd_calibrate_wealth)
+
+    sp = sub.add_parser("sensitivity", help="one-at-a-time sensitivity of outcomes and of a scenario effect to unestimated parameters")
+    common(sp)
+    sp.add_argument("--scenario", default="scenarios/corporate_tax_plus_5pp.yaml")
+    sp.add_argument("--seed", type=int, default=42)
+    sp.add_argument("--years", type=int, default=15)
+    sp.add_argument("--n-persons", type=int, default=8000)
+    sp.add_argument("--replicates", type=int, default=2)
+    sp.add_argument("--output-dir", default=None)
+    sp.set_defaults(func=cmd_sensitivity)
 
     sp = sub.add_parser("demo", help="10,000-person demo run on the FICTIONAL inputs")
     sp.add_argument("--config", default=DEMO_CONFIG)
