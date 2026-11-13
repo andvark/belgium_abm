@@ -1,0 +1,10 @@
+indicator,role,simulated,observed,rel_gap,status
+employment_to_unemployment,input (observed); model must reproduce it,0.023432575290903663,0.02722292,-0.13923358365290495,close (<=15%)
+employment_to_inactivity (incl. retirement),input (derived); retirement part is modelled,0.11152389133208278,0.12039775,-0.07370452245093628,close (<=15%)
+unemployment_to_employment,validation (derived to keep cross-section stationary),0.5011891852490924,0.47244366,0.06084434543812578,close (<=15%)
+"inactivity_to_employment (inactive incl. students, retirees <=74)",validation,0.12560976603289198,0.19729678,-0.3633460919489311,LARGE GAP (>35%)
+sole_prop_birth_rate,validation (entry flows are derived to keep the age profile),0.14275875519712858,0.1039,0.37400149371634805,LARGE GAP (>35%)
+sole_prop_exit_rate,input (observed),0.09726531152368366,0.1015,-0.04172106873218073,close (<=15%)
+bv_birth_rate,validation,0.06749061444027073,0.065,0.038317145234934236,close (<=15%)
+bv_closure_rate (voluntary + insolvency + retirement liquidation),validation of the combined channels,0.09955156239286313,0.025,2.982062495714525,LARGE GAP (>35%)
+household_saving_rate,"validation (national accounts, households incl. NPISH)",0.1065999204729903,0.1401,-0.2391154855603833,gap (15-35%)

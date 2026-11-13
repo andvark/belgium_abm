@@ -1,10 +1,12 @@
 {
   "baseline_year": 2025,
   "config": "belgium_baseline",
-  "config_hash_sha256": "8365a05c807ddfb5f647787561f53ff0a74254b8b4cfecaa178d5a915ff8df63",
+  "config_hash_sha256": "ab162468099b29cacecba8a1bd188ec0820d6ff29d97276f58208870bca41611",
   "economy": {
     "all_parameters_status": [
-      "assumed"
+      "assumed",
+      "derived",
+      "observed"
     ],
     "banner": "STYLISED ECONOMY - behavioural and wealth parameters are assumptions, not estimates",
     "name": "economy_stylised"
@@ -12,43 +14,43 @@
   "horizon_years": 30,
   "intergenerational": {
     "0": {
-      "intergenerational_wealth_rank_correlation": 0.31749162279967275,
+      "intergenerational_wealth_rank_correlation": 0.3036967963688874,
       "intergenerational_wealth_rank_correlation_n": 3881.0
     },
     "1": {
-      "intergenerational_wealth_rank_correlation": 0.31967710248585596,
+      "intergenerational_wealth_rank_correlation": 0.3073476692342198,
       "intergenerational_wealth_rank_correlation_n": 3864.0
     },
     "2": {
-      "intergenerational_wealth_rank_correlation": 0.33543938642852084,
+      "intergenerational_wealth_rank_correlation": 0.32558475204050996,
       "intergenerational_wealth_rank_correlation_n": 3874.0
     },
     "3": {
-      "intergenerational_wealth_rank_correlation": 0.26588548516013555,
+      "intergenerational_wealth_rank_correlation": 0.24639957858665515,
       "intergenerational_wealth_rank_correlation_n": 3870.0
     },
     "4": {
-      "intergenerational_wealth_rank_correlation": 0.31551951043481385,
+      "intergenerational_wealth_rank_correlation": 0.29684189665314453,
       "intergenerational_wealth_rank_correlation_n": 3872.0
     },
     "5": {
-      "intergenerational_wealth_rank_correlation": 0.3220759205666459,
+      "intergenerational_wealth_rank_correlation": 0.3102308231696369,
       "intergenerational_wealth_rank_correlation_n": 3883.0
     },
     "6": {
-      "intergenerational_wealth_rank_correlation": 0.319351609927877,
+      "intergenerational_wealth_rank_correlation": 0.3022445279720279,
       "intergenerational_wealth_rank_correlation_n": 3890.0
     },
     "7": {
-      "intergenerational_wealth_rank_correlation": 0.3022865369384844,
+      "intergenerational_wealth_rank_correlation": 0.2843576316598997,
       "intergenerational_wealth_rank_correlation_n": 3888.0
     },
     "8": {
-      "intergenerational_wealth_rank_correlation": 0.3281322797453796,
+      "intergenerational_wealth_rank_correlation": 0.31578457812153476,
       "intergenerational_wealth_rank_correlation_n": 3883.0
     },
     "9": {
-      "intergenerational_wealth_rank_correlation": 0.3092269194432423,
+      "intergenerational_wealth_rank_correlation": 0.2830476764033921,
       "intergenerational_wealth_rank_correlation_n": 3876.0
     }
   },
@@ -56,83 +58,113 @@
   "label": "baseline",
   "level_calibration": [
     {
-      "achieved_median": 31102.87651590859,
-      "level_scale": 1.5683430525310467,
-      "median_before_final_step": 31102.87651590859,
+      "achieved_median": 31225.478816446353,
+      "labour_force_exit_rate_derived": 0.10147976638020532,
+      "level_scale": 1.5149550345320175,
+      "median_before_final_step": 31225.478816446353,
       "replicate": 0,
+      "retirement_flow_share": 0.01891798361979467,
       "seed": 42,
+      "skill_sigma": 0.12433402309777342,
       "target_median": 31299.0
     },
     {
-      "achieved_median": 31148.79398686366,
-      "level_scale": 1.5669902121702133,
-      "median_before_final_step": 31148.79398686366,
+      "achieved_median": 31216.484271408946,
+      "labour_force_exit_rate_derived": 0.10252413376383764,
+      "level_scale": 1.5189804196687076,
+      "median_before_final_step": 31216.484271408946,
       "replicate": 1,
+      "retirement_flow_share": 0.017873616236162362,
       "seed": 43,
+      "skill_sigma": 0.12469197367302054,
       "target_median": 31299.0
     },
     {
-      "achieved_median": 31193.265568346756,
-      "level_scale": 1.5666225653576908,
-      "median_before_final_step": 31193.265568346756,
+      "achieved_median": 31238.71845778236,
+      "labour_force_exit_rate_derived": 0.10090749512743628,
+      "level_scale": 1.5152854429258034,
+      "median_before_final_step": 31238.71845778236,
       "replicate": 2,
+      "retirement_flow_share": 0.019490254872563718,
       "seed": 44,
+      "skill_sigma": 0.11960604387697304,
       "target_median": 31299.0
     },
     {
-      "achieved_median": 31111.35771154846,
-      "level_scale": 1.5582002489140179,
-      "median_before_final_step": 31111.35771154846,
+      "achieved_median": 31218.281819683838,
+      "labour_force_exit_rate_derived": 0.10313653020713463,
+      "level_scale": 1.4926445126707333,
+      "median_before_final_step": 31218.281819683838,
       "replicate": 3,
+      "retirement_flow_share": 0.01726121979286536,
       "seed": 45,
+      "skill_sigma": 0.1235313287477704,
       "target_median": 31299.0
     },
     {
-      "achieved_median": 31159.97764448038,
-      "level_scale": 1.5516551569194468,
-      "median_before_final_step": 31159.97764448038,
+      "achieved_median": 31229.103698750238,
+      "labour_force_exit_rate_derived": 0.10232476738229539,
+      "level_scale": 1.492692823251648,
+      "median_before_final_step": 31229.103698750238,
       "replicate": 4,
+      "retirement_flow_share": 0.018072982617704614,
       "seed": 46,
+      "skill_sigma": 0.12865863993882987,
       "target_median": 31299.0
     },
     {
-      "achieved_median": 31179.278532371456,
-      "level_scale": 1.5462361467725951,
-      "median_before_final_step": 31179.278532371456,
+      "achieved_median": 31179.360760100415,
+      "labour_force_exit_rate_derived": 0.10370806307550645,
+      "level_scale": 1.5003653831560333,
+      "median_before_final_step": 31179.360760100415,
       "replicate": 5,
+      "retirement_flow_share": 0.016689686924493553,
       "seed": 47,
+      "skill_sigma": 0.13468449371136537,
       "target_median": 31299.0
     },
     {
-      "achieved_median": 31160.008738249402,
-      "level_scale": 1.5805900273501914,
-      "median_before_final_step": 31160.008738249402,
+      "achieved_median": 31222.52592795517,
+      "labour_force_exit_rate_derived": 0.10494037313992387,
+      "level_scale": 1.5306634769973162,
+      "median_before_final_step": 31222.52592795517,
       "replicate": 6,
+      "retirement_flow_share": 0.015457376860076134,
       "seed": 48,
+      "skill_sigma": 0.12677997408932895,
       "target_median": 31299.0
     },
     {
-      "achieved_median": 31172.444705299164,
-      "level_scale": 1.5481095310983177,
-      "median_before_final_step": 31172.444705299164,
+      "achieved_median": 31223.58319819736,
+      "labour_force_exit_rate_derived": 0.10565120622119815,
+      "level_scale": 1.5122278310510442,
+      "median_before_final_step": 31223.58319819736,
       "replicate": 7,
+      "retirement_flow_share": 0.014746543778801843,
       "seed": 49,
+      "skill_sigma": 0.13179512648761915,
       "target_median": 31299.0
     },
     {
-      "achieved_median": 31183.527950122454,
-      "level_scale": 1.5610016073808848,
-      "median_before_final_step": 31183.527950122454,
+      "achieved_median": 31245.470920942917,
+      "labour_force_exit_rate_derived": 0.10139072315977421,
+      "level_scale": 1.4950192268373534,
+      "median_before_final_step": 31245.470920942917,
       "replicate": 8,
+      "retirement_flow_share": 0.01900702684022578,
       "seed": 50,
+      "skill_sigma": 0.11275526468897801,
       "target_median": 31299.0
     },
     {
-      "achieved_median": 31154.497421792585,
-      "level_scale": 1.552777002421162,
-      "median_before_final_step": 31154.497421792585,
+      "achieved_median": 31211.427002438344,
+      "labour_force_exit_rate_derived": 0.10336079823299182,
+      "level_scale": 1.528644262697087,
+      "median_before_final_step": 31211.427002438344,
       "replicate": 9,
+      "retirement_flow_share": 0.017036951767008174,
       "seed": 51,
+      "skill_sigma": 0.14362727401827668,
       "target_median": 31299.0
     }
   ],
