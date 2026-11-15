@@ -12,3 +12,6 @@ data/raw/*
 !data/raw/.gitkeep
 data/processed/*
 !data/processed/.gitkeep
+
+# separate research repository (own .git)
+mgmt_company_tax_research/
